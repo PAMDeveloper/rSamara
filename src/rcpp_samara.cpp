@@ -1,0 +1,122 @@
+/**
+ * @file rcpp_samara.cpp
+ * @author See the AUTHORS file
+ */
+
+/*
+ * Copyright (C) 2012-2017 ULCO http://www.univ-littoral.fr
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <Rcpp.h>
+
+// [[Rcpp::depends(samara)]]
+
+#include <samara/model/kernel/Model.hpp>
+#include <samara/model/kernel/Simulator.hpp>
+#include <samara/model/models/ModelParameters.hpp>
+#include <samara/model/observer/GlobalView.hpp>
+#include <samara/model/observer/Observer.hpp>
+#include <samara/utils/ParametersReader.hpp>
+
+using namespace Rcpp;
+
+static void format_dates(const model::models::ModelParameters& parameters,
+                         std::string& begin, std::string& end)
+{
+    utils::DateTime::format_date(parameters.get < std::string >("BeginDate"),
+                                 begin);
+    utils::DateTime::format_date(parameters.get < std::string >("EndDate"),
+                                 end);
+}
+
+// [[Rcpp::export]]
+DataFrame rcpp_run()
+{
+    samara::GlobalParameters globalParameters;
+    model::kernel::Model* model = new model::kernel::Model;
+    model::models::ModelParameters parameters;
+    utils::ParametersReader reader;
+    std::string begin;
+    std::string end;
+
+    reader.load("06SB15-fev13-D1_SV21", parameters);
+    format_dates(parameters, begin, end);
+
+    globalParameters.modelVersion = parameters.get < std::string >("IdModele");
+    model::kernel::Simulator simulator(model, globalParameters);
+
+    simulator.attachView("global", new model::observer::GlobalView);
+    simulator.init(utils::DateTime::toJulianDayNumber(begin), parameters);
+    simulator.run(utils::DateTime::toJulianDayNumber(begin),
+                  utils::DateTime::toJulianDayNumber(end));
+
+    const model::observer::Observer& observer = simulator.observer();
+    const model::observer::Observer::Views& views = observer.views();
+    Rcpp::List result(views.begin()->second->values().size() + 1);
+    Rcpp::CharacterVector names;
+
+    for (model::observer::Observer::Views::const_iterator it = views.begin();
+         it != views.end(); ++it) {
+        model::observer::View::Values values = it->second->values();
+        double begin = it->second->begin();
+        double end = it->second->end();
+
+        // write header
+        names.push_back("time");
+        for (model::observer::View::Values::const_iterator
+                 itv = values.begin(); itv != values.end(); ++itv) {
+            names.push_back(itv->first);
+        }
+        // write dates
+        {
+            Rcpp::CharacterVector values;
+
+            for (double t = begin; t <= end; ++t) {
+                values.push_back(utils::DateTime::toJulianDay(t));
+            }
+            result[0] = values;
+        }
+        // write values
+        unsigned int index = 1;
+
+        for (model::observer::View::Values::const_iterator itv =
+                 values.begin(); itv != values.end(); ++itv) {
+            model::observer::View::Value::const_iterator itp =
+                itv->second.begin();
+            Rcpp::NumericVector values;
+
+            for (double t = begin; t <= end; ++t) {
+                while (itp != itv->second.end() and itp->first < t) {
+                    ++itp;
+                }
+                if (itp != itv->second.end()) {
+                    values.push_back(
+                        boost::lexical_cast < double >(itp->second));
+                }
+                // else {
+                //     o << "NA";
+                // }
+            }
+            result[index] = values;
+            ++index;
+        }
+    }
+
+    DataFrame out(result);
+
+    out.attr("names") = names;
+    return out;
+}
