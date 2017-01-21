@@ -111,8 +111,6 @@ List rcpp_run()
                         boost::lexical_cast < double >(itp->second));
                 } else {
                     values.push_back(NumericVector::get_na());
-
-                    // o << "NA";
                 }
             }
             result[index] = values;
