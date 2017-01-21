@@ -22,15 +22,39 @@
 
 #include <Rcpp.h>
 
+#include "rcpp_samara.hpp"
+
 using namespace Rcpp;
 
-// rcpp_run
-List rcpp_run();
-RcppExport SEXP rsamara_rcpp_run() {
+// rcpp_init_from_database
+XPtr < Context > rcpp_init_from_database(Rcpp::String name);
+RcppExport SEXP rsamara_rcpp_init_from_database(SEXP s) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_run());
+    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_database(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// rcpp_init_from_json
+XPtr < Context > rcpp_init_from_json(Rcpp::String name);
+RcppExport SEXP rsamara_rcpp_init_from_json(SEXP s) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_json(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+// rcpp_run
+List rcpp_run(SEXP handle);
+RcppExport SEXP rsamara_rcpp_run(SEXP s) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(rcpp_run(s));
     return rcpp_result_gen;
 END_RCPP
 }

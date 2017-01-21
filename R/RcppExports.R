@@ -20,6 +20,14 @@
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ##
 
-rcpp_run <- function() {
-    .Call('rsamara_rcpp_run', PACKAGE = 'rsamara')
+rcpp_init_from_database <- function(name) {
+    .Call('rsamara_rcpp_init_from_database', PACKAGE = 'rsamara', name)
+}
+
+rcpp_init_from_json <- function(json) {
+    .Call('rsamara_rcpp_init_from_json', PACKAGE = 'rsamara', json)
+}
+
+rcpp_run <- function(context) {
+    .Call('rsamara_rcpp_run', PACKAGE = 'rsamara', context)
 }

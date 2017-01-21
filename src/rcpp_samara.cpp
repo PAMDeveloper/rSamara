@@ -22,7 +22,7 @@
 
 #include <Rcpp.h>
 
-// [[Rcpp::depends(samara)]]
+#include "rcpp_samara.hpp"
 
 #include <samara/model/kernel/Model.hpp>
 #include <samara/model/kernel/Simulator.hpp>
@@ -42,9 +42,9 @@ static void format_dates(const model::models::ModelParameters& parameters,
                                  end);
 }
 
-// [[Rcpp::export]]
-List rcpp_run()
+XPtr < Context > rcpp_init_from_database(Rcpp::String name)
 {
+    Context* context = new Context;
     samara::GlobalParameters globalParameters;
     model::kernel::Model* model = new model::kernel::Model;
     model::models::ModelParameters parameters;
@@ -52,18 +52,50 @@ List rcpp_run()
     std::string begin;
     std::string end;
 
-    reader.load("06SB15-fev13-D1_SV21", parameters);
+    reader.loadFromDatabase(name, parameters);
     format_dates(parameters, begin, end);
-
     globalParameters.modelVersion = parameters.get < std::string >("IdModele");
-    model::kernel::Simulator simulator(model, globalParameters);
 
-    simulator.attachView("global", new model::observer::GlobalView);
-    simulator.init(utils::DateTime::toJulianDayNumber(begin), parameters);
-    simulator.run(utils::DateTime::toJulianDayNumber(begin),
-                  utils::DateTime::toJulianDayNumber(end));
+    context->begin = utils::DateTime::toJulianDayNumber(begin);
+    context->end = utils::DateTime::toJulianDayNumber(end);
+    context->simulator = new model::kernel::Simulator(model, globalParameters);
 
-    const model::observer::Observer& observer = simulator.observer();
+    context->simulator->attachView("global", new model::observer::GlobalView);
+    context->simulator->init(context->begin, parameters);
+    return XPtr < Context >(context, true);
+}
+
+XPtr < Context > rcpp_init_from_json(Rcpp::String json)
+{
+    Context* context = new Context;
+    samara::GlobalParameters globalParameters;
+    model::kernel::Model* model = new model::kernel::Model;
+    model::models::ModelParameters parameters;
+    utils::ParametersReader reader;
+    std::string begin;
+    std::string end;
+
+    reader.loadFromJSON(json, parameters);
+    format_dates(parameters, begin, end);
+    globalParameters.modelVersion = parameters.get < std::string >("IdModele");
+
+    context->begin = utils::DateTime::toJulianDayNumber(begin);
+    context->end = utils::DateTime::toJulianDayNumber(end);
+    context->simulator = new model::kernel::Simulator(model, globalParameters);
+
+    context->simulator->attachView("global", new model::observer::GlobalView);
+    context->simulator->init(context->begin, parameters);
+    return XPtr < Context >(context, true);
+}
+
+// [[Rcpp::export]]
+List rcpp_run(SEXP handle)
+{
+    XPtr < Context > context(handle);
+
+    context->simulator->run(context->begin, context->end);
+
+    const model::observer::Observer& observer = context->simulator->observer();
     const model::observer::Observer::Views& views = observer.views();
     Rcpp::List gresult(views.size());
     Rcpp::CharacterVector gnames;
