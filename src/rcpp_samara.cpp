@@ -43,7 +43,7 @@ static void format_dates(const model::models::ModelParameters& parameters,
 }
 
 // [[Rcpp::export]]
-DataFrame rcpp_run()
+List rcpp_run()
 {
     samara::GlobalParameters globalParameters;
     model::kernel::Model* model = new model::kernel::Model;
@@ -65,15 +65,19 @@ DataFrame rcpp_run()
 
     const model::observer::Observer& observer = simulator.observer();
     const model::observer::Observer::Views& views = observer.views();
-    Rcpp::List result(views.begin()->second->values().size() + 1);
-    Rcpp::CharacterVector names;
+    Rcpp::List gresult(views.size());
+    Rcpp::CharacterVector gnames;
+    unsigned int gindex = 0;
 
     for (model::observer::Observer::Views::const_iterator it = views.begin();
          it != views.end(); ++it) {
+        Rcpp::List result(it->second->values().size() + 1);
+        Rcpp::CharacterVector names;
         model::observer::View::Values values = it->second->values();
         double begin = it->second->begin();
         double end = it->second->end();
 
+        gnames.push_back(it->first);
         // write header
         names.push_back("time");
         for (model::observer::View::Values::const_iterator
@@ -105,18 +109,22 @@ DataFrame rcpp_run()
                 if (itp != itv->second.end()) {
                     values.push_back(
                         boost::lexical_cast < double >(itp->second));
+                } else {
+                    values.push_back(NumericVector::get_na());
+
+                    // o << "NA";
                 }
-                // else {
-                //     o << "NA";
-                // }
             }
             result[index] = values;
             ++index;
         }
+        DataFrame out(result);
+
+        out.attr("names") = names;
+        gresult[gindex] = out;
+        ++gindex;
     }
 
-    DataFrame out(result);
-
-    out.attr("names") = names;
-    return out;
+    gresult.attr("names") = gnames;
+    return gresult;
 }

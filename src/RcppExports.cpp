@@ -25,7 +25,7 @@
 using namespace Rcpp;
 
 // rcpp_run
-DataFrame rcpp_run();
+List rcpp_run();
 RcppExport SEXP rsamara_rcpp_run() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
