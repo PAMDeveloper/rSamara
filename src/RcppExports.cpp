@@ -48,6 +48,17 @@ BEGIN_RCPP
 END_RCPP
 }
 
+// rcpp_init_from_dataframe
+XPtr < Context > rcpp_init_from_dataframe(Rcpp::List data);
+RcppExport SEXP rsamara_rcpp_init_from_dataframe(SEXP s) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_dataframe(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+
 // rcpp_run
 List rcpp_run(SEXP handle);
 RcppExport SEXP rsamara_rcpp_run(SEXP s) {

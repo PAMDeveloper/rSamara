@@ -127,8 +127,8 @@
     "Ca": 400.00
   },
   "site": {
-    "CodeStationPluie": 270130,
-    "CodeStationMeteo": 270130,
+    "CodeStationPluie": "270130",
+    "CodeStationMeteo": "270130",
     "SeuilPluie": -999.00,
     "Kpar": 0.50
   },

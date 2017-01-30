@@ -21,6 +21,7 @@
  */
 
 #include <Rcpp.h>
+#include <Rinternals.h>
 
 #include "rcpp_samara.hpp"
 
@@ -30,6 +31,8 @@
 #include <samara/model/observer/GlobalView.hpp>
 #include <samara/model/observer/Observer.hpp>
 #include <samara/utils/ParametersReader.hpp>
+
+#include <boost/property_tree/ptree.hpp>
 
 using namespace Rcpp;
 
@@ -41,6 +44,8 @@ static void format_dates(const model::models::ModelParameters& parameters,
     utils::DateTime::format_date(parameters.get < std::string >("EndDate"),
                                  end);
 }
+
+// [[Rcpp::export]]
 
 XPtr < Context > rcpp_init_from_database(Rcpp::String name)
 {
@@ -88,7 +93,57 @@ XPtr < Context > rcpp_init_from_json(Rcpp::String json)
     return XPtr < Context >(context, true);
 }
 
-// [[Rcpp::export]]
+XPtr < Context > rcpp_init_from_dataframe(Rcpp::List data)
+{
+    Context* context = new Context;
+    samara::GlobalParameters globalParameters;
+    model::kernel::Model* model = new model::kernel::Model;
+    model::models::ModelParameters parameters;
+    utils::ParametersReader reader;
+    std::string begin;
+    std::string end;
+    boost::property_tree::ptree tree;
+    CharacterVector names = data.attr("names");
+
+    for (unsigned int i = 0; i < names.size(); ++i) {
+        std::string key = Rcpp::as < std::string >(names[i]);
+        SEXP s = data[i];
+
+        if (TYPEOF(s) == 14) {
+            tree.put(key, Rcpp::as < double >(data[i]));
+        } else if (TYPEOF(s) == 16) {
+            tree.put(key, Rcpp::as < std::string >(data[i]));
+        } else if (TYPEOF(s) == 19) { // VECSEXP
+            List subdata = data[i];
+            CharacterVector subnames = subdata.attr("names");
+            boost::property_tree::ptree subtree;
+
+            for (unsigned int j = 0; j < subnames.size(); ++j) {
+                std::string subkey = Rcpp::as < std::string >(subnames[j]);
+                SEXP t = subdata[j];
+
+                if (TYPEOF(t) == 14) {
+                    subtree.put(subkey, Rcpp::as < double >(subdata[j]));
+                } else if (TYPEOF(t) == 16) {
+                    subtree.put(subkey, Rcpp::as < std::string >(subdata[j]));
+                }
+            }
+            tree.add_child(key, subtree);
+        }
+    }
+    reader.loadFromTree(tree, parameters);
+    format_dates(parameters, begin, end);
+    globalParameters.modelVersion = parameters.get < std::string >("IdModele");
+
+    context->begin = utils::DateTime::toJulianDayNumber(begin);
+    context->end = utils::DateTime::toJulianDayNumber(end);
+    context->simulator = new model::kernel::Simulator(model, globalParameters);
+
+    context->simulator->attachView("global", new model::observer::GlobalView);
+    context->simulator->init(context->begin, parameters);
+    return XPtr < Context >(context, true);
+}
+
 List rcpp_run(SEXP handle)
 {
     XPtr < Context > context(handle);

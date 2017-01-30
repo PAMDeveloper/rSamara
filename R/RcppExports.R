@@ -28,6 +28,10 @@ rcpp_init_from_json <- function(json) {
     .Call('rsamara_rcpp_init_from_json', PACKAGE = 'rsamara', json)
 }
 
+rcpp_init_from_dataframe <- function(data) {
+    .Call('rsamara_rcpp_init_from_dataframe', PACKAGE = 'rsamara', data)
+}
+
 rcpp_run <- function(context) {
     .Call('rsamara_rcpp_run', PACKAGE = 'rsamara', context)
 }
