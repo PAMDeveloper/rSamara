@@ -1,0 +1,9 @@
+ifeq "$(WIN)" "64"
+PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"D:/samara/include" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
+PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"D:/samara/lib/x64" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'`  -lartis-1.0 -lartis-kernel -lartis-observer -lartis-utils -lboost_date_time-mgw49-mt-1_62 -lboost_filesystem-mgw49-mt-1_62 -lboost_graph-mgw49-mt-1_62 -lboost_program_options-mgw49-mt-1_62 -lboost_regex-mgw49-mt-1_62 -lboost_serialization-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -lpq -lsamara-2.1 -lsamara-kernel -lsamara-models-common -lsamara-models-meteo -lsamara-models-samara -lsamara-observer -lsamara-utils -std=c++11
+else
+PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"D:/samara/include" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
+PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"D:/samara/lib/i386" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'`  -lartis-1.0 -lartis-kernel -lartis-observer -lartis-utils -lboost_date_time-mgw49-mt-1_62 -lboost_filesystem-mgw49-mt-1_62 -lboost_graph-mgw49-mt-1_62 -lboost_program_options-mgw49-mt-1_62 -lboost_regex-mgw49-mt-1_62 -lboost_serialization-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -lpq -lsamara-2.1 -lsamara-kernel -lsamara-models-common -lsamara-models-meteo -lsamara-models-samara -lsamara-observer -lsamara-utils -std=c++11
+endif
+
+

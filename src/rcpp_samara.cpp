@@ -23,14 +23,14 @@
 #include <Rcpp.h>
 #include <Rinternals.h>
 
-#include "rcpp_samara.hpp"
+#include "rsamara_types.hpp"
 
-#include <samara/model/kernel/Model.hpp>
-#include <samara/model/kernel/Simulator.hpp>
-#include <samara/model/models/ModelParameters.hpp>
-#include <samara/model/observer/GlobalView.hpp>
-#include <samara/model/observer/Observer.hpp>
-#include <samara/utils/ParametersReader.hpp>
+#include "samara/model/kernel/Model.hpp"
+#include "samara/model/kernel/Simulator.hpp"
+#include "samara/model/models/ModelParameters.hpp"
+#include "samara/model/observer/GlobalView.hpp"
+#include "samara/model/observer/Observer.hpp"
+#include "samara/utils/ParametersReader.hpp"
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -46,12 +46,11 @@ static void format_dates(const model::models::ModelParameters& parameters,
 }
 
 // [[Rcpp::export]]
-
-XPtr < Context > rcpp_init_from_database(Rcpp::String name)
+XPtr < Context > rcpp_init_from_database_(Rcpp::String name)
 {
     Context* context = new Context;
     samara::GlobalParameters globalParameters;
-    model::kernel::Model* model = new model::kernel::Model;
+    model::kernel::KernelModel* model = new model::kernel::KernelModel;
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
     std::string begin;
@@ -70,11 +69,12 @@ XPtr < Context > rcpp_init_from_database(Rcpp::String name)
     return XPtr < Context >(context, true);
 }
 
-XPtr < Context > rcpp_init_from_json(Rcpp::String json)
+// [[Rcpp::export]]
+XPtr < Context > rcpp_init_from_json_(Rcpp::String json)
 {
     Context* context = new Context;
     samara::GlobalParameters globalParameters;
-    model::kernel::Model* model = new model::kernel::Model;
+    model::kernel::KernelModel* model = new model::kernel::KernelModel;
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
     std::string begin;
@@ -93,11 +93,12 @@ XPtr < Context > rcpp_init_from_json(Rcpp::String json)
     return XPtr < Context >(context, true);
 }
 
-XPtr < Context > rcpp_init_from_dataframe(Rcpp::List data)
+// [[Rcpp::export]]
+XPtr < Context > rcpp_init_from_dataframe_(Rcpp::List data)
 {
     Context* context = new Context;
     samara::GlobalParameters globalParameters;
-    model::kernel::Model* model = new model::kernel::Model;
+    model::kernel::KernelModel* model = new model::kernel::KernelModel;
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
     std::string begin;
@@ -138,13 +139,13 @@ XPtr < Context > rcpp_init_from_dataframe(Rcpp::List data)
     context->begin = utils::DateTime::toJulianDayNumber(begin);
     context->end = utils::DateTime::toJulianDayNumber(end);
     context->simulator = new model::kernel::Simulator(model, globalParameters);
-
     context->simulator->attachView("global", new model::observer::GlobalView);
     context->simulator->init(context->begin, parameters);
     return XPtr < Context >(context, true);
 }
 
-List rcpp_run(SEXP handle)
+// [[Rcpp::export]]
+List rcpp_run_(SEXP handle)
 {
     XPtr < Context > context(handle);
 
