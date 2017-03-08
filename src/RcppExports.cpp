@@ -6,47 +6,25 @@
 
 using namespace Rcpp;
 
-// rcpp_init_from_database_
-XPtr < Context > rcpp_init_from_database_(Rcpp::String name);
-RcppExport SEXP rsamara_rcpp_init_from_database_(SEXP nameSEXP) {
+// rcpp_init_from_database
+XPtr < Context > rcpp_init_from_database(Rcpp::String name);
+RcppExport SEXP rsamara_rcpp_init_from_database(SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::String >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_database_(name));
+    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_database(name));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_init_from_json_
-XPtr < Context > rcpp_init_from_json_(Rcpp::String json);
-RcppExport SEXP rsamara_rcpp_init_from_json_(SEXP jsonSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::String >::type json(jsonSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_json_(json));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_init_from_dataframe_
-XPtr < Context > rcpp_init_from_dataframe_(Rcpp::List data);
-RcppExport SEXP rsamara_rcpp_init_from_dataframe_(SEXP dataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_dataframe_(data));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_run_
-List rcpp_run_(SEXP handle);
-RcppExport SEXP rsamara_rcpp_run_(SEXP handleSEXP) {
+// rcpp_run
+List rcpp_run(SEXP handle);
+RcppExport SEXP rsamara_rcpp_run(SEXP handleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type handle(handleSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_run_(handle));
+    rcpp_result_gen = Rcpp::wrap(rcpp_run(handle));
     return rcpp_result_gen;
 END_RCPP
 }

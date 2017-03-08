@@ -23,7 +23,7 @@
 #ifndef __RCPP_SAMARA_HPP
 #define __RCPP_SAMARA_HPP
 
-#include "samara/model/kernel/Simulator.hpp"
+#include <samara/model/kernel/Simulator.hpp>
 
 struct Context
 {

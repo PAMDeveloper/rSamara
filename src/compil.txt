@@ -1,0 +1,1 @@
+c:/Rtools/mingw_32/bin/g++  -I"C:/R/include" -DNDEBUG     -I"d:/Compiler/gcc-4.9.3/local330/include"  `Rscript -e 'Rcpp:::CxxFlags()'` -I"D:/Lib/boost_1_62_0"   `Rscript -e 'Rcpp:::LdFlags()'` -L"D:/Lib/boost_1_62_0/stage/lib" -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62   -O2 -Wall  -mtune=core2 -c RcppExports.cpp -o RcppExports.o
