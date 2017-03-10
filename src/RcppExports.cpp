@@ -6,6 +6,17 @@
 
 using namespace Rcpp;
 
+// getParameters_from_database
+List getParameters_from_database(Rcpp::String name);
+RcppExport SEXP rsamara_getParameters_from_database(SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(getParameters_from_database(name));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_init_from_database
 XPtr < Context > rcpp_init_from_database(Rcpp::String name);
 RcppExport SEXP rsamara_rcpp_init_from_database(SEXP nameSEXP) {

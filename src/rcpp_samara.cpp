@@ -45,101 +45,117 @@ using namespace Rcpp;
 //                                 end);
 //}
 
+
 // [[Rcpp::export]]
 List getParameters_from_database(Rcpp::String name)
 {
   model::models::ModelParameters parameters;
   utils::ParametersReader reader;
   reader.loadFromDatabase(name, parameters);
-  XPtr < Context > context(handle);
 
-  Rcpp::List gresult(views.size());
-  Rcpp::CharacterVector gnames;
-  unsigned int gindex = 0;
-
-  for (model::observer::Observer::Views::const_iterator it = views.begin();
-       it != views.end(); ++it) {
-      Rcpp::List result(it->second->values().size() + 1);
-      Rcpp::CharacterVector names;
-      model::observer::View::Values values = it->second->values();
-      double begin = it->second->begin();
-      double end = it->second->end();
-
-      gnames.push_back(it->first);
-      // write header
-      names.push_back("time");
-      for (model::observer::View::Values::const_iterator
-               itv = values.begin(); itv != values.end(); ++itv) {
-          names.push_back(itv->first);
-      }
-      // write dates
-      {
-          Rcpp::CharacterVector values;
-
-          for (double t = begin; t <= end; ++t) {
-              values.push_back(utils::DateTime::toJulianDay(t));
-          }
-          result[0] = values;
-      }
-      // write values
-      unsigned int index = 1;
-
-      for (model::observer::View::Values::const_iterator itv =
-               values.begin(); itv != values.end(); ++itv) {
-          model::observer::View::Value::const_iterator itp =
-              itv->second.begin();
-          Rcpp::NumericVector values;
-
-          for (double t = begin; t <= end; ++t) {
-              while (itp != itv->second.end() and itp->first < t) {
-                  ++itp;
-              }
-              if (itp != itv->second.end()) {
-                  values.push_back(
-                      boost::lexical_cast < double >(itp->second));
-              } else {
-                  values.push_back(NumericVector::get_na());
-              }
-          }
-          result[index] = values;
-          ++index;
-      }
-      DataFrame out(result);
-
-      out.attr("names") = names;
-      gresult[gindex] = out;
-      ++gindex;
+  std::map < std::string, std::string > * paramMap = parameters.getRawParameters();
+  Rcpp::List result(paramMap->size());
+  Rcpp::CharacterVector names;
+  Rcpp::NumericVector values;
+  unsigned int hdrIdx = 0;
+  for(auto const& it: *paramMap){
+      std::string key = it.first;
+      std::string value = it.second;
+      names.push_back(key);
+      values.push_back(boost::lexical_cast < double >(value));
   }
 
-  gresult.attr("names") = gnames;
-  return gresult;
+  Rcpp::CharacterVector headers;
+  headers.push_back("name");
+  headers.push_back("value");
+  result[0] = names;
+  result[1] = values;
+  DataFrame out(result);
+  out.attr("names") = headers;
+  return out;
+
+    //  for (model::observer::Observer::Views::const_iterator it = views.begin();
+    //       it != views.end(); ++it) {
+    //      Rcpp::List result(it->second->values().size() + 1);
+    //      Rcpp::CharacterVector names;
+    //      model::observer::View::Values values = it->second->values();
+    //      double begin = it->second->begin();
+    //      double end = it->second->end();
+
+    //      gnames.push_back(it->first);
+    //      // write header
+    //      names.push_back("time");
+    //      for (model::observer::View::Values::const_iterator
+    //               itv = values.begin(); itv != values.end(); ++itv) {
+    //          names.push_back(itv->first);
+    //      }
+    //      // write dates
+    //      {
+    //          Rcpp::CharacterVector values;
+
+    //          for (double t = begin; t <= end; ++t) {
+    //              values.push_back(utils::DateTime::toJulianDay(t));
+    //          }
+    //          result[0] = values;
+    //      }
+    //      // write values
+    //      unsigned int index = 1;
+
+    //      for (model::observer::View::Values::const_iterator itv =
+    //               values.begin(); itv != values.end(); ++itv) {
+    //          model::observer::View::Value::const_iterator itp =
+    //              itv->second.begin();
+    //          Rcpp::NumericVector values;
+
+    //          for (double t = begin; t <= end; ++t) {
+    //              while (itp != itv->second.end() and itp->first < t) {
+    //                  ++itp;
+    //              }
+    //              if (itp != itv->second.end()) {
+    //                  values.push_back(
+    //                      boost::lexical_cast < double >(itp->second));
+    //              } else {
+    //                  values.push_back(NumericVector::get_na());
+    //              }
+    //          }
+    //          result[index] = values;
+    //          ++index;
+    //      }
+    //      DataFrame out(result);
+
+    //      out.attr("names") = names;
+    //      gresult[gindex] = out;
+    //      ++gindex;
+    //  }
+
+
 
 }
 
-// [[Rcpp::export]]
-XPtr < Context > rcpp_init_from_dataframe(List list)
-{
-    Context* context = new Context;
-    samara::GlobalParameters globalParameters;
-    model::kernel::KernelModel* model = new model::kernel::KernelModel;
-    model::models::ModelParameters parameters;
-    utils::ParametersReader reader;
-    std::string begin;
-    std::string end;
+//// [[Rcpp::export]]
+//XPtr < Context > rcpp_init_from_dataframe(List list)
+//{
+//    Context* context = new Context;
+//    samara::GlobalParameters globalParameters;
+//    model::kernel::KernelModel* model = new model::kernel::KernelModel;
+//    model::models::ModelParameters parameters;
+//    utils::ParametersReader reader;
+//    std::string begin;
+//    std::string end;
 
-    reader.loadFromDatabase(name, parameters);
-    begin = parameters.get<std::string>("datedebut");
-    end = parameters.get<std::string>("datefin");
-    globalParameters.modelVersion = parameters.get < std::string >("idmodele");
+//    reader.loadFromDatabase(name, parameters);
+//    begin = parameters.get<std::string>("datedebut");
+//    end = parameters.get<std::string>("datefin");
+//    globalParameters.modelVersion = parameters.get < std::string >("idmodele");
 
-    context->begin = utils::DateTime::toJulianDayNumber(begin);
-    context->end = utils::DateTime::toJulianDayNumber(end);
-    context->simulator = new model::kernel::Simulator(model, globalParameters);
+//    context->begin = utils::DateTime::toJulianDayNumber(begin);
+//    context->end = utils::DateTime::toJulianDayNumber(end);
+//    context->simulator = new model::kernel::Simulator(model, globalParameters);
 
-    context->simulator->attachView("global", new model::observer::GlobalView());
-    context->simulator->init(context->begin, parameters);
-    return XPtr < Context >(context, true);
-}
+//    context->simulator->attachView("global", new model::observer::GlobalView());
+//    context->simulator->init(context->begin, parameters);
+//    return XPtr < Context >(context, true);
+//}
 
 // [[Rcpp::export]]
 XPtr < Context > rcpp_init_from_database(Rcpp::String name)
