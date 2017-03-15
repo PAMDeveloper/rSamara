@@ -293,8 +293,13 @@ List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
     CharacterVector names = dfParameters[0];
     CharacterVector values = dfParameters[1];
     for (int i = 0; i < names.size(); ++i) {
-      std::cout << names(i) << " " << values(i) << std::endl;
-        //parameters.getRawParameters()->insert(names(i), values(i));
+      //std::cout << names(i) << " " << values(i) << std::endl;
+        parameters.getRawParameters()->insert(
+            std::pair<std::string,std::string>(
+                Rcpp::as<std::string>(names(i)),
+                Rcpp::as<std::string>(values(i))
+            )
+            );
     }
 
     NumericVector TMax = dfMeteo[0];
@@ -314,9 +319,12 @@ List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
       parameters.meteoValues.push_back(c);
     }
 
+    std::cout << parameters.get<std::string>("datedebut") << "\n"
+              << parameters.get<std::string>("datefin") << std::endl;
     double begin = utils::DateTime::toJulianDayNumber(
       parameters.get<std::string>("datedebut"));
-    double end = utils::DateTime::toJulianDayNumber(parameters.get<std::string>("datedefin"));
+    double end = utils::DateTime::toJulianDayNumber(
+      parameters.get<std::string>("datefin"));
     model::kernel::Simulator * simulator = new model::kernel::Simulator(model, globalParameters);
     simulator->attachView("global", new model::observer::GlobalView());
     simulator->init(begin, parameters);
