@@ -22,7 +22,7 @@
 
 #include <Rcpp.h>
 #include <Rinternals.h>
-
+#include <cmath>
 #include "rsamara_types.hpp"
 
 #include <samara/model/kernel/Model.hpp>
@@ -45,6 +45,11 @@ static void format_dates(const model::models::ModelParameters& parameters,
                                  end);
 }
 
+double round(double value, int digits)
+{
+  return floor(value * pow(10, digits) + 0.5) / pow(10, digits);
+}
+
 // [[Rcpp::export]]
 List getParameters_from_database(Rcpp::String name)
 {
@@ -60,7 +65,21 @@ List getParameters_from_database(Rcpp::String name)
         std::string key = it.first;
         std::string value = it.second;
         names.push_back(key);
+
+        /*try
+        {
+          double val = round(parameters.get<double>(key), 4);
+          char buffer[32];
+          snprintf(buffer, sizeof(buffer), "%g", val);
+          values.push_back(buffer);
+          std::cout << key << " " << buffer << std::endl;
+        }
+        catch(...) {
+          std::string v = parameters.get<std::string>(key);
+          values.push_back(value);
+        }*/
         values.push_back(value);
+
     }
 
     DataFrame df = DataFrame::create(Named("Name")=names,Named("Values")=values);
@@ -319,8 +338,8 @@ List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
       parameters.meteoValues.push_back(c);
     }
 
-    std::cout << parameters.get<std::string>("datedebut") << "\n"
-              << parameters.get<std::string>("datefin") << std::endl;
+    /*std::cout << parameters.get<std::string>("datedebut") << "\n"
+                << parameters.get<std::string>("datefin") << std::endl;*/
     double begin = utils::DateTime::toJulianDayNumber(
       parameters.get<std::string>("datedebut"));
     double end = utils::DateTime::toJulianDayNumber(
@@ -329,6 +348,11 @@ List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
     simulator->attachView("global", new model::observer::GlobalView());
     simulator->init(begin, parameters);
     simulator->run(begin, end);
+
+
+    for(auto it = parameters.getRawParameters()->begin(); it != parameters.getRawParameters()->end(); ++it) {
+      std::cout << it->first << " " << it->second << "\n";
+    }
 
     const model::observer::Observer& observer = simulator->observer();
     const model::observer::Observer::Views& views = observer.views();

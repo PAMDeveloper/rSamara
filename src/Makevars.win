@@ -1,9 +1,9 @@
 ifeq "$(WIN)" "64"
 PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"../../samara/src" -I"../../artis/src" -I"../../../ext_libs/include" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
-PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"../../../ext_libs/mingw-4.9.3/x64/shared" -L"../../../libs/mingw-4.9.3/x64/static" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -lartis -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -lpq -lsamara -std=c++11
+PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"../../../ext_libs/mingw-4.9.3/x64/shared" -L"../../../libs/mingw-4.9.3/x64/static" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -lartis -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -llibpq -lsamara -std=c++11
 else
 PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"../../samara/src" -I"../../artis/src" -I"../../../ext_libs/include" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
-PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"../../../ext_libs/mingw-4.9.3/x86/shared" -L"../../../libs/mingw-4.9.3/x86/static" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -lartis -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -lpq -lsamara -std=c++11
+PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"../../../ext_libs/mingw-4.9.3/x86/shared" -L"../../../libs/mingw-4.9.3/x86/static" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -lartis -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 -lecpg -lecpg_compat -lpgtypes -llibpq -lsamara -std=c++11
 endif
 
 
