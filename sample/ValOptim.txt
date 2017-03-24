@@ -1,0 +1,5 @@
+Epsib	3	8
+Ict	0.5	2.5
+MGR_init	8	14
+plasto_init	40	90
+SLAp	20	80
