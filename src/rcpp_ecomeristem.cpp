@@ -47,11 +47,13 @@ static void format_dates(const model::models::ModelParameters& parameters,
                                  end);
 }
 
-static bool is_number(const std::string& s)
-{
-  std::string::const_iterator it = s.begin();
-  while (it != s.end() && std::isdigit(*it)) ++it;
-  return !s.empty() && it == s.end();
+static bool is_number(const std::string& s) {
+  try {
+    std::stod(s);
+  } catch(...) {
+    return false;
+  }
+  return true;
 }
 
 static double cint(double x){
@@ -80,9 +82,13 @@ List getParameters_from_files(Rcpp::String folder)
     for(auto const& it: *paramMap){
         std::string key = it.first;
         std::string value = it.second;
-        if(is_number(value)) {
-          value = boost::lexical_cast<std::string>(round(std::stod(value.c_str()),4));
+        std::cout << key << ":";
+        std::cout << value;
+        if(is_number(value) && key.compare("BeginDate") != 0 && key.compare("EndDate") != 0)  {
+          value = std::to_string(round(std::stod(value.c_str()),4));
+          std::cout << " number" << std::endl;
         }
+
         names.push_back(key);
         values.push_back(value);
     }

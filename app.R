@@ -17,59 +17,68 @@ result = recomeristem::rcpp_run_from_dataframe(params, meteo)[[1]]
 
 # Define UI for application that draws a histogram
 ui <- pageWithSidebar(
-  headerPanel('Examples of DataTables'),
+  headerPanel('Ecomeristem results'),
   sidebarPanel(
     tabsetPanel(
-      tabPanel('mtcars',
-               dataTableOutput("mytable2")),
-      tabPanel('iris',
+      tabPanel('Parameters',
                dataTableOutput("mytable3")),
+      tabPanel('Meteo',
+               dataTableOutput("mytable2")),
       tabPanel(
-        'variables',
+        'Results',
         fluidPage(
           checkboxGroupInput('show_vars',
                            'Columns in result to show:',
                            names(result),
-                           selected = names(result))
+                           selected = names(result)),
+          actionLink("selectall","Select All")
         )
       )
     )
   ),
   mainPanel(
-    tabPanel('diamonds',
-             dataTableOutput("mytable1"))
-    # 
-    
-    # helpText('For the diamonds data, we can select variables
-    #          to show in the table; for the mtcars example, we
-    #          use orderClasses = TRUE so that sorted columns 
-    #          are colored since they have special CSS classes 
-    #          attached; for the iris data, we customize the 
-    #          length menu so we can display 5 rows per page.')
+    dataTableOutput("mytable1")
   )
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
-  
+server <- function(input, output, session) {
+
+  observe({
+    if(input$selectall == 0) return(NULL)
+    else if (input$selectall%%2 == 0)
+    {
+      updateCheckboxGroupInput(session,'show_vars',
+                               'Columns in result to show:',
+                               names(result))
+    }
+    else
+    {
+      updateCheckboxGroupInput(session,'show_vars',
+                               'Columns in result to show:',
+                               names(result),
+                               selected = names(result))
+    }
+  })
+
   # a large table, reative to input$show_vars
   # customize the length drop-down menu; display 5 rows per page by default
   output$mytable1 = renderDataTable({
     result[, input$show_vars, drop = FALSE]
   })
-  
+
   # sorted columns are colored now because CSS are attached to them
   output$mytable2 = renderDataTable({
     meteo
   }, options = list(orderClasses = TRUE))
-  
+
   # customize the length drop-down menu; display 5 rows per page by default
   output$mytable3 = renderDataTable({
     params
   }, options = list(lengthMenu = c(5, 30, 50), pageLength = 25))
-  
+
 }
 
-# Run the application 
+# Run the application
 shinyApp(ui = ui, server = server)
 
