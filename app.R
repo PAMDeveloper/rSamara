@@ -11,8 +11,8 @@ library(shiny)
 library(recomeristem)
 library(ggplot2)
 
-meteo = recomeristem::getMeteo_from_files("D:/Samples/ecomeristem_og_testSample")
-params = recomeristem::getParameters_from_files("D:/Samples/ecomeristem_og_testSample")
+meteo = recomeristem::getMeteo_from_files("sample")
+params = recomeristem::getParameters_from_files("sample")
 result = recomeristem::rcpp_run_from_dataframe(params, meteo)[[1]]
 
 # Define UI for application that draws a histogram
