@@ -20,10 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __RCPP_SAMARA_HPP
-#define __RCPP_SAMARA_HPP
-
-#include <samara/model/kernel/Simulator.hpp>
+#include <model/kernel/Simulator.hpp>
 
 struct Context
 {
@@ -34,4 +31,3 @@ struct Context
 
 typedef void* rhandle_t;
 
-#endif
