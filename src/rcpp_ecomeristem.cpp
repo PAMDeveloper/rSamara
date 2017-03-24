@@ -23,16 +23,18 @@
 #include <Rcpp.h>
 #include <Rinternals.h>
 
-#include "rsamara_types.hpp"
+#include "recomeristem_types.hpp"
 
-#include <samara/model/kernel/Model.hpp>
-#include <samara/model/kernel/Simulator.hpp>
-#include <samara/model/models/ModelParameters.hpp>
-#include <samara/model/observer/GlobalView.hpp>
-#include <samara/model/observer/Observer.hpp>
-#include <samara/utils/ParametersReader.hpp>
+#include <model/kernel/KernelModel.hpp>
+#include <model/kernel/Simulator.hpp>
+#include <model/models/ModelParameters.hpp>
+#include <model/observer/PlantView.hpp>
+#include <model/observer/View.hpp>
+#include <model/observer/Observer.hpp>
+#include <utils/ParametersReader.hpp>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace Rcpp;
 
@@ -45,12 +47,87 @@ static void format_dates(const model::models::ModelParameters& parameters,
                                  end);
 }
 
+static bool is_number(const std::string& s)
+{
+  std::string::const_iterator it = s.begin();
+  while (it != s.end() && std::isdigit(*it)) ++it;
+  return !s.empty() && it == s.end();
+}
+
+static double cint(double x){
+  if (modf(x,0)>=.5)
+    return x>=0?ceil(x):floor(x);
+  else
+    return x<0?ceil(x):floor(x);
+}
+
+static double round(double r,unsigned places){
+  double off=pow(10,places);
+  return cint(r*off)/off;
+}
+
+// [[Rcpp::export]]
+List getParameters_from_files(Rcpp::String folder)
+{
+    model::models::ModelParameters parameters;
+    utils::ParametersReader reader;
+    reader.loadParametersFromFiles(folder, parameters);
+
+    std::map < std::string, std::string > * paramMap = parameters.getRawParameters();
+    Rcpp::List result(paramMap->size());
+    Rcpp::CharacterVector names;
+    Rcpp::CharacterVector values;
+    for(auto const& it: *paramMap){
+        std::string key = it.first;
+        std::string value = it.second;
+        if(is_number(value)) {
+          value = boost::lexical_cast<std::string>(round(std::stod(value.c_str()),4));
+        }
+        names.push_back(key);
+        values.push_back(value);
+    }
+
+    DataFrame df = DataFrame::create(Named("Name")=names,Named("Values")=values);
+    return df;
+}
+
+
+// [[Rcpp::export]]
+List getMeteo_from_files(Rcpp::String folder)
+{
+    model::models::ModelParameters parameters;
+    utils::ParametersReader reader;
+    reader.loadParametersFromFiles(folder, parameters);
+
+    std::vector < model::models::Climate > * meteoValues = parameters.getMeteoValues();
+    Rcpp::List result(meteoValues->size());
+    CharacterVector names =  CharacterVector::create("Temperature", "Par", "Etp", "Irrigation", "P");
+    NumericVector Temperature, Par, Etp, Irrigation, P;
+
+    for(auto const& it: *meteoValues){
+        Temperature.push_back(it.Temperature);
+        Par.push_back(it.Par);
+        Etp.push_back(it.Etp);
+        Irrigation.push_back(it.Irrigation);
+        P.push_back(it.P);
+    }
+
+    DataFrame df = DataFrame::create(
+                Named("Temperature")=Temperature,
+                Named("Par")=Par,
+                Named("Etp")=Etp,
+                Named("Irrigation")=Irrigation,
+                Named("P")=P
+            );
+    return df;
+}
+
 // [[Rcpp::export]]
 List getParameters_from_database(Rcpp::String name)
 {
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
-    reader.loadFromDatabase(name, parameters);
+    reader.loadParametersFromProstgresql(name, parameters);
 
     std::map < std::string, std::string > * paramMap = parameters.getRawParameters();
     Rcpp::List result(paramMap->size());
@@ -73,39 +150,27 @@ List getMeteo_from_database(Rcpp::String name)
 {
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
-    reader.loadFromDatabase(name, parameters);
+    reader.loadParametersFromProstgresql(name, parameters);
 
-    std::vector < model::models::Climate > meteoValues = parameters.getMeteoValues();
-    Rcpp::List result(meteoValues.size());
-    CharacterVector names =  CharacterVector::create("TMax", "TMin", "TMoy", "HMax", "HMin", "HMoy", "Vt", "Ins", "Rg", "ETP", "Rain");
-    NumericVector TMax, TMin, TMoy, HMax, HMin, HMoy, Vt, Ins, Rg, ETP, Rain;
+    std::vector < model::models::Climate > * meteoValues = parameters.getMeteoValues();
+    Rcpp::List result(meteoValues->size());
+    CharacterVector names =  CharacterVector::create("Temperature", "Par", "Etp", "Irrigation", "P");
+    NumericVector Temperature, Par, Etp, Irrigation, P;
 
-    for(auto const& it: meteoValues){
-        TMax.push_back(it.TMax);
-        TMin.push_back(it.TMin);
-        TMoy.push_back(it.TMoy);
-        HMax.push_back(it.HMax);
-        HMin.push_back(it.HMin);
-        HMoy.push_back(it.HMoy);
-        Vt.push_back(it.Vt);
-        Ins.push_back(it.Ins);
-        Rg.push_back(it.Rg);
-        ETP.push_back(it.ETP);
-        Rain.push_back(it.Rain);
+    for(auto const& it: *meteoValues){
+        Temperature.push_back(it.Temperature);
+        Par.push_back(it.Par);
+        Etp.push_back(it.Etp);
+        Irrigation.push_back(it.Irrigation);
+        P.push_back(it.P);
     }
 
     DataFrame df = DataFrame::create(
-                Named("TMax")=TMax,
-                Named("TMin")=TMin,
-                Named("TMoy")=TMoy,
-                Named("HMax")=HMax,
-                Named("HMin")=HMin,
-                Named("HMoy")=HMoy,
-                Named("Vt")=Vt,
-                Named("Ins")=Ins,
-                Named("Rg")=Rg,
-                Named("ETP")=ETP,
-                Named("Rain")=Rain
+                Named("Temperature")=Temperature,
+                Named("Par")=Par,
+                Named("Etp")=Etp,
+                Named("Irrigation")=Irrigation,
+                Named("P")=P
             );
     return df;
 }
@@ -114,23 +179,24 @@ List getMeteo_from_database(Rcpp::String name)
 XPtr < Context > rcpp_init_from_database(Rcpp::String name)
 {
     Context* context = new Context;
-    samara::GlobalParameters globalParameters;
+    ecomeristem::GlobalParameters globalParameters;
     model::kernel::KernelModel* model = new model::kernel::KernelModel;
     model::models::ModelParameters parameters;
     utils::ParametersReader reader;
     std::string begin;
     std::string end;
 
-    reader.loadFromDatabase(name, parameters);
-    begin = parameters.get<std::string>("datedebut");
-    end = parameters.get<std::string>("datefin");
-    globalParameters.modelVersion = parameters.get < std::string >("idmodele");
+    reader.loadParametersFromProstgresql(name, parameters);
+    begin = parameters.get<std::string>("BeginDate");
+    end = parameters.get<std::string>("EndDate");
+//    globalParameters.modelVersion = parameters.get < std::string >("idmodele");
 
     context->begin = utils::DateTime::toJulianDayNumber(begin);
     context->end = utils::DateTime::toJulianDayNumber(end);
     context->simulator = new model::kernel::Simulator(model, globalParameters);
 
-    context->simulator->attachView("global", new model::observer::GlobalView());
+    model::observer::PlantView * view = new model::observer::PlantView();
+    context->simulator->attachView("global", view);
     context->simulator->init(context->begin, parameters);
     return XPtr < Context >(context, true);
 }
@@ -220,6 +286,7 @@ List rcpp_run(SEXP handle)
 
     const model::observer::Observer& observer = context->simulator->observer();
     const model::observer::Observer::Views& views = observer.views();
+
     Rcpp::List gresult(views.size());
     Rcpp::CharacterVector gnames;
     unsigned int gindex = 0;
@@ -286,7 +353,7 @@ List rcpp_run(SEXP handle)
 List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
 {
 
-    samara::GlobalParameters globalParameters;
+    ecomeristem::GlobalParameters globalParameters;
     model::kernel::KernelModel* model = new model::kernel::KernelModel;
     model::models::ModelParameters parameters;
 
@@ -302,31 +369,26 @@ List rcpp_run_from_dataframe(List dfParameters, List dfMeteo)
             );
     }
 
-    NumericVector TMax = dfMeteo[0];
-    NumericVector TMin = dfMeteo[1];
-    NumericVector TMoy = dfMeteo[2];
-    NumericVector HMax = dfMeteo[3];
-    NumericVector HMin = dfMeteo[4];
-    NumericVector HMoy = dfMeteo[5];
-    NumericVector Vt = dfMeteo[6];
-    NumericVector Ins = dfMeteo[7];
-    NumericVector Rg = dfMeteo[8];
-    NumericVector ETP = dfMeteo[9];
-    NumericVector Rain = dfMeteo[10];
+    NumericVector Temperature = dfMeteo[0];
+    NumericVector Par = dfMeteo[1];
+    NumericVector Etp = dfMeteo[2];
+    NumericVector Irrigation = dfMeteo[3];
+    NumericVector P = dfMeteo[4];
 
-    for (int i = 0; i < TMax.size(); ++i) {
-      model::models::Climate c(TMax(i), TMin(i), TMoy(i), HMax(i), HMin(i), HMoy(i), Vt(i), Ins(i), Rg(i), Rain(i));
+
+    for (int i = 0; i < Temperature.size(); ++i) {
+      model::models::Climate c(Temperature(i), Par(i), Etp(i), Irrigation(i), P(i));
       parameters.meteoValues.push_back(c);
     }
 
-    std::cout << parameters.get<std::string>("datedebut") << "\n"
-              << parameters.get<std::string>("datefin") << std::endl;
+    std::cout << parameters.get<std::string>("BeginDate") << "\n"
+              << parameters.get<std::string>("EndDate") << std::endl;
     double begin = utils::DateTime::toJulianDayNumber(
-      parameters.get<std::string>("datedebut"));
+      parameters.get<std::string>("BeginDate"));
     double end = utils::DateTime::toJulianDayNumber(
-      parameters.get<std::string>("datefin"));
+      parameters.get<std::string>("EndDate"));
     model::kernel::Simulator * simulator = new model::kernel::Simulator(model, globalParameters);
-    simulator->attachView("global", new model::observer::GlobalView());
+    simulator->attachView("global", new model::observer::PlantView());
     simulator->init(begin, parameters);
     simulator->run(begin, end);
 
