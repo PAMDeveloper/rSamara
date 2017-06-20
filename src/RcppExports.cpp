@@ -6,59 +6,145 @@
 
 using namespace Rcpp;
 
-// getParameters_from_database
-List getParameters_from_database(Rcpp::String name);
-RcppExport SEXP rsamara_getParameters_from_database(SEXP nameSEXP) {
+// DBSimulationParamsDF
+List DBSimulationParamsDF(Rcpp::String idsimulation);
+RcppExport SEXP rsamara_DBSimulationParamsDF(SEXP idsimulationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::String >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(getParameters_from_database(name));
+    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBSimulationParamsDF(idsimulation));
     return rcpp_result_gen;
 END_RCPP
 }
-// getMeteo_from_database
-List getMeteo_from_database(Rcpp::String name);
-RcppExport SEXP rsamara_getMeteo_from_database(SEXP nameSEXP) {
+// DBSimulationMeteoDF
+List DBSimulationMeteoDF(Rcpp::String idsimulation);
+RcppExport SEXP rsamara_DBSimulationMeteoDF(SEXP idsimulationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::String >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(getMeteo_from_database(name));
+    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBSimulationMeteoDF(idsimulation));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_init_from_database
-XPtr < Context > rcpp_init_from_database(Rcpp::String name);
-RcppExport SEXP rsamara_rcpp_init_from_database(SEXP nameSEXP) {
+// DBSimulationIdDF
+List DBSimulationIdDF(Rcpp::String idsimulation);
+RcppExport SEXP rsamara_DBSimulationIdDF(SEXP idsimulationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::String >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_init_from_database(name));
+    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBSimulationIdDF(idsimulation));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_run
-List rcpp_run(SEXP handle);
-RcppExport SEXP rsamara_rcpp_run(SEXP handleSEXP) {
+// DBSimpleSimulationParamsDF
+List DBSimpleSimulationParamsDF(Rcpp::String idsimulation);
+RcppExport SEXP rsamara_DBSimpleSimulationParamsDF(SEXP idsimulationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type handle(handleSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_run(handle));
+    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBSimpleSimulationParamsDF(idsimulation));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_run_from_dataframe
-List rcpp_run_from_dataframe(List dfParameters, List dfMeteo);
-RcppExport SEXP rsamara_rcpp_run_from_dataframe(SEXP dfParametersSEXP, SEXP dfMeteoSEXP) {
+// DBVarietyDF
+List DBVarietyDF(Rcpp::String idvariete);
+RcppExport SEXP rsamara_DBVarietyDF(SEXP idvarieteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type dfParameters(dfParametersSEXP);
-    Rcpp::traits::input_parameter< List >::type dfMeteo(dfMeteoSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_run_from_dataframe(dfParameters, dfMeteo));
+    Rcpp::traits::input_parameter< Rcpp::String >::type idvariete(idvarieteSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBVarietyDF(idvariete));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DBStationDF
+List DBStationDF(Rcpp::String codestation);
+RcppExport SEXP rsamara_DBStationDF(SEXP codestationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type codestation(codestationSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBStationDF(codestation));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DBPlotDF
+List DBPlotDF(Rcpp::String idparcelle);
+RcppExport SEXP rsamara_DBPlotDF(SEXP idparcelleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type idparcelle(idparcelleSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBPlotDF(idparcelle));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DBItineraryDF
+List DBItineraryDF(Rcpp::String iditinerairetechnique);
+RcppExport SEXP rsamara_DBItineraryDF(SEXP iditinerairetechniqueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type iditinerairetechnique(iditinerairetechniqueSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBItineraryDF(iditinerairetechnique));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DBMeteoDF
+List DBMeteoDF(Rcpp::String codestation, Rcpp::String beginDate, Rcpp::String endDate);
+RcppExport SEXP rsamara_DBMeteoDF(SEXP codestationSEXP, SEXP beginDateSEXP, SEXP endDateSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type codestation(codestationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type beginDate(beginDateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type endDate(endDateSEXP);
+    rcpp_result_gen = Rcpp::wrap(DBMeteoDF(codestation, beginDate, endDate));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runDB
+List runDB(Rcpp::String idsimulation);
+RcppExport SEXP rsamara_runDB(SEXP idsimulationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(runDB(idsimulation));
+    return rcpp_result_gen;
+END_RCPP
+}
+// run2DF
+List run2DF(List params, List meteo);
+RcppExport SEXP rsamara_run2DF(SEXP paramsSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(run2DF(params, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runDF
+List runDF(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo);
+RcppExport SEXP rsamara_runDF(SEXP from_dateSEXP, SEXP to_dateSEXP, SEXP simulationSEXP, SEXP varietySEXP, SEXP plotSEXP, SEXP itinerarySEXP, SEXP stationSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type from_date(from_dateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type to_date(to_dateSEXP);
+    Rcpp::traits::input_parameter< List >::type simulation(simulationSEXP);
+    Rcpp::traits::input_parameter< List >::type variety(varietySEXP);
+    Rcpp::traits::input_parameter< List >::type plot(plotSEXP);
+    Rcpp::traits::input_parameter< List >::type itinerary(itinerarySEXP);
+    Rcpp::traits::input_parameter< List >::type station(stationSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runDF(from_date, to_date, simulation, variety, plot, itinerary, station, meteo));
     return rcpp_result_gen;
 END_RCPP
 }
