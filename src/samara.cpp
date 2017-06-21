@@ -44,11 +44,13 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
     vector <  vector <double> > currentResults;
 
     bool crop = false;
-    for (DateEnCours; DateEnCours < DateFinSimul; DateEnCours++) {
+    for (DateEnCours; DateEnCours <= DateFinSimul; DateEnCours++) {
 
 //        std::string currentDate = DateTime::toJulianDayFmt(DateEnCours, DateFormat::DATE_FORMAT_YMD);
         TMax = parameters->getClimate(DateEnCours-DateDebutSimul).TMax;
-        set_meteo_vars(parameters, DateEnCours-DateDebutSimul);
+        set_meteo_vars(parameters, DateEnCours-DateDebutSimul,
+                       TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
+                       Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
         NbJAS = DateEnCours - DateSemis;
 
         //crop entity
@@ -60,7 +62,11 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
             crop = true;
         }
         eval_Par(DateEnCours);
-        EToFao();
+        EToFao(ETP, Altitude, RgMax, RgCalc,
+               TMin, TMax,
+               HMin, HMax, HMoyCalc,
+               TMoyCalc, Vt, ETo,
+               TMoyPrec, VPDCalc);
 
         if(crop) Riz::EvolPhenoPSPStress(SumPP, PPSens, SumDegreDayCor, SDJLevee, SDJBVP, SDJRPR, SDJMatu1, SDJMatu2, StockSurface, TxRuSurfGermi, RuSurf,
                                     DateEnCours, DateSemis, StockTotal, NumPhase, SumDDPhasePrec, SeuilTemp, ChangePhase, SeuilTempSsPhase, ChangeSsPhase, NumSsPhase);
@@ -111,7 +117,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
         if(crop)risocas::RS_EvalAssimPot_V2_1(PARIntercepte, Par, Conversion, TMax, TMin, TBase, TOpt1, DayLength, StressCold, CO2Exp, Ca, CO2Cp, SlaMin, Sla, CoeffAssimSla,
                                       AssimPot, CoeffCO2Assim);
 
-        risocas::RS_EvalCstrAssim(Cstr, ASScstr, CstrAssim);
+        if (crop) risocas::RS_EvalCstrAssim(Cstr, ASScstr, CstrAssim);
         if (crop) risocas::RS_EvalAssim(AssimPot, CstrAssim, Assim);
 
         risocas::RS_TransplantingShock_V2(CounterNursery, CoeffTransplantingShock, Assim);
@@ -261,7 +267,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
         values.push_back(j);
     }
     results.push_back(values);
-    for (int i = 0; i < names.size(); ++i) {
+    for (int i = 0; i < names.size()-1; ++i) {
         vector <double> values;
         for (int j = 0; j < currentResults.size(); ++j) {
             values.push_back(currentResults[j][i]);
@@ -446,7 +452,10 @@ void reset_variables() {
     DryMatAboveGroundTotPop = 0;
 }
 
-void set_meteo_vars(SamaraParameters * parameters, double t) {
+void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
+                    , double &HMax, double &HMin, double &HMoy
+                    , double &Vt, double &Ins, double &Rg, double &ETP
+                    , double &Pluie, double & TMoyCalc, double & HMoyCalc) {
     TMax = parameters->getClimate(t).TMax;
     TMin = parameters->getClimate(t).TMin;
     TMoy = parameters->getClimate(t).TMoy; //local
@@ -528,7 +537,11 @@ void eval_Par(double t) {
 }
 
 
-void EToFao() {
+void EToFao(double const &ETP, double const &Alt, double const &RgMax, double const &RgCalc,
+            double const &TMin, double const &TMax,
+            double const &HMin, double const &HMax, double const &HMoyCalc,
+            double const &TMoyCalc, double const &Vt, double &ETo,
+            double &TMoyPrec, double &VPDCalc) {
     try {	 
       if ((ETP == NilValue)) {
 		  double eActual; double eSat; double RgRgMax; double TLat; double delta; double KPsy; double Eaero; double Erad; double Rn; double G;
@@ -546,8 +559,8 @@ void EToFao() {
           RgRgMax = 1;
         Rn = 0.77 * RgCalc - (1.35 * RgRgMax - 0.35) *
              (0.34 - 0.14 * std::pow(eActual, 0.5)) *
-             (pow(TMax + 273.16, 4) + std::pow(TMin + 273.16, 4)) * 2.45015 * std::pow(10
-                                                                                       , -9);
+             (pow(TMax + 273.16, 4) + std::pow(TMin + 273.16, 4)) * 2.45015 * std::pow(10, -9);
+
         // chaleur latente de vaporisation de l'eau
         TLat = 2.501 - 2.361 * std::pow(10, -3) * TMoyCalc;
         //  pente de la courbe de pression de vapeur saturante en kPa/°C
@@ -573,6 +586,7 @@ void EToFao() {
   }
 
 void kill_crop(){
+    CstrAssim = 0;
     NumPhase = 0;
     RelPotLeafLength = 0;
     RootFront = 0;
