@@ -36,7 +36,7 @@ class SamaraParameters {
 
     double getDouble(string s) {return doubles[s].first;}
     string getString(string s) {return strings[s].first;}
-    Climate getClimate(int t){return climatics[t];}
+    Climate getClimate(int t){return climatics[t+1];}
 };
 
 

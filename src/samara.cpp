@@ -12,7 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #endif
-
+#include <QDebug>
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters) {
 
     //Simu parameters
@@ -44,9 +44,20 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
     vector <  vector <double> > currentResults;
 
     bool crop = false;
-    for (DateEnCours; DateEnCours <= DateFinSimul; DateEnCours++) {
+    //Compute day before for TMoyPrec
+    set_meteo_vars(parameters, -1,
+                   TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
+                   Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
+    EToFao(ETP, Altitude, RgMax, RgCalc,
+           TMin, TMax,
+           HMin, HMax, HMoyCalc,
+           TMoyCalc, Vt, ETo,
+           TMoyPrec, VPDCalc);
+    //
 
-//        std::string currentDate = DateTime::toJulianDayFmt(DateEnCours, DateFormat::DATE_FORMAT_YMD);
+
+    //Main loop
+    for (DateEnCours; DateEnCours <= DateFinSimul; DateEnCours++) {
         TMax = parameters->getClimate(DateEnCours-DateDebutSimul).TMax;
         set_meteo_vars(parameters, DateEnCours-DateDebutSimul,
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
@@ -60,6 +71,10 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
                                                  CounterNursery, Density, DryMatStructLeafPop, DryMatStructSheathPop, DryMatStructRootPop, DryMatStructInternodePop,
                                                  DryMatStructPaniclePop, DryMatResInternodePop);
             crop = true;
+        }
+
+        if(DateEnCours - DateDebutSimul == 140) {
+            qDebug() << DateEnCours;
         }
         eval_Par(DateEnCours);
         EToFao(ETP, Altitude, RgMax, RgCalc,
@@ -267,6 +282,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
         values.push_back(j);
     }
     results.push_back(values);
+
     for (int i = 0; i < names.size()-1; ++i) {
         vector <double> values;
         for (int j = 0; j < currentResults.size(); ++j) {

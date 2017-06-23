@@ -62,6 +62,7 @@ public:
     }
 
     void load_meteo(string codestation, string start, string end) {
+        start = JulianDayConverter::toJulianDay( JulianDayConverter::toJulianDayNumber(start) - 1);
         std::string meteo_query = query("meteo","codestation",codestation) +
                 " AND jour >= '" + start + "' AND jour <= '" +
                 end + "' ORDER BY jour ASC";

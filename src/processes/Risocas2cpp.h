@@ -2976,8 +2976,7 @@ void RS_EvolGrowthTot_V2_1(double const &NumPhase, double const &GrowthStructLea
             A_GrowthStructTot = GrowthStructTotPop;
 
         }
-        GrowthDryMatPop = GrowthStructTotPop + /*NEW LB*/ (DryMatResInternodePop - DryMatResInternodePopOld) /*/NEW LB*//*DELETED*/ /*GrowthResInternodePop*/ +
-                PanicleFilPop;
+        GrowthDryMatPop = GrowthStructTotPop + /*NEW LB*/ (DryMatResInternodePop - DryMatResInternodePopOld) /*/NEW LB*//*DELETED*/ /*GrowthResInternodePop*/ + PanicleFilPop;
 
     } catch (...) {
         error_message("RS_EvolGrowthTot_V2_1", URisocas);
@@ -3289,7 +3288,8 @@ void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, do
 }
 
 void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot, double const &GrowthResInternodePop,
-                                 double &GrowthStructTotPop, double &AssimSurplus, double &GrowthStructLeafPop, double &GrowthStructSheathPop, double &GrowthStructRootPop, double &GrowthStructInternodePop, double &GrowthStructPaniclePop, double &A_GrowthStructLeaf, double &A_GrowthStructTot, double &A_AssimSurplus) {
+                                 double &GrowthStructTotPop, double &AssimSurplus, double &GrowthStructLeafPop,
+                                 double &GrowthStructSheathPop, double &GrowthStructRootPop, double &GrowthStructInternodePop, double &GrowthStructPaniclePop, double &A_GrowthStructLeaf, double &A_GrowthStructTot, double &A_AssimSurplus) {
     try {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             GrowthStructTotPop = GrowthStructLeafPop + GrowthStructSheathPop +
@@ -3297,7 +3297,6 @@ void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot
                     GrowthStructInternodePop + GrowthStructPaniclePop /*NEW P*/ + GrowthResInternodePop;
 
             A_GrowthStructTot = GrowthStructTotPop;
-
             AssimSurplus = max((SupplyTot - GrowthStructTotPop /*DELETED*//*- GrowthResInternodePop*/), 0.);
             A_AssimSurplus = max((SupplyTot - GrowthStructTotPop /*DELETED*//*- GrowthResInternodePop*/), 0.);
         }
