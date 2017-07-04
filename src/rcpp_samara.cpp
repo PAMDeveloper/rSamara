@@ -1,25 +1,3 @@
-/**
- * @file rcpp_samara.cpp
- * @author See the AUTHORS file
- */
-
-/*
-* Copyright (C) 2012-2017 ULCO http://www.univ-littoral.fr
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include <Rcpp.h>
 #include <Rinternals.h>
 #include "rsamara_types.hpp"
@@ -27,6 +5,48 @@
 using namespace Rcpp;
 using namespace std;
 
+
+void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list, string category) {
+    CharacterVector names = list[0];
+    NumericVector values = list[1];
+    for (int i = 0; i < names.size(); ++i) {
+        pair <double, string> token( values(i), category );
+        map.insert( pair<string, pair <double, string> >(
+                        Rcpp::as<string>(names(i)), token )
+                    );
+        //std::cout << Rcpp::as<string>(names(i)) << values(i) << std::endl;
+    }
+}
+
+void fillClimaticVectorWithList(vector < Climate > & climatics, List list) {
+    NumericVector TMax = list[0];
+    NumericVector TMin = list[1];
+    NumericVector TMoy = list[2];
+    NumericVector HMax = list[3];
+    NumericVector HMin = list[4];
+    NumericVector HMoy = list[5];
+    NumericVector Vt = list[6];
+    NumericVector Ins = list[7];
+    NumericVector Rg = list[8];
+    NumericVector Rain = list[9];
+    NumericVector ETP = list[10];
+    for (int i = 0; i < TMax.size(); ++i) {
+        Climate c(TMax(i), TMin(i), TMoy(i), HMax(i), HMin(i), HMoy(i), Vt(i), Ins(i), Rg(i), Rain(i), ETP(i));
+        climatics.push_back(c);
+    }
+}
+
+DataFrame resultToList(const pair <vector <string>, vector < vector <double> > > & results) {
+    CharacterVector names( results.first.begin(), results.first.end() );
+    List values(results.first.size());
+    for (int i = 0; i < results.first.size(); ++i) {
+        NumericVector vValues( results.second[i].begin(), results.second[i].end() );
+        values[i] = vValues;
+    }
+    DataFrame out(values);
+    out.attr("names") = names;
+    return out;
+}
 
 List DFFromDoubleMap(const map <string, pair <double, string> > & map, string category)
 {
@@ -190,71 +210,15 @@ List DBMeteoDF(Rcpp::String codestation, Rcpp::String beginDate, Rcpp::String en
     return result;
 }
 
-
-//List getFileParameters(Rcpp::String filepath, Rcpp::String id){}
-
-void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list, string category) {
-    CharacterVector names = list[0];
-    NumericVector values = list[1];
-    for (int i = 0; i < names.size(); ++i) {
-        pair <double, string> token( values(i), category );
-        map.insert( pair<string, pair <double, string> >(
-                        Rcpp::as<string>(names(i)), token )
-                    );
-        //std::cout << Rcpp::as<string>(names(i)) << values(i) << std::endl;
-    }
-}
-
-void fillClimaticVectorWithList(vector < Climate > & climatics, List list) {
-    NumericVector TMax = list[0];
-    NumericVector TMin = list[1];
-    NumericVector TMoy = list[2];
-    NumericVector HMax = list[3];
-    NumericVector HMin = list[4];
-    NumericVector HMoy = list[5];
-    NumericVector Vt = list[6];
-    NumericVector Ins = list[7];
-    NumericVector Rg = list[8];
-    NumericVector Rain = list[9];
-    NumericVector ETP = list[10];
-    for (int i = 0; i < TMax.size(); ++i) {
-        Climate c(TMax(i), TMin(i), TMoy(i), HMax(i), HMin(i), HMoy(i), Vt(i), Ins(i), Rg(i), Rain(i), ETP(i));
-        climatics.push_back(c);
-    }
-}
-
-DataFrame resultToList(const pair <vector <string>, vector < vector <double> > > & results) {
-    CharacterVector names( results.first.begin(), results.first.end() );
-    List values(results.first.size());
-    for (int i = 0; i < results.first.size(); ++i) {
-        NumericVector vValues( results.second[i].begin(), results.second[i].end() );
-        values[i] = vValues;
-    }
-    DataFrame out(values);
-    out.attr("names") = names;
-    return out;
-}
-
-
-#include <chrono>
-#include <ctime>
-
 // [[Rcpp::export]]
 List runDB(Rcpp::String idsimulation)
 {
-    auto startC = std::chrono::high_resolution_clock::now();
     SamaraParameters * parameters = new SamaraParameters();
     PSQLLoader * loader = new PSQLLoader(parameters);
     loader->load_complete_simulation(idsimulation);
-    auto endC = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli>  elapsed_seconds = endC-startC;
-    std::cout << "parameters loaded in " << elapsed_seconds.count() << "ms\n";
     startC = endC;
     init_parameters(parameters);
     List result = resultToList(run_samara_2_1(parameters));
-    endC = std::chrono::high_resolution_clock::now();
-    elapsed_seconds = endC-startC;
-    std::cout << "simulation done in " << elapsed_seconds.count() << "ms\n";
     delete parameters;
     delete loader;
     return result;
@@ -300,17 +264,7 @@ List runDF(Rcpp::String from_date, Rcpp::String to_date, List simulation, List v
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+//List getFileParameters(Rcpp::String filepath, Rcpp::String id){}
 
 
 

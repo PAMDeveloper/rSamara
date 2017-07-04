@@ -28,45 +28,21 @@ public:
         return "SELECT * FROM " + table + " WHERE " + key + " = '" + value + "'";
     }
 
-    void load_complete_simulation(string idsimulation) {
-        load_simulation(idsimulation);
-        load_variety(parameters->getString("idvariete"));
-        load_station(parameters->getString("codestation"));
-        load_plot(parameters->getString("idparcelle"));
-        load_itinerary(parameters->getString("iditinerairetechnique"));
-        load_meteo(parameters->getString("codestation"),
-                   parameters->getString("datedebut"),
-                   parameters->getString("datefin"));
+    string list_query(string table, string key) {
+        return "SELECT DISTINCT " + key + " FROM " + table;
     }
 
-    //@TODO bouger KPAR dans la station ou ailleurs
-    void load_simulation(string idsimulation) {
-        load_record(query("simulation","idsimulation",idsimulation), "simulation");
-    }
+    vector<string> load_list(string query) {
+        PGresult* result = PQexec(db, query.c_str());
+        if (PQresultStatus(result) != PGRES_TUPLES_OK){
+            cout << "Error: " << PQerrorMessage(db) << endl;
+        }
 
-    void load_variety(string idvariete) {
-        load_record(query("variete","idvariete",idvariete), "variete");
-    }
-
-    void load_station(string codestation) {
-        load_record(query("station","codestation",codestation), "station");
-    }
-
-    void load_plot(string idparcelle) {
-        load_record(query("parcelle","idparcelle",idparcelle), "parcelle");
-        load_record(query("typesol","codetypesol",parameters->getString("codetypesol")), "parcelle");
-    }
-
-    void load_itinerary(string iditinerairetechnique) {
-        load_record(query("itinerairetechnique","iditinerairetechnique",iditinerairetechnique), "itinerairetechnique");
-    }
-
-    void load_meteo(string codestation, string start, string end) {
-        start = JulianDayConverter::toJulianDay( JulianDayConverter::toJulianDayNumber(start) - 1);
-        std::string meteo_query = query("meteo","codestation",codestation) +
-                " AND jour >= '" + start + "' AND jour <= '" +
-                end + "' ORDER BY jour ASC";
-        load_records(meteo_query);
+        vector<string> list;
+        for (int row = 0; row < PQntuples(result); ++row) {
+            list.push_back(PQgetvalue(result, row, 0));
+        }
+        return list;
     }
 
     void load_records(string query) {
@@ -117,6 +93,70 @@ public:
             }
         }
     }
+
+
+    void load_complete_simulation(string idsimulation) {
+        load_simulation(idsimulation);
+        load_variety(parameters->getString("idvariete"));
+        load_station(parameters->getString("codestation"));
+        load_plot(parameters->getString("idparcelle"));
+        load_itinerary(parameters->getString("iditinerairetechnique"));
+        load_meteo(parameters->getString("codestation"),
+                   parameters->getString("datedebut"),
+                   parameters->getString("datefin"));
+    }
+
+    vector<string> load_simulations_list() {
+        return load_list(list_query("simulation","idsimulation"));
+    }
+
+    vector<string>  load_variety_list() {
+        return load_list(list_query("variete","idvariete"));
+    }
+
+    vector<string>  load_station_list() {
+        return load_list(list_query("station","codestation"));
+    }
+
+    vector<string> load_plot_list() {
+        return load_list(list_query("parcelle","idparcelle"));
+    }
+
+    vector<string>  load_itinerary_list() {
+        return load_list(list_query("itinerairetechnique","iditinerairetechnique"));
+    }
+
+    //@TODO bouger KPAR dans la station ou ailleurs
+    void load_simulation(string idsimulation) {
+        load_record(query("simulation","idsimulation",idsimulation), "simulation");
+    }
+
+    void load_variety(string idvariete) {
+        load_record(query("variete","idvariete",idvariete), "variete");
+    }
+
+    void load_station(string codestation) {
+        load_record(query("station","codestation",codestation), "station");
+    }
+
+    void load_plot(string idparcelle) {
+        load_record(query("parcelle","idparcelle",idparcelle), "parcelle");
+        load_record(query("typesol","codetypesol",parameters->getString("codetypesol")), "parcelle");
+    }
+
+    void load_itinerary(string iditinerairetechnique) {
+        load_record(query("itinerairetechnique","iditinerairetechnique",iditinerairetechnique), "itinerairetechnique");
+    }
+
+    void load_meteo(string codestation, string start, string end) {
+        start = JulianDayConverter::toJulianDay( JulianDayConverter::toJulianDayNumber(start) - 1);
+        std::string meteo_query = query("meteo","codestation",codestation) +
+                " AND jour >= '" + start + "' AND jour <= '" +
+                end + "' ORDER BY jour ASC";
+        load_records(meteo_query);
+    }
+
+
 };
 
 #endif // PSQLLOADER_H
