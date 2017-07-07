@@ -34,6 +34,20 @@ class SamaraParameters {
     map < string, pair < double, string > > doubles;
     map < string, pair < string, string > > strings;
 
+    void clearParameters(string s) {
+        for(auto it = doubles.begin(), ite = doubles.end(); it != ite;) {
+          if(it->second.second == s) it = doubles.erase(it);
+          else ++it;
+        }
+
+        for(auto it = strings.begin(), ite = strings.end(); it != ite;) {
+          if(it->second.second == s) it = strings.erase(it);
+          else ++it;
+        }
+    }
+
+    void clearMeteo() {climatics.clear();}
+
     double getDouble(string s) {return doubles[s].first;}
     string getString(string s) {return strings[s].first;}
     Climate getClimate(int t){return climatics[t+1];}

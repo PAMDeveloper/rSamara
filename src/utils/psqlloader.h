@@ -149,11 +149,24 @@ public:
     }
 
     void load_meteo(string codestation, string start, string end) {
+        parameters->clearMeteo();
         start = JulianDayConverter::toJulianDay( JulianDayConverter::toJulianDayNumber(start) - 1);
         std::string meteo_query = query("meteo","codestation",codestation) +
                 " AND jour >= '" + start + "' AND jour <= '" +
                 end + "' ORDER BY jour ASC";
         load_records(meteo_query);
+        std::cout << meteo_query << std::endl;
+    }
+
+    void load_meteo(string codestation, double startJulian, double endJulian) {
+        parameters->clearMeteo();
+        string start = JulianDayConverter::toJulianDayFmt( startJulian - 1, DATE_FORMAT_YMD);
+        string end = JulianDayConverter::toJulianDayFmt( endJulian, DATE_FORMAT_YMD );
+        std::string meteo_query = query("meteo","codestation",codestation) +
+                " AND jour >= '" + start + "' AND jour <= '" +
+                end + "' ORDER BY jour ASC";
+        load_records(meteo_query);
+        std::cout << meteo_query << std::endl;
     }
 
 
