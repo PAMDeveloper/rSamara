@@ -37,10 +37,6 @@ DBMeteoDF <- function(codestation, beginDate, endDate) {
     .Call('rsamara_DBMeteoDF', PACKAGE = 'rsamara', codestation, beginDate, endDate)
 }
 
-runDB <- function(idsimulation) {
-    .Call('rsamara_runDB', PACKAGE = 'rsamara', idsimulation)
-}
-
 run2DF <- function(params, meteo) {
     .Call('rsamara_run2DF', PACKAGE = 'rsamara', params, meteo)
 }

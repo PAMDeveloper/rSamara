@@ -107,17 +107,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// runDB
-List runDB(Rcpp::String idsimulation);
-RcppExport SEXP rsamara_runDB(SEXP idsimulationSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::String >::type idsimulation(idsimulationSEXP);
-    rcpp_result_gen = Rcpp::wrap(runDB(idsimulation));
-    return rcpp_result_gen;
-END_RCPP
-}
 // run2DF
 List run2DF(List params, List meteo);
 RcppExport SEXP rsamara_run2DF(SEXP paramsSEXP, SEXP meteoSEXP) {

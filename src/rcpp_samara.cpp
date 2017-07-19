@@ -209,7 +209,7 @@ List DBMeteoDF(Rcpp::String codestation, Rcpp::String beginDate, Rcpp::String en
     delete loader;
     return result;
 }
-
+/*
 // [[Rcpp::export]]
 List runDB(Rcpp::String idsimulation)
 {
@@ -222,7 +222,7 @@ List runDB(Rcpp::String idsimulation)
     delete parameters;
     delete loader;
     return result;
-}
+}*/
 
 // [[Rcpp::export]]
 List run2DF(List params, List meteo)

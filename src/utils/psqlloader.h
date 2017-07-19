@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <libpq-fe.h>
+#include "simulationloader.h"
 #include "../parameters.h"
 #include "julianconverter.h"
 
@@ -12,16 +13,16 @@
 
 using namespace std;
 
-class PSQLLoader
+class PSQLLoader : public AbstractSimulationLoader
 {
 public:
     PGconn * db;
-    SamaraParameters * parameters;
+//    SamaraParameters * parameters;
 
-    PSQLLoader(SamaraParameters * params) {
+    PSQLLoader(SamaraParameters * params)
+        : AbstractSimulationLoader(params) {
         string connection_string = "host=localhost port=5432 dbname=samara user=user_samara password=samarapassword";
         db = PQconnectdb(connection_string.c_str());
-        parameters = params;
     }
 
     string query(string table, string key, string value) {
@@ -106,7 +107,7 @@ public:
                    parameters->getString("datefin"));
     }
 
-    vector<string> load_simulations_list() {
+    vector<string> load_simulation_list() {
         return load_list(list_query("simulation","idsimulation"));
     }
 

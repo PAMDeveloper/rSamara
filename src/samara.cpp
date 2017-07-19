@@ -12,7 +12,6 @@
 #include <QFile>
 #include <QTextStream>
 #endif
-#include <QDebug>
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters) {
 
     //Simu parameters
@@ -73,9 +72,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
             crop = true;
         }
 
-        if(DateEnCours - DateDebutSimul == 140) {
-            qDebug() << DateEnCours;
-        }
+
         eval_Par(DateEnCours);
         EToFao(ETP, Altitude, RgMax, RgCalc,
                TMin, TMax,
@@ -558,7 +555,7 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             double const &HMin, double const &HMax, double const &HMoyCalc,
             double const &TMoyCalc, double const &Vt, double &ETo,
             double &TMoyPrec, double &VPDCalc) {
-    try {	 
+    try {
       if ((ETP == NilValue)) {
 		  double eActual; double eSat; double RgRgMax; double TLat; double delta; double KPsy; double Eaero; double Erad; double Rn; double G;
         eSat = 0.3054 * (exp(17.27 * TMax * 1.0 / (TMax + 237.3)) +
