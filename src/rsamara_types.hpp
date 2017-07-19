@@ -23,15 +23,18 @@
 #ifndef __RCPP_SAMARA_HPP
 #define __RCPP_SAMARA_HPP
 
-#include <samara/model/kernel/Simulator.hpp>
 
-struct Context
-{
-    model::kernel::Simulator* simulator;
-    double begin;
-    double end;
-};
+#include "utils/psqlloader.h"
+#include "samara.h"
 
-typedef void* rhandle_t;
+//struct Context
+//{
+//    double begin;
+//    double end;
+//    double sowing;
+
+//};
+
+//typedef void* rhandle_t;
 
 #endif
