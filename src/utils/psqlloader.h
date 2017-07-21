@@ -13,14 +13,14 @@
 
 using namespace std;
 
-class PSQLLoader : public AbstractSimulationLoader
+class PSQLLoader /*: public AbstractSimulationLoader*/
 {
 public:
     PGconn * db;
-//    SamaraParameters * parameters;
+    SamaraParameters * parameters;
 
     PSQLLoader(SamaraParameters * params)
-        : AbstractSimulationLoader(params) {
+        : parameters(params) {
         string connection_string = "host=localhost port=5432 dbname=samara user=user_samara password=samarapassword";
         db = PQconnectdb(connection_string.c_str());
     }
