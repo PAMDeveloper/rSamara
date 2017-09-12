@@ -2,7 +2,7 @@
 #Returns best value for each parameter, best fitness value, plots
 #Authors : Florian Larue, Grégory Beurier, Lauriane Rouan -- (PAM, AGAP, BIOS, CIRAD)
 
-source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
+source('D:/PAMStudio_dev/git/rSamara/R/AccessLoader.R')
 
 #Install and load packages
 list.of.packages <- c("parallel","pso", "rgenoud", "ABCoptim", "DEoptim")
@@ -15,20 +15,20 @@ lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
 
 #Data
 #direct from simulation table
-initSim('D:/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
+#initSim('D:/PAMStudio_dev/git/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
 
 #detailled load
 #initSimDetails('D:/BdD_Sorghum_10geno.accdb', 'Sotuba-2011-D1', '06SB15_12fev13', 'SotubaPCDA', '270130', '2011/05/01', '2011/12/31')
 
 #separated load
-#connectDB('D:/BdD_Sorghum_10geno.accdb')
-#.GlobalEnv$params <- loadSimDetails('Sotuba-2011-D2', '06SB15_12fev13_', 'SotubaPCDA_SV21', '270130', '2011/05/01', '2011/12/31')
-#.GlobalEnv$meteo <- loadMeteo('270130', '2011/05/01', '2011/12/31')
-#.GlobalEnv$obs <- loadObs('Sotuba-2011-D2', '06SB15_12fev13', '2011/05/01', '2011/12/31')
-#odbcCloseAll()
+connectDB('D:/PAMStudio_dev/git/BdD_Sorghum_10geno.accdb')
+.GlobalEnv$params <- loadSimDetails('Sotuba-2011-D2', '06SB15_12fev13_', 'SotubaPCDA_SV21', '270130', '2011/05/01', '2011/12/31')
+.GlobalEnv$meteo <- loadMeteo('270130', '2011/05/01', '2011/12/31')
+.GlobalEnv$obs <- loadObs('Sotuba-2011-D2', '06SB15_12fev13', '2011/05/01', '2011/12/31')
+odbcCloseAll()
 
 
-## ESTIMATE
+# ESTIMATE
 paramInit = params
 vObs = obs
 paramInitTrans = paramInit
@@ -56,7 +56,7 @@ Optim_Samara_funct <- function(p){
 }
 
 ##DE
-resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=5, strategy=2))
+resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=100, strategy=2))
 
 ##plots results
 varlist = c("drymatabovegroundpop", "drymatpanicletotpop", "drymatstempop", "drymatstructleafpop", "grainyieldpop", "lai", "sla")
