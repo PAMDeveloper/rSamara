@@ -58,13 +58,24 @@ public:
                                             map<string, double> constraints = map<string,double>(),
                                             string dayId = "obsplantdate")
     {
-        double dayMax = results.begin()->second.size();
+        double dayMin = results[dayId].front();
+        double dayMax = results[dayId].back();
+
+      //delete obs columns
         map<string, vector<double>> filteredVObs;
         for(auto const &token : vObs) {
             string * s = new string(token.first);
             transform(s->begin(), s->end(), s->begin(), ::tolower);
             if(results.find(*s) != results.end() || (keepDay && *s == dayId)) {
-                filteredVObs.insert( pair<string,vector<double> >(*s, vector<double>()) );
+                bool empty = true;
+                for(double val: token.second) {
+                  if(val != -999) {
+                    empty = false;
+                    break;
+                  }
+                }
+                if(!empty)
+                  filteredVObs.insert( pair<string,vector<double> >(*s, vector<double>()) );
             }
             delete s;
         }
@@ -72,8 +83,8 @@ public:
         for (int i = 0; i < vObs[dayId].size(); ++i) {
             bool valid = true;
 
-            valid &= vObs[dayId][i] <= dayMax;
-            if(valid){
+            valid &= (vObs[dayId][i] <= dayMax) && (vObs[dayId][i] >= dayMin);
+            /*if(valid){
                 for(auto const &token : filteredVObs)  {
                     string * s = new string(token.first);
                     transform(s->begin(), s->end(), s->begin(), ::tolower);
@@ -82,8 +93,9 @@ public:
                     }
                     delete s;
                 }
-            }
+            }*/
 
+            //copy valid lines
             if(valid){
                 for(auto token : filteredVObs) {
                     string * h = new string(token.first);
@@ -105,9 +117,12 @@ public:
                                               map<string, double> constraints = map<string,double>(),
                                               string dayId = "obsplantdate") {
 
-        map<string, vector<double>> filteredVObs = filterVObs(vObs, results, true, constraints, dayId);
+      double dayMin = results[dayId].front();
+      double dayMax = results[dayId].back();
 
-        map<string, vector<double>> reducedResults;
+      map<string, vector<double>> filteredVObs = filterVObs(vObs, results, true, constraints, dayId);
+      map<string, vector<double>> reducedResults;
+
         for(auto const &token : filteredVObs) {
             string s = token.first;
             transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -116,12 +131,17 @@ public:
             }
         }
 
+        for(auto key: reducedResults) {
+          std::cout << key.first << " ";
+        }
+        std::cout << filteredVObs[dayId].size() << " " << std::endl;
 
         for(auto const &r : reducedResults) {
             for (int i = 0; i < filteredVObs[dayId].size(); ++i) {
                 int day = filteredVObs[dayId][i];
-                if(day <= results[r.first].size())
-                    reducedResults[r.first].push_back(results[r.first][day-1]);
+                std::cout << day << " ";
+                if(day <= dayMax && day >= dayMin)
+                    reducedResults[r.first].push_back(results[r.first][day-dayMin]);
             }
         }
 

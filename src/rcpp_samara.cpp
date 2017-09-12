@@ -314,10 +314,29 @@ List runDF(Rcpp::String from_date, Rcpp::String to_date, List simulation, List v
 List rcpp_reduceVobs(List vObs, List results) {
   std::map <std::string, std::vector<double> > vObsMap;
   std::map <std::string, std::vector<double> > resultMap;
+
   vObsMap = mapFromDF(vObs);
   resultMap = mapFromDF(results);
+
+  /*for(auto key: resultMap) {
+    std::cout << key.first;
+    for( double val: key.second)
+      std::cout << val << " ";
+    std::cout << std::endl;
+  }*/
+
   ResultParser parser;
-  auto ret = parser.filterVObs(vObsMap,resultMap, false);
+  std::map<std::string, std::vector<double>>  ret = parser.filterVObs(vObsMap,resultMap, false);
+
+/*  std::cout << "*********************" << std::endl;
+  for(auto key: ret) {
+    std::cout << key.first;
+    for( double val: key.second)
+      std::cout << val << " ";
+    std::cout << std::endl;
+  }*/
+
+
   return mapOfVectorToDF(ret);
 }
 

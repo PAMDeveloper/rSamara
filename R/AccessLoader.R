@@ -7,6 +7,14 @@ accessFilePath = 'D:/BdD_Sorghum_10geno.accdb'
 connectionString = paste('Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=', accessFilePath, sep='')
 connection <- odbcDriverConnect(connectionString)
 
+
+# YYYY-MM-dd
+tojulianday <- function(dateStr)
+{
+  res = julian(as.Date(dateStr), as.Date("0001-01-01")) + 1721427
+  res
+}
+
 loadSimParams <- function(sim)
 {
   sqlQuery(connection,paste("SELECT * FROM simulation WHERE simcode='", sim,"'", sep=""))
@@ -49,18 +57,33 @@ loadmeteo <- function(wscode, beginDate, endDate)
   sqlQuery(connection,query)
 }
 
-loadobs <- function(trialcode, variety)
+loadObs <- function(trialcode, variety, startDate, endDate)
 {
-  sqlQuery(connection,paste("SELECT * FROM ObservationsSamara WHERE trialcode='", trialcode,"' AND varcode='", variety, "'", sep=""))
+  obs = sqlQuery(connection,paste("SELECT * FROM ObservationsSamara WHERE trialcode='", trialcode,
+                            "' AND varcode='", variety, "'",
+                            " AND obsplantdate > (#", startDate, "#)-2",
+                            " AND obsplantdate < #", endDate, "#+1",
+                            sep=""))
+  obs$trialcode <- NULL
+  obs$varcode <- NULL
+  obs$obsplantdate <- sapply(obs$obsplantdate, tojulianday)
+
+  obs
 }
 
-
-# YYYY-MM-dd
-tojulianday <- function(dateStr)
+loadSimObs <- function(simcode)
 {
-  res = julian(as.Date(dateStr), as.Date("0001-01-01")) + 1721427
+  sim = loadSimParams(simcode);
+  trialcode = sim$itkcode[1]
+  variety = sim$variety[1]
+  bDate = res$startingdate[1]
+  eDate = res$endingdate[1]
+
+  res = loadObs(trialcode, variety, bDate, eDate)
   res
 }
+
+
 
 loadSim <- function(simCode)
 {
