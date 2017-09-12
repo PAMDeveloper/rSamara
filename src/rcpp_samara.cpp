@@ -6,30 +6,59 @@ using namespace Rcpp;
 using namespace std;
 
 
+DataFrame mapOfVectorToDF(std::map<std::string, std::vector<double>> map) {
+  Rcpp::CharacterVector names;
+  List values(map.size());
+  int idx = 0;
+  for(auto const& it: map){
+    names.push_back(it.first);
+    NumericVector vec( it.second.begin(), it.second.end() );
+    values[idx] = vec;
+    idx++;
+  }
+  DataFrame df(values);
+  df.attr("names") = names;
+  return df;
+}
+
+map <string, vector <double > > mapFromDF(DataFrame list) {
+  map <string, vector <double > > map;
+  CharacterVector names = list.attr("names");
+  for (int i = 0; i < names.size(); ++i) {
+    std::vector<double> vec = as<std::vector<double> >(list[i]);
+    std::pair <std::string, std::vector<double> > token( Rcpp::as<string>(names(i)), vec );
+    map.insert( token );
+  }
+  return map;
+}
+
 void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list, string category) {
-    CharacterVector names = list[0];
-    NumericVector values = list[1];
+    CharacterVector names = list.attr("names");
+    NumericVector values = list[0];
     for (int i = 0; i < names.size(); ++i) {
-        pair <double, string> token( values(i), category );
+        double val = list[i];
+        string key = Rcpp::as<string>(names[i]);
+        //std::cout << key << std::endl << ":" << val << std::endl;
+        pair <double, string> token( val, category );
         map.insert( pair<string, pair <double, string> >(
-                        Rcpp::as<string>(names(i)), token )
-                    );
-        //std::cout << Rcpp::as<string>(names(i)) << values(i) << std::endl;
+                        key, token )
+        );
+
     }
 }
 
 void fillClimaticVectorWithList(vector < Climate > & climatics, List list) {
-    NumericVector TMax = list[0];
-    NumericVector TMin = list[1];
-    NumericVector TMoy = list[2];
-    NumericVector HMax = list[3];
-    NumericVector HMin = list[4];
-    NumericVector HMoy = list[5];
-    NumericVector Vt = list[6];
-    NumericVector Ins = list[7];
-    NumericVector Rg = list[8];
-    NumericVector Rain = list[9];
-    NumericVector ETP = list[10];
+    NumericVector TMax = list[3];
+    NumericVector TMin = list[2];
+    NumericVector TMoy = list[4];
+    NumericVector HMax = list[6];
+    NumericVector HMin = list[5];
+    NumericVector HMoy = list[7];
+    NumericVector Vt = list[9];
+    NumericVector Ins = list[11];
+    NumericVector Rg = list[10];
+    NumericVector Rain = list[8];
+    NumericVector ETP = list[12];
     for (int i = 0; i < TMax.size(); ++i) {
         Climate c(TMax(i), TMin(i), TMoy(i), HMax(i), HMin(i), HMoy(i), Vt(i), Ins(i), Rg(i), Rain(i), ETP(i));
         climatics.push_back(c);
@@ -95,8 +124,8 @@ List DFFromClimaticVector(vector < Climate > meteoValues)
         Vt.push_back(it.Vt);
         Ins.push_back(it.Ins);
         Rg.push_back(it.Rg);
-        ETP.push_back(it.ETP);
         Rain.push_back(it.Rain);
+        ETP.push_back(it.ETP);
     }
 
     DataFrame df = DataFrame::create(
@@ -109,8 +138,8 @@ List DFFromClimaticVector(vector < Climate > meteoValues)
                 Named("Vt")=Vt,
                 Named("Ins")=Ins,
                 Named("Rg")=Rg,
-                Named("ETP")=ETP,
-                Named("Rain")=Rain
+                Named("Rain")=Rain,
+                Named("ETP")=ETP
             );
     return df;
 }
@@ -209,6 +238,17 @@ List DBMeteoDF(Rcpp::String codestation, Rcpp::String beginDate, Rcpp::String en
     delete loader;
     return result;
 }
+
+// [[Rcpp::export]]
+List DBObsDF(Rcpp::String idsimulation) {
+  SamaraParameters * parameters = new SamaraParameters();
+  PSQLLoader * loader = new PSQLLoader(parameters);
+  List result = mapOfVectorToDF(loader->load_obs(idsimulation));
+  delete parameters;
+  delete loader;
+  return result;
+}
+
 /*
 // [[Rcpp::export]]
 List runDB(Rcpp::String idsimulation)
@@ -234,9 +274,15 @@ List run2DF(List params, List meteo)
     fillClimaticVectorWithList(parameters->climatics, meteo);
     //for (auto const& x : parameters->climatics)
     //{std::cout << x.TMax << std::endl;}
-    init_parameters(parameters);
-    List result = resultToList(run_samara_2_1(parameters));
+
+	  pair <vector <string>, vector < vector <double> > > results = run_samara_2_1(parameters);
+
+	 /*for (int i = 0; i < results.second[0].size(); ++i) {
+        std::cout << fixed << results.second[3].at(i) << std::endl;
+	 }*/
+    List result = resultToList(results);
     delete parameters;
+
     return result;
 }
 
@@ -261,6 +307,30 @@ List runDF(Rcpp::String from_date, Rcpp::String to_date, List simulation, List v
     List result = resultToList(run_samara_2_1(parameters));
     delete parameters;
     return result;
+}
+
+
+// [[Rcpp::export]]
+List rcpp_reduceVobs(List vObs, List results) {
+  std::map <std::string, std::vector<double> > vObsMap;
+  std::map <std::string, std::vector<double> > resultMap;
+  vObsMap = mapFromDF(vObs);
+  resultMap = mapFromDF(results);
+  ResultParser parser;
+  auto ret = parser.filterVObs(vObsMap,resultMap, false);
+  return mapOfVectorToDF(ret);
+}
+
+
+// [[Rcpp::export]]
+List rcpp_reduceResults(List results, List vobs) {
+  std::map <std::string, std::vector<double> > vObsMap;
+  std::map <std::string, std::vector<double> > resultMap;
+  vObsMap = mapFromDF(vobs);
+  resultMap = mapFromDF(results);
+  ResultParser parser;
+  auto ret = parser.reduceResults(resultMap,vObsMap);
+  return mapOfVectorToDF(ret);
 }
 
 

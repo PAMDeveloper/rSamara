@@ -7,6 +7,7 @@
 #include "processes/Riz.h"
 #include "processes/sorghum.h"
 #include "utils/julianconverter.h"
+#include <iostream>
 
 #ifdef WITH_TRACE
 #include <QFile>
@@ -15,16 +16,42 @@
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters) {
 
     //Simu parameters
+//    double DateDebutSimul = parameters->getDouble("startingdate");
+//    double DateFinSimul = parameters->getDouble("endingdate");
+//    double DateSemis = parameters->getDouble("sowing");
     double DateDebutSimul = parameters->getDouble("datedebut");
     double DateFinSimul = parameters->getDouble("datefin");
-    double DateSemis = parameters->getDouble("datesemis");
+        double DateSemis = parameters->getDouble("datesemis");
     double DateEnCours = DateDebutSimul;
     double NbJAS = DateEnCours - DateSemis;
     double NbDaysSinceGermination = NilValue;
 
+    std::cout << DateDebutSimul << " " << DateFinSimul << " " << DateSemis << std::endl;
+
     init_parameters(parameters);
     init_parcelle();
     LatRad = Latitude * M_PI * 1.0 / 180;
+
+    for(auto token: parameters->doubles) {
+        std::cout << token.first << "\t" << token.second.first << std::endl;
+    }
+
+    for (int i = 0; i < parameters->climatics.size(); ++i) {
+        std::cout <<
+                     parameters->climatics[i].TMax << " " <<
+                     parameters->climatics[i].TMin << " " <<
+                     parameters->climatics[i].TMoy << " " <<
+                     parameters->climatics[i].HMax << " " <<
+                     parameters->climatics[i].HMin << " " <<
+                     parameters->climatics[i].HMoy << " " <<
+                     parameters->climatics[i].Vt << " " <<
+                     parameters->climatics[i].Ins << " " <<
+                     parameters->climatics[i].Rg << " " <<
+                     parameters->climatics[i].Rain << " " <<
+                     parameters->climatics[i].ETP << " " <<
+                     std::endl;
+
+}
 
 #ifdef WITH_TRACE
     QFile paramFile( "Params.csv" );
@@ -294,7 +321,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
 
 void init_parameters(SamaraParameters * params) {
     SamaraParameters parameters = *params;
-    Altitude = parameters.getDouble("altitude");
+    Altitude = parameters.getDouble("wsalt");
     ASScstr = parameters.getDouble("asscstr");
     AttenMitch = parameters.getDouble("attenmitch");
     BundHeight = parameters.getDouble("bundheight");
@@ -350,7 +377,7 @@ void init_parameters(SamaraParameters * params) {
     KRespMaintSheath = parameters.getDouble("krespmaintsheath");
     KRespPanicle = parameters.getDouble("kresppanicle");
     KTempMaint = parameters.getDouble("ktempmaint");
-    Latitude = parameters.getDouble("latitude");
+    Latitude = parameters.getDouble("wslat");
     LeafLengthMax = parameters.getDouble("leaflengthmax");
     LifeSavingDrainage = parameters.getDouble("lifesavingdrainage");
     Mulch = parameters.getDouble("mulch");

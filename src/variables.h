@@ -1,4 +1,3 @@
-
 //parameters
 double Altitude;
 double ASScstr;
