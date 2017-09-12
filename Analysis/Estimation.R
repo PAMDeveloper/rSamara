@@ -15,17 +15,17 @@ lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
 
 #Data
 #direct from simulation table
-#initSim('D:/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
+initSim('D:/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
 
 #detailled load
 #initSimDetails('D:/BdD_Sorghum_10geno.accdb', 'Sotuba-2011-D1', '06SB15_12fev13', 'SotubaPCDA', '270130', '2011/05/01', '2011/12/31')
 
 #separated load
-connectDB('D:/BdD_Sorghum_10geno.accdb')
-.GlobalEnv$params <- loadSimDetails('Sotuba-2011-D2', '06SB15_12fev13_', 'SotubaPCDA_SV21', '270130', '2011/05/01', '2011/12/31')
-.GlobalEnv$meteo <- loadMeteo('270130', '2011/05/01', '2011/12/31')
-.GlobalEnv$obs <- loadObs('Sotuba-2011-D2', '06SB15_12fev13', '2011/05/01', '2011/12/31')
-odbcCloseAll()
+#connectDB('D:/BdD_Sorghum_10geno.accdb')
+#.GlobalEnv$params <- loadSimDetails('Sotuba-2011-D2', '06SB15_12fev13_', 'SotubaPCDA_SV21', '270130', '2011/05/01', '2011/12/31')
+#.GlobalEnv$meteo <- loadMeteo('270130', '2011/05/01', '2011/12/31')
+#.GlobalEnv$obs <- loadObs('Sotuba-2011-D2', '06SB15_12fev13', '2011/05/01', '2011/12/31')
+#odbcCloseAll()
 
 
 ## ESTIMATE
@@ -110,16 +110,16 @@ plot(resOptimDE, plot.type="bestvalit",type="l")
 #clusterExport(cl, varlist = c("meteo","vObs","obsRed", "paramInitTrans", "ParamOfInterest", "ParamList"))
 
 ##GENOUD
-#resOptimGA <- genoud(Optim_Ecomeristem_funct, NbParam, max=FALSE, pop.size=1000, max.generations=1000, wait.generations=100, hard.generation.limit=TRUE, MemoryMatrix=TRUE, starting.values=NULL, Domains=Bounds, print.level = 2, boundary.enforcement = 0, gradient.check=FALSE, cluster=cl)
+#resOptimGA <- genoud(Optim_Samara_funct, NbParam, max=FALSE, pop.size=1000, max.generations=1000, wait.generations=100, hard.generation.limit=TRUE, MemoryMatrix=TRUE, starting.values=NULL, Domains=Bounds, print.level = 2, boundary.enforcement = 0, gradient.check=FALSE, cluster=cl)
 
 ##PSO
-#resOptimPSO <- psoptim(rep(NA,NbParam), Optim_Ecomeristem_funct, lower=Bounds[,1], upper=Bounds[,2], control=list(maxit=10000,abstol=0))
+#resOptimPSO <- psoptim(rep(NA,NbParam), Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], control=list(maxit=10000,abstol=0))
 
 ##ABC
-#resOptimABC <- abc_optim(Bounds[,1], Optim_Ecomeristem_funct, lb=Bounds[,1], ub=Bounds[,2], maxCycle = 1000, criter=10000, limit = 500)
+#resOptimABC <- abc_optim(Bounds[,1], Optim_Samara_funct, lb=Bounds[,1], ub=Bounds[,2], maxCycle = 1000, criter=10000, limit = 500)
 
 ##DE
-#resOptimDE <- DEoptim(Optim_Ecomeristem_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=2000, strategy=2, cluster=cl, packages=c("recomeristem"), parVar=c("meteo","vObs","obsRed", "paramInitTrans", "ParamOfInterest", "ParamList") ))
+#resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=2000, strategy=2, cluster=cl, packages=c("recomeristem"), parVar=c("meteo","vObs","obsRed", "paramInitTrans", "ParamOfInterest", "ParamList") ))
 
 #stopCluster(cl)
 

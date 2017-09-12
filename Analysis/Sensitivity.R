@@ -1,27 +1,36 @@
 #Script sensitivity analysis for EcoMeristem
-#Authors : Florian Larue, Grégory Beurier, Jean-Christophe Soulie, Lauriane Rouan 
+#Authors : Florian Larue, Gr?gory Beurier, Jean-Christophe Soulie, Lauriane Rouan
 #(PAM, AGAP, BIOS, CIRAD)
 
-#####################Gestion des entrées-sorties#####################
-PPath <- "D:/Workspace/R/testestim/"  #chemin vers fichier paramètre et fichier valparam
-MPath <- "D:/Workspace/R/testestim/"  #chemin vers fichiers meteo
-OVariable <- "tillernb_1"             #nom variable à observer
-Method <- "M"                         #méthode AS (M = morris, C = complet, F = fast)
+source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
+
+#####################Gestion des entr?es-sorties#####################
+DBPath <- 'D:/BdD_Sorghum_10geno.accdb' #chemin vers la db
+SimName <- '06SB15-fev13-D2_SV21'
+PPath <- "D:/PAMStudio/dev/git/rSamara/Analysis/"  #chemin vers fichier fichier valparam
+OVariable <- "tillernb_1"             #nom variable ? observer
+Method <- "M"                         #m?thode AS (M = morris, C = complet, F = fast)
 ValParamName <- "ValParam.txt"
 ##########################################
 
 
 #Install and load packages
-list.of.packages <- c("recomeristem","sensitivity")
+list.of.packages <- c("sensitivity")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
-#Files
-parameterFilename <- paste(PPath, "ECOMERISTEM_parameters.txt", sep = "")
-ValParamFilename <- paste(PPath, ValParamName, sep = "")
+#sim
+connectDB('D:/BdD_Sorghum_10geno.accdb')
+parameterFileContents <- loadSim(SimName)
+meteo <- loadSimMeteo(SimName)
+#.GlobalEnv$obs <- loadObs('Sotuba-2011-D2', '06SB15_12fev13', '2011/05/01', '2011/12/31')
+#odbcCloseAll()
 meteo <- recomeristem::getMeteo_from_files(MPath)
 parameterFileContents <- recomeristem::getParameters_from_files(PPath)
+
+#params
+ValParamFilename <- paste(PPath, ValParamName, sep = "")
 ValParam <- read.table(ValParamFilename, blank.lines.skip = TRUE, col.names = c("Name", "BInf", "BSup", "Step"))
 nbFact <- nrow(ValParam)
 ParamAFaireVarier <- as.vector(ValParam[,1])
@@ -35,7 +44,7 @@ NbParam <- length(as.vector(B1))
 
 bounds <- apply(cbind(B1, B2), 1, function(x){list(min = x[1], max = x[2])})
 
-EcoMerist <- function(x) {
+Samara <- function(x) {
   # recherche de l'indice du parametre en cours dans le fichier de parametre
   ind <- match(ParamAFaireVarier,parameterFileContents$Name)
   # substitution de la valeur du parametre
@@ -47,28 +56,28 @@ EcoMerist <- function(x) {
             row.names = FALSE,
             col.names = FALSE)
   #On lance la simulation
-  EcoSim <- recomeristem::rcpp_run_from_dataframe(parameterFileContents, meteo)
-  
-  #On récupère LA sortie choisie à l'aide l'interface d'optimisation
+  SamaraSim <- rsamara::run2DF(parameterFileContents, meteo)
+
+  #On r?cup?re LA sortie choisie ? l'aide l'interface d'optimisation
   #Attention il faut une seule valeur pas un vecteur
-  ValSimTot <- EcoSim[[OVariable]]
-  #on récupère la dernière valeur
-  ValSim <- as.numeric(ValSimTot[length(ValSimTot)])
+  ValSimTot <- SamaraSim[[OVariable]]
+  #on r?cup?re la derni?re valeur
+  SamaraSim <- as.numeric(ValSimTot[length(ValSimTot)])
   return(ValSim)
 }
 
-EcoMerist.fun <- function(m) {toto=apply(m, 1, EcoMerist); return(toto)}
+Samara.fun <- function(m) {toto=apply(m, 1, EcoMerist); return(toto)}
 
-########################Analyse de Sensibilité##################################
-#Méthode de Morris
-SensitivityEcoMerist <- function() {
+########################Analyse de Sensibilit?##################################
+#M?thode de Morris
+SensitivitySamara <- function() {
   sa<-morris(model=NULL,
-             factors = ParamAFaireVarier, 
-             r = 100, 
-             binf=B1, 
-             bsup=B2, 
+             factors = ParamAFaireVarier,
+             r = 100,
+             binf=B1,
+             bsup=B2,
              design = list(type = "oat", levels = 10, grid.jump = 5))
-  y <- EcoMerist.fun(sa$X)
+  y <- Samara.fun(sa$X)
   tell(sa,y)
   print(sa)
   plot(sa)
@@ -83,32 +92,32 @@ PlanComplet <- function() {
   PlanComplet <- expand.grid(ListeFacteurs)
   y <- EcoMerist.fun(PlanComplet)
   sortie <- cbind(PlanComplet, y)
-  write.table(sortie, 
-              paste(PPath, "sortie_plan_complet.txt", sep = ""), 
-              sep="\t", 
+  write.table(sortie,
+              paste(PPath, "sortie_plan_complet.txt", sep = ""),
+              sep="\t",
               row.names = FALSE,
               col.names = FALSE,
               dec = ".")
 }
 
-##Méthode FAST (A ADAPTER)
-IndicesSensitivityEcoMerist <- function() {
+##M?thode FAST (A ADAPTER)
+IndicesSensitivitySamara <- function() {
   sa <- fast99(model = NULL,
              factors = 4,
              n = 450,
              q = rep("qunif", 4),
              q.arg=bounds)
-  y <- EcoMerist.fun(sa$X)
-  
+  y <- Samara.fun(sa$X)
+
   tell(sa, y)
-  
+
   sortie <- cbind(sa$X, sa$y)
-  write.table(sortie, 
-              paste(PPath, "sortie_plan_fast.txt", sep = ""), 
-              sep="\t", 
-              row.names = FALSE, 
+  write.table(sortie,
+              paste(PPath, "sortie_plan_fast.txt", sep = ""),
+              sep="\t",
+              row.names = FALSE,
               col.names = FALSE,
-              dec = ".")  
+              dec = ".")
   print(sa)
   plot(sa)
 }
@@ -116,10 +125,10 @@ IndicesSensitivityEcoMerist <- function() {
 ########################Start Analyse##################################
 switch(Method,
        "M" = {
-         SensitivityEcoMerist()
+         SensitivitySamara()
        },
        "C" = {
-         IndicesSensitivityEcoMerist()
+         IndicesSensitivitySamara()
        },
        "F" = {
          PlanComplet()
