@@ -131,15 +131,9 @@ public:
             }
         }
 
-        for(auto key: reducedResults) {
-          std::cout << key.first << " ";
-        }
-        std::cout << filteredVObs[dayId].size() << " " << std::endl;
-
         for(auto const &r : reducedResults) {
             for (int i = 0; i < filteredVObs[dayId].size(); ++i) {
                 int day = filteredVObs[dayId][i];
-                std::cout << day << " ";
                 if(day <= dayMax && day >= dayMin)
                     reducedResults[r.first].push_back(results[r.first][day-dayMin]);
             }
