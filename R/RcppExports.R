@@ -37,11 +37,23 @@ DBMeteoDF <- function(codestation, beginDate, endDate) {
     .Call('rsamara_DBMeteoDF', PACKAGE = 'rsamara', codestation, beginDate, endDate)
 }
 
+DBObsDF <- function(idsimulation) {
+    .Call('rsamara_DBObsDF', PACKAGE = 'rsamara', idsimulation)
+}
+
 run2DF <- function(params, meteo) {
     .Call('rsamara_run2DF', PACKAGE = 'rsamara', params, meteo)
 }
 
 runDF <- function(from_date, to_date, simulation, variety, plot, itinerary, station, meteo) {
     .Call('rsamara_runDF', PACKAGE = 'rsamara', from_date, to_date, simulation, variety, plot, itinerary, station, meteo)
+}
+
+rcpp_reduceVobs <- function(vObs, results) {
+    .Call('rsamara_rcpp_reduceVobs', PACKAGE = 'rsamara', vObs, results)
+}
+
+rcpp_reduceResults <- function(results, vobs) {
+    .Call('rsamara_rcpp_reduceResults', PACKAGE = 'rsamara', results, vobs)
 }
 

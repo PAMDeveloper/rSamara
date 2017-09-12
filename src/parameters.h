@@ -48,7 +48,11 @@ class SamaraParameters {
 
     void clearMeteo() {climatics.clear();}
 
-    double getDouble(string s) {return doubles[s].first;}
+    double getDouble(string s) {
+      if(doubles.find(s) == doubles.end())
+        return -999;
+      return doubles[s].first;
+      }
     string getString(string s) {return strings[s].first;}
     Climate getClimate(int t){return climatics[t+1];}
 };

@@ -13,14 +13,15 @@
 
 using namespace std;
 
-class PSQLLoader : public AbstractSimulationLoader
+
+class PSQLLoader /*: public AbstractSimulationLoader*/
 {
 public:
     PGconn * db;
-//    SamaraParameters * parameters;
+    SamaraParameters * parameters;
 
     PSQLLoader(SamaraParameters * params)
-        : AbstractSimulationLoader(params) {
+        : parameters(params) {
         string connection_string = "host=localhost port=5432 dbname=samara user=user_samara password=samarapassword";
         db = PQconnectdb(connection_string.c_str());
     }
@@ -43,6 +44,8 @@ public:
         for (int row = 0; row < PQntuples(result); ++row) {
             list.push_back(PQgetvalue(result, row, 0));
         }
+
+        std::sort (list.begin(), list.end());
         return list;
     }
 
@@ -156,7 +159,6 @@ public:
                 " AND jour >= '" + start + "' AND jour <= '" +
                 end + "' ORDER BY jour ASC";
         load_records(meteo_query);
-        std::cout << meteo_query << std::endl;
     }
 
     void load_meteo(string codestation, double startJulian, double endJulian) {
@@ -167,9 +169,47 @@ public:
                 " AND jour >= '" + start + "' AND jour <= '" +
                 end + "' ORDER BY jour ASC";
         load_records(meteo_query);
-        std::cout << meteo_query << std::endl;
     }
 
+
+    map<string, vector<double>> load_obs(string idsimulation) {
+        load_simulation(idsimulation);
+        return load_obs(parameters->getString("idparcelle"), parameters->getString("idvariete"), parameters->getString("iditinerairetechnique"),
+                        parameters->getString("codestation"), parameters->getDouble("datedebut"), parameters->getDouble("datefin"));
+    }
+
+    map<string, vector<double>> load_obs(string plot, string variety, string itinerary, string codestation, double startJulian, double endJulian) {
+        string start = JulianDayConverter::toJulianDayFmt( startJulian - 1, DATE_FORMAT_YMD);
+        string end = JulianDayConverter::toJulianDayFmt( endJulian, DATE_FORMAT_YMD );
+        std::string obs_query = "SELECT * FROM observer WHERE idparcelle='" + plot +
+                "' AND idvariete='" + variety +
+                "' AND iditinerairetechnique='" + itinerary +
+                "' AND codestation='" + codestation +
+                "' AND jour >= '" + start + "' AND jour <= '" +
+                end + "' ORDER BY jour ASC";
+        std::cout << obs_query;
+        map<string, vector<double>> resultMap;
+        PGresult* result = PQexec(db, obs_query.c_str());
+        if (PQresultStatus(result) != PGRES_TUPLES_OK){
+            cout << "Error: " << PQerrorMessage(db) << endl;
+        }
+
+        for (int col = 0; col < PQnfields(result); ++col) {
+            if( PQftype(result,col) == PSQLTYPE_STRING ){
+                //Nothing
+            } else if( PQftype(result,col) == PSQLTYPE_DATE ){
+                //Nothing ?
+            } else {
+                string key = string(PQfname(result,col));
+                vector<double> colData;
+                for (int row = 0; row < PQntuples(result); ++row) {
+                    colData.push_back(atof(PQgetvalue(result,row,col)));
+                }
+                resultMap.insert(pair<string, vector<double>>(key, colData));
+            }
+        }
+        return resultMap;
+    }
 
 };
 
