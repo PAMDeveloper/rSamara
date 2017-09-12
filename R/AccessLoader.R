@@ -41,6 +41,12 @@ tojulianday <- function(dateStr)
   res
 }
 
+fromjulian <-  function(jday)
+{
+  res = as.Date(jday - 1721427, origin=as.Date("0001-01-01"))
+  res
+}
+
 loadSimParams <- function(sim)
 {
   sqlQuery(msAccessCon,paste("SELECT * FROM simulation WHERE simcode='", sim,"'", sep=""))

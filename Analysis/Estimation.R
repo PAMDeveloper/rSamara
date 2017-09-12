@@ -15,7 +15,11 @@ lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
 
 #Data
 #direct from simulation table
+<<<<<<< .mine
 #initSim('D:/PAMStudio_dev/git/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
+=======
+#initSim('D:/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1')
+>>>>>>> .theirs
 
 #detailled load
 #initSimDetails('D:/BdD_Sorghum_10geno.accdb', 'Sotuba-2011-D1', '06SB15_12fev13', 'SotubaPCDA', '270130', '2011/05/01', '2011/12/31')
@@ -59,17 +63,22 @@ Optim_Samara_funct <- function(p){
 resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=100, strategy=2))
 
 ##plots results
-varlist = c("drymatabovegroundpop", "drymatpanicletotpop", "drymatstempop", "drymatstructleafpop", "grainyieldpop", "lai", "sla")
+varlist = c("totbiom", "pangrawe", "drymatstempop", "leafdm", "lai")
 bestp <- as.vector(resOptimDE$optim$bestmem)
 paramInitTrans[ParamOfInterest] <- bestp
 parameters <- paramInitTrans
 Res_samara <- rsamara::run2DF(parameters,meteo)
 res = rsamara::rcpp_reduceResults(Res_samara, vObs)
-obsRed$obsplantdate <- vObs$obsplantdate
+#obsRed$obsplantdate <- vObs$obsplantdate
 par(mfrow=c(2, 2))
+obsRed[obsRed=="-999"]<-0
+#res$obsplantdate <- sapply(res$obsplantdate, function(x){(x=-999) })
+#obsRed$obsplantdate <- sapply(obsRed$obsplantdate, fromjulian)
 for (v in varlist) {
-  plot(Res_samara[[v]], type="l")
-  points(obsRed$obsplantdate, obsRed[[v]], type="p", col="red")
+  yLimMax = 1.1*max(res[[v]],obsRed[[v]])
+  yLimMin = min(res[[v]],obsRed[[v]])
+  plot(res$dap, res[[v]], type="l", ylab=v, ylim=c(yLimMin,yLimMax))
+  points(obsRed$dap, obsRed[[v]], type="p", col="red")
 }
 
 #DE specific plots
