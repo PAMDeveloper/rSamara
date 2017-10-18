@@ -106,7 +106,7 @@ void EvalRunOffScale(double const &Rain, double const &Irrig, double const &seui
 
   try {
     Lr = 0;
-    if ((Irrig == NilValue)) {
+    if ((Irrig == NilValue || Irrig == 0)) {
       EnPlus = Rain;
     } else {
       EnPlus = Rain + Irrig;
@@ -130,7 +130,7 @@ void EvalRunOffIrrigAuto(double const &Rain, double const &Irrigation, double co
   try {
     IrrigTotDay = 0;
     Lr = 0;
-    if ((Irrigation == NilValue)) {
+    if ((Irrigation == NilValue || Irrigation == 0)) {
       CorrectedIrrigation = 0;
     } else {
       CorrectedIrrigation = Irrigation;
@@ -459,7 +459,7 @@ void EvalKce(double const &Mulch, double const &Ltr,
 void EvalKcTot(double const &Kce, double const &Kcp,
                double &KcTot) {
   try {
-    if ((Kcp == NilValue)) {
+    if ((Kcp == NilValue || Kcp == 0)) {
       KcTot = Kce;
     } else {
       KcTot = Kce + Kcp;

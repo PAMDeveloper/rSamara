@@ -356,6 +356,7 @@ double RootSystSoilSurfPopOld = 0;
 double RootSystVolPop = 0;
 double RootSystVolPopOld = 0;
 double RUE = 0;
+double RUEgreen = 0;
 double RuRac = 0;
 double RuSurf = 0;
 double SDJCorPhase4 = 0;

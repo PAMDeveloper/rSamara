@@ -56,7 +56,7 @@ Optim_Samara_funct <- function(p){
 }
 
 ##DE
-resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=5, strategy=2))
+resOptimDE <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=0,itermax=15, strategy=2))
 
 ##plots results
 varlist = c("totbiom", "pangrawe", "drymatstempop", "leafdm", "lai")

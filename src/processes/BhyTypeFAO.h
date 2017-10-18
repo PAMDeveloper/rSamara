@@ -399,7 +399,7 @@ void EvalRuiss_Seuil(double const &Rain, double const &seuilRuiss, double const 
     Lr = 0;
     if (Rain > seuilRuiss)
       Lr = (Rain - seuilRuiss) * PourcRuiss * 1.0 / 100;
-    if (Irrig == NilValue)
+    if (Irrig == NilValue || Irrig == 0)
       EauDispo = Rain - Lr;
     else
       EauDispo = Rain + Irrig - Lr;

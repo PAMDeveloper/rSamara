@@ -949,7 +949,7 @@ void RS_EvalRUE(double const &NumPhase, double const &ChangePhase, double const 
             CumTr = CumTr + Tr;
             CumEt = CumEt + Tr + Evap;
             CumWUse = CumWUse + Tr + Evap + Dr + Lr;
-            if ((Irrigation == NilValue)) {
+            if ((Irrigation == NilValue || Irrigation == 0)) {
                 CorrectedIrrigation = 0;
             } else {
                 CorrectedIrrigation = Irrigation;
@@ -1912,7 +1912,7 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
             }
         }
         // define corrected irrigation
-        if ((Irrigation == NilValue)) {
+        if ((Irrigation == NilValue || Irrigation == 0)) {
             CorrectedIrrigation = 0;
         } else {
             CorrectedIrrigation = Irrigation;
@@ -2048,7 +2048,7 @@ void RS_AutomaticIrrigation_V2(double const &NumPhase, double const &IrrigAuto, 
 
     try {
         CorrectedBundheight = BundHeight;
-        if ((Irrigation == NilValue)) {
+        if ((Irrigation == NilValue || Irrigation == 0)) {
             CorrectedIrrigation = 0;
         } else {
             CorrectedIrrigation = Irrigation;
@@ -3072,7 +3072,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
             }
             /*/NEW Y*/
 
-            if ((Irrigation == NilValue)) {
+            if ((Irrigation == NilValue || Irrigation == 0)) {
                 CorrectedIrrigation = 0;
             } else {
                 CorrectedIrrigation = Irrigation;
@@ -3466,7 +3466,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
         CorrectedBundheight = BundHeight;
         /*StressPeriod := 0;     */
 
-        if ((Irrigation == NilValue)) {
+        if ((Irrigation == NilValue || Irrigation == 0)) {
             CorrectedIrrigation = 0;
         } else {
             CorrectedIrrigation = Irrigation;
@@ -3965,7 +3965,7 @@ void RS_EvalRUE_V2_2(double const &NumPhase, double const &ChangePhase, double c
             }
             /*/NEW Y*/
 
-            if ((Irrigation == NilValue)) {
+            if ((Irrigation == NilValue || Irrigation == 0)) {
                 CorrectedIrrigation = 0;
             } else
 

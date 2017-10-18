@@ -14,14 +14,14 @@
 using namespace std;
 
 
-class PSQLLoader /*: public AbstractSimulationLoader*/
+class PSQLLoader : public AbstractSimulationLoader
 {
 public:
     PGconn * db;
     SamaraParameters * parameters;
 
     PSQLLoader(SamaraParameters * params)
-        : parameters(params) {
+        : AbstractSimulationLoader(params) {
         string connection_string = "host=localhost port=5432 dbname=samara user=user_samara password=samarapassword";
         db = PQconnectdb(connection_string.c_str());
     }
@@ -58,6 +58,7 @@ public:
         for (int row = 0; row < PQntuples(result); ++row) {
             parameters->climatics.push_back(
                         Climate(
+                            JulianDayConverter::toJulianDayNumber(string(PQgetvalue(result,row,1))),
                             atof(PQgetvalue(result, row, 2)),
                             atof(PQgetvalue(result, row, 3)),
                             atof(PQgetvalue(result, row, 4)),
@@ -106,8 +107,8 @@ public:
         load_plot(parameters->getString("idparcelle"));
         load_itinerary(parameters->getString("iditinerairetechnique"));
         load_meteo(parameters->getString("codestation"),
-                   parameters->getString("datedebut"),
-                   parameters->getString("datefin"));
+                   parameters->getDouble("datedebut"),
+                   parameters->getDouble("datefin"));
     }
 
     vector<string> load_simulation_list() {
