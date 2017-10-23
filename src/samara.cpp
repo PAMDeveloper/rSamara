@@ -20,8 +20,13 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
 //    double DateDebutSimul = parameters->getDouble("startingdate");
 //    double DateFinSimul = parameters->getDouble("endingdate");
 //    double DateSemis = parameters->getDouble("sowing");
-    double DateDebutSimul = parameters->getDouble("datedebut");
-    double DateFinSimul = parameters->getDouble("datefin");
+//    double DateDebutSimul = parameters->getDouble("datedebut");
+//    double DateFinSimul = parameters->getDouble("datefin");
+//    double DateSemis = parameters->getDouble("datesemis");
+
+
+    double DateDebutSimul = parameters->getDouble("debutsimul");
+    double DateFinSimul = parameters->getDouble("finsimul");
     double DateSemis = parameters->getDouble("datesemis");
     double DateEnCours = DateDebutSimul;
     double NbJAS = DateEnCours - DateSemis;
@@ -405,14 +410,14 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
 
     bool crop = false;
     //Compute day before for TMoyPrec
-    set_meteo_vars(parameters, -1,
-                   TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
-                   Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
-    EToFao(ETP, Altitude, RgMax, RgCalc,
-           TMin, TMax,
-           HMin, HMax, HMoyCalc,
-           TMoyCalc, Vt, ETo,
-           TMoyPrec, VPDCalc);
+//    set_meteo_vars(parameters, -1,
+//                   TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
+//                   Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
+//    EToFao(ETP, Altitude, RgMax, RgCalc,
+//           TMin, TMax,
+//           HMin, HMax, HMoyCalc,
+//           TMoyCalc, Vt, ETo,
+//           TMoyPrec, VPDCalc);
     //
 
 
@@ -723,7 +728,7 @@ void init_psql_parameters(SamaraParameters * params) {
 
 void init_parameters(SamaraParameters * params) {
     SamaraParameters parameters = *params;
-    Altitude = parameters.getDouble("wsalt");
+    Altitude = parameters.getDouble("altitude");
     ASScstr = parameters.getDouble("asscstr");
     AttenMitch = parameters.getDouble("attenmitch");
     BundHeight = parameters.getDouble("bundheight");
@@ -779,7 +784,7 @@ void init_parameters(SamaraParameters * params) {
     KRespMaintSheath = parameters.getDouble("krespmaintsheath");
     KRespPanicle = parameters.getDouble("kresppanicle");
     KTempMaint = parameters.getDouble("ktempmaint");
-    Latitude = parameters.getDouble("wslat");
+    Latitude = parameters.getDouble("latitude");
     LeafLengthMax = parameters.getDouble("leaflengthmax");
     LifeSavingDrainage = parameters.getDouble("lifesavingdrainage");
     Mulch = parameters.getDouble("mulch");
@@ -914,7 +919,7 @@ void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, doubl
     } else {
       TMoyCalc = TMoy;
     }
-    if (((HMin != NilValue) && (HMax != NilValue)) && ((TMin != 0) && (TMax != 0))) {
+    if (((HMin != NilValue) && (HMax != NilValue)) && ((HMin != 0) && (HMax != 0))) {
       HMoyCalc = (HMax + HMin) * 1.0 / 2;
     } else {
       HMoyCalc = HMoy;

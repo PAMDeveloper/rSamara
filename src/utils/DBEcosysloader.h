@@ -59,7 +59,8 @@ public:
 
     vector<string> load_list(const QSqlDatabase & db, QString query) {
         QSqlQuery result(query, db);
-        qDebug() << query << " > " << result.lastError().text();
+        if(!result.lastError().text().isEmpty())
+            qDebug() << query << " > " << result.lastError().text();
         vector<string> list;
         result.first();
         do {
@@ -72,7 +73,8 @@ public:
 
     void load_records(const QSqlDatabase & db, QString query) {
         QSqlQuery result(query, db);
-        qDebug() << query << " >\n " << result.lastError().text();
+        if(!result.lastError().text().isEmpty())
+            qDebug() << query << " >\n " << result.lastError().text();
         result.first();
         do {
             parameters->climatics.push_back(
@@ -101,13 +103,25 @@ public:
     void load_record(const QSqlDatabase & db, QString query, QString category) {
         QSqlQuery result(query, db);
         QSqlRecord rec = result.record();
-        qDebug() << query << " >\n " << result.lastError().text();
+        if(!result.lastError().text().isEmpty())
+            qDebug() << query << " >\n " << result.lastError().text();
 ;        result.first();
         do {
             for (int col = 0; col < rec.count(); ++col) {
                 QVariant::Type type = rec.field(col).type();
                 QString key = rec.fieldName(col);
-
+                if(category == "variete") {
+                    if(     key == "IrrigAutoStop" ||
+                            key == "IrrigAutoResume" ||
+                            key == "FTSWIrrig" ||
+                            key == "TransplantingDepth" ||
+                            key == "Ca")
+                        continue;
+                }
+                if(parameters->doubles.find(key.toLower().toStdString()) != parameters->doubles.end() && key != "Edit") {
+                    qDebug() << key << "already exists !!!!" ;
+                    qDebug() << "from" << parameters->doubles[key.toLower().toStdString()].first << "to" << result.value(col).toString();
+                }
                 if(type == QVariant::String) {
                     parameters->strings[key.toLower().toStdString()] =
                             pair <string, string> (
@@ -122,7 +136,7 @@ public:
                             pair <double, string> (
                                 result.value(col).toDate().toJulianDay(), category.toStdString());
                 } else {
-                    qDebug() << key << result.value(col) << QVariant::typeToName(type);
+//                    qDebug() << key << result.value(col) << QVariant::typeToName(type);
                     parameters->doubles[key.toLower().toStdString()] =
                             pair <double, string> (
                                 result.value(col).toDouble(), category.toStdString());
