@@ -20,11 +20,11 @@ struct Climate {
   double Rain;
   double ETP;
 
-  Climate(double JulianDay, double TMax, double TMin, double TMoy,
+  Climate(/*double JulianDay, */double TMax, double TMin, double TMoy,
           double HMax, double HMin, double HMoy,
           double Vt, double Ins, double Rg,
           double Rain, double ETP) :
-    JulianDay(JulianDay),TMax(TMax), TMin(TMin), TMoy(TMoy), HMax(HMax), HMin(HMin),
+    /*JulianDay(JulianDay),*/TMax(TMax), TMin(TMin), TMoy(TMoy), HMax(HMax), HMin(HMin),
     HMoy(HMoy), Vt(Vt), Ins(Ins), Rg(Rg), Rain(Rain), ETP(ETP)
   { }
 };
