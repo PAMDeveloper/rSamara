@@ -1,0 +1,21 @@
+﻿Auteur : Florian Larue, Grégory Beurier, Jean-Christophe Soulié, Lauriane Rouan
+Date création : 05/11/2013
+Date modification : 11/09/2017
+
+Le but de ce fichier est de décrires les différentes étapes nécessaires pour effectuer une analyse de sensibilité pour le modèle Ecomersitem
+
+1) Le script réalisant l'analyse de sensibilité se nomme : EMSensitivity.r
+2) Dans EMSensitivity.r, les actions suivantes sont à réaliser :
+	- définir la variable PPath (ligne 6 du fichier) en spécifiant où se situent le fichier ECOMERISTEM_PARAMETERS.txt
+	- définir la variable MPath (ligne 7 du fichier) en spécifiant où se situent les fichiers meteo
+	- définir la variable OVariable (ligne 8 du fichier) pour savoir quelle variable de sortie on va observer
+	- définir la méthode AS à utiliser : M = Morris, F = Fast, C = Complet (ligne 9 du fichier)
+	- définir la variable ValParamFilename (ligne 10 du fichier) qui va contenir le nom du fichier où les paramètres de l'analyse de sensibilité sont écrits. 
+	 
+Ce dernier fichier doit être organisé comme suit :
+		Nom de la variable tabulation valeur min tabulation valeur max tabulation step (pour découper l'intervalle dans le cas d'un plan complet ou NA dans le cas d'une analyse de sensibilité fast ou morris)
+Exemple :
+Epsib	4	10	NA
+
+Lancer le script
+Normalement ça marche :)

@@ -24,9 +24,10 @@
 #define __RCPP_SAMARA_HPP
 
 
-#include "utils/psqlloader.h"
+// #include "utils/psqlloader.h"
 #include "samara.h"
-#include <utils/resultparser.h>
+#include "utils/resultparser.h"
+#include "utils/juliancalculator.h"
 
 //struct Context
 //{

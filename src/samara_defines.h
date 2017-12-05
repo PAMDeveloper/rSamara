@@ -4,13 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
-//#include <set>
-//#include <map>
-//#include <string>
-//#include <sstream>
-//#include <iostream>
-
-#include "utils/julianconverter.h"
+#include "utils/juliancalculator.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -24,5 +18,4 @@ static double NilValue = -999;
 static std::string FloatToStr(double val) {
   return std::to_string(val);
 }
-
 #endif
