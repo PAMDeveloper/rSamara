@@ -2559,6 +2559,8 @@ void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhas
             CulmsPerHill = CulmsPerPlant * PlantsPerHill;
             DryMatStructPaniclePop = DryMatStructPaniclePop * max(0., CulmsPop) * 1.0 /
                     (CulmsPop + TillerDeathPop);
+        } else {
+            TillerDeathPop = 0;
         }
 
     } catch (...) {
@@ -2918,6 +2920,9 @@ void RS_EvolPanicleFilPop_V2_1(double const &NumPhase, double const &Ic, double 
 void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &PhaseStemElongation, double const &DryMatStructInternodePop, double const &DryMatStructSheathPop, double const &CoeffResCapacityInternode, double const &AssimSurplus, double const &ResInternodeMobiliDay,
                                         double &ResCapacityInternodePop, double &IncreaseResInternodePop, double &DryMatResInternodePop, double &AssimNotUsed, double &AssimNotUsedCum, double &GrowthResInternodePop, double &DryMatResInternodePopOld, double &A_IncreaseResInternodePop) {
     try {
+        if(NumPhase == 5) {
+            ResCapacityInternodePop = ResCapacityInternodePop;
+        }
         //if ((PhaseStemElongation = 1) or (NumPhase >= 5)) then
         if ((NumPhase >= 2)) {
 
@@ -3050,7 +3055,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
         if (((NumPhase < 1) || ((NumPhase == 1) && (ChangePhase == 1))) /*NEW G*/ || (Density == DensityNursery)/*/NEW G*/) {
             CumPar = 0;
             RUE = 0;
-            CumTr = 0.00001;
+            CumTr = 0;
             CumEt = 0.00001;
             CumWUse = 0.00001;
             CumWReceived = 0;
@@ -3098,7 +3103,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
                 WueTot = DryMatTotPop * 1.0 / (CumWUse * 10000);
 
                 /*DELETED G*/
-                //RUE := ((DryMatTotPop + DeadLeafDrywtPop - DryMatStructRootPop) / Max(CumPar, 0.00001)) / 10;
+//                RUE := ((DryMatTotPop + DeadLeafDrywtPop - DryMatStructRootPop) / Max(CumPar, 0.00001)) / 10;
                 //(Please delete this grey line and replace with the following one in green)
                 /*/DELETED G*/
 
@@ -3440,7 +3445,10 @@ void RS_EvalAssimPot_V2_1(double const &PARIntercepte, double const &PAR, double
 
                 /*NEW Y*/
                 AssimPot = AssimPot * std::pow((SlaMin * 1.0 / max(sla, SlaMin)), CoeffAssimSla);
-                // Effect of SLA on AssimPot ; AssimPot is reduced if Sla>SlaMin; For no effect set parameter CoeffAssimSla=0, for proportional effect set CoeffAssimSla=1. Intermediate values are OK.
+                // Effect of SLA on AssimPot ; AssimPot is reduced if Sla>SlaMin;
+                //For no effect set parameter CoeffAssimSla=0,
+                //for proportional effect set CoeffAssimSla=1.
+                //Intermediate values are OK.
 
 
 

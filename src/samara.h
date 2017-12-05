@@ -2,16 +2,25 @@
 #define SAMARA_H
 
 #include "samara_defines.h"
+#include "utils/juliancalculator.h"
 #include "parameters.h"
 
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters);
+pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters);
 
 void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc);
 void init_parameters(SamaraParameters * params);
-void init_parcelle();
+void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double &ResUtil
+                   , double &ProfRu, double &EpaisseurSurf, double &EpaisseurProf
+                   , double &RuSurf, double &CapaREvap, double &CapaRFE, double &CapaRDE
+                   , double &StRuMax, double &StockIniProf, double &StockIniSurf
+                   , double &ValRSurf, double &ValRDE, double &ValRFE
+                   , double &StockSurface, double &StockTotal, double &Hum
+                   , double &LTRkdfcl, double &LIRkdf, double &LTRkdf
+                   , double &CounterNursery, double &VolRelMacropores);
 void eval_Par(double t);
 void EToFao(double const &ETP, double const &Alt, double const &RgMax, double const &RgCalc,
             double const &TMin, double const &TMax,
@@ -20,6 +29,8 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             double &TMoyPrec, double &VPDCalc);
 void kill_crop();
 void reset_variables();
+void reset_variables_2_3();
 void init_culture();
+void init_all_variables();
 
 #endif // SAMARA_H

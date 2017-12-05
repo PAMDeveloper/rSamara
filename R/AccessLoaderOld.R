@@ -3,13 +3,12 @@
 #accessFilePath = 'D:/BdD_Sorghum_10geno.accdb'
 
 #Install and load packages
-list.of.packages <- c("RODBC", "gdata")
+list.of.packages <- c("RODBC")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
 
-#DB connection and load params & obs
 initSim <- function(accessFilePath, simcode)
 {
   connectDB(accessFilePath)
@@ -36,25 +35,21 @@ connectDB <- function(accessFilePath)
 }
 
 # YYYY-MM-dd
-julianDayLoad <- function(dateStr)
+tojulianday <- function(dateStr)
 {
-  dateStr = gsub("/","-",dateStr)
-  res = toJulianDayCalc(dateStr)
+  res = julian(as.Date(dateStr), as.Date("0001-01-01")) + 1721427
   res
 }
 
-julianDayFromDB <- function(dateStr)
+fromjulian <-  function(jday)
 {
-  res = toJulianDayCalc(format(dateStr, format="%Y-%m-%d"))
+  res = as.Date(jday - 1721427, origin=as.Date("0001-01-01"))
   res
 }
 
-
-loadSimParams <- function(sim, path)
+loadSimParams <- function(sim)
 {
-  df = read.xls(path)
-  df[which(df$simcode == sim), ]
- # sqlQuery(msAccessCon,paste("SELECT * FROM simulation WHERE simcode='", sim,"'", sep=""))
+  sqlQuery(msAccessCon,paste("SELECT * FROM simulation WHERE simcode='", sim,"'", sep=""))
 }
 
 
@@ -85,44 +80,25 @@ loadplot <- function(plotcode)
 #Native windows Fr access format on result (YYYY-MM-dd)
 loadMeteo <- function(wscode, beginDate, endDate)
 {
-  bDate = beginDate
-  eDate = endDate
+  bDate = beginDate # format(as.Date(beginDate, "%d/%m/%Y"), format="%B %d %Y");
+  eDate = endDate #format(as.Date(endDate, "%d/%m/%Y"), format="%B %d %Y");
   query = paste("SELECT * FROM wdataday WHERE wscode='",wscode,"'",
                   " AND weatherdate > (#", bDate, "#)-2",
-                  " AND weatherdate < #", eDate, "#",
+                  " AND weatherdate < #", eDate, "#+1",
                   " ORDER BY weatherdate ASC;",sep="")
   sqlQuery(msAccessCon,query)
 }
 
 loadObs <- function(trialcode, variety, startDate, endDate)
 {
-
-  query = paste("SELECT Observation_resultat.Id as id, Observation_resultat.obsplantdate as obsplantdate, ",
-                "Observation_resultat.DAP as nbjas, [Observation_resultat]![Pl_Height]*10 AS plantheight, ",
-                "Observation_resultat.lai as lai, Observation_resultat.GrainYield as grainyieldpop, ",
-                "Observation_resultat.AppLeaves as appleaves, Observation_resultat.AppTill as culmsperplant,",
-                " [Observation_resultat]![GrainYield]/[Observation_resultat]![TotBiom] AS haunindex, ",
-                "Observation_resultat.PanGrainNb as drymatstructpaniclepop, ",
-                "[Observation_resultat]![StemDM]*10+[Observation_resultat]![leafDM]*10+IIf(IsNull([Observation_resultat]![PanicleDM]*10),0,",
-                "[Observation_resultat]![PanicleDM]*10) AS drymatabovegroundpop,",
-                " [Observation_resultat]![lai]/([Observation_resultat]![leafDM]*10) AS sla,",
-                " [Observation_resultat.leafDM]*10 as leafdm, [Observation_resultat.StemDM]*10 as stemdm, ",
-                "[Observation_resultat.PanicleDM]*10 as panicledm FROM Observation_resultat "
-                ," WHERE id='", trialcode,
-                "' AND obsplantdate > (#", startDate, "#)-1",
-                " AND obsplantdate < #", endDate, "#",
-                sep="")
-  # print(query)
-  obs = sqlQuery(msAccessCon,query)
-
-  #obs = sqlQuery(msAccessCon,paste("SELECT * FROM ObservationsSamara WHERE trialcode='", trialcode,
-   #                         "' AND varcode='", variety, "'",
-    #                        " AND obsplantdate > (#", startDate, "#)-2",
-     #                       " AND obsplantdate < #", endDate, "#+1",
-      #                      sep=""))
+  obs = sqlQuery(msAccessCon,paste("SELECT * FROM ObservationsSamara WHERE trialcode='", trialcode,
+                            "' AND varcode='", variety, "'",
+                            " AND obsplantdate > (#", startDate, "#)-2",
+                            " AND obsplantdate < #", endDate, "#+1",
+                            sep=""))
   obs$trialcode <- NULL
   obs$varcode <- NULL
-  obs$obsplantdate <- sapply(obs$obsplantdate, julianDayFromDB)
+  obs$obsplantdate <- sapply(obs$obsplantdate, tojulianday)
   obs <- obs[,colSums(is.na(obs))<nrow(obs)]
   obs
 }
@@ -152,10 +128,9 @@ loadSimDetails <- function(itkcode, variety, plotcode, wscode, startDate, endDat
   res = merge(res, vardf)
 
   # clean df and set julian dates
-  # print(res$sowing)
-  res$sowing <- julianDayLoad(format(res$sowing, format="%Y/%m/%d"))
-  res$endingdate <- julianDayLoad(endDate)
-  res$startingdate <- julianDayLoad(startDate)
+  res$sowing <- tojulianday(res$sowing)
+  res$endingdate <- tojulianday(endDate)
+  res$startingdate <- tojulianday(startDate)
   res$itkcode <-NULL
   res$simcode <-NULL
   res$variety <- NULL
@@ -165,22 +140,22 @@ loadSimDetails <- function(itkcode, variety, plotcode, wscode, startDate, endDat
   res$name <-NULL
   res$namesoil <-NULL
   res$wscode <-NULL
-  res$nblayer <-0
-  res$p0 <-0
-  # res$ru <-NULL
-  res$depthsoil <-0
+  res$nblayer <-NULL
+  res$p0 <-NULL
+  res$ru <-NULL
+  res$depthsoil <-NULL
 
   res$kpar <- 0.5
 
-  # res = res[, !apply(res==-999,2,all)]
+  res = res[, !apply(res==-999,2,all)]
   resDf <-as.data.frame(res)
 
   resDf
 }
 
-loadSim <- function(simCode, path)
+loadSim <- function(simCode)
 {
-  sim = loadSimParams(simCode, path);
+  sim = loadSimParams(simCode);
 
   #get all df
   variety = sim$variety[1]
@@ -203,9 +178,9 @@ loadSim <- function(simCode, path)
   res = merge(res, vardf, by="variety", all.x=TRUE, all.y=FALSE)
 
   # clean df and set julian dates
-  res$sowing <- julianDayLoad(format(res$sowing, format="%Y/%m/%d"))
-  res$endingdate <- julianDayLoad(format(res$endingdate, format="%Y/%m/%d"))
-  res$startingdate <- julianDayLoad(format(res$startingdate, format="%Y/%m/%d"))
+  res$sowing <- tojulianday(res$sowing)
+  res$endingdate <- tojulianday(res$endingdate)
+  res$startingdate <- tojulianday(res$startingdate)
   res$itkcode <-NULL
   res$simcode <-NULL
   res$variety <- NULL
