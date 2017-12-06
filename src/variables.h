@@ -128,7 +128,6 @@ double Rg;
 double ETP;
 double Pluie;
 
-
 //variables
 double ApexHeight = 0;
 double ApexHeightGain = 0;

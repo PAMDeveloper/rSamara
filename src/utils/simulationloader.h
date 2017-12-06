@@ -7,7 +7,7 @@ class AbstractSimulationLoader
 {
 public:
     SamaraParameters * parameters;
-    AbstractSimulationLoader(SamaraParameters * params): parameters(params){};
+    AbstractSimulationLoader(SamaraParameters * params): parameters(params){}
     virtual void load_complete_simulation(string idsimulation)  = 0;
     virtual vector<string> load_simulation_list() = 0;
     virtual vector<string>  load_variety_list() = 0;
