@@ -18,10 +18,10 @@ initSim <- function(accessFilePath, simcode)
   odbcCloseAll()
 }
 
-initSimDetails <- function(accessFilePath, itkcode, variety, plotcode, wscode, startDate, endDate)
+initSimDetails <- function(accessFilePath, itkcode, variety, fieldcode, wscode, startDate, endDate)
 {
   connectDB(accessFilePath)
-  .GlobalEnv$params <- loadSimDetails(itkcode, variety, plotcode, wscode, startDate, endDate)
+  .GlobalEnv$params <- loadSimDetails(itkcode, variety, fieldcode, wscode, startDate, endDate)
   .GlobalEnv$meteo <- loadMeteo(wscode, startDate, endDate)
   .GlobalEnv$obs <- loadObs(itkcode, variety, startDate, endDate)
   odbcCloseAll()
@@ -68,12 +68,12 @@ loadws <- function(wscode)
   sqlQuery(msAccessCon,paste("SELECT wscode, wsalt, wslat, wslong FROM ws WHERE wscode='", wscode,"'", sep=""))
 }
 
-loadplot <- function(plotcode)
+loadfield <- function(fieldcode)
 {
-  plotDF = sqlQuery(msAccessCon,paste("SELECT * FROM plotsim WHERE plotcode='", plotcode,"'", sep=""))
-  soilcode = plotDF$soilcode[1]
+  fieldDF = sqlQuery(msAccessCon,paste("SELECT * FROM plotsim WHERE fieldcode='", fieldcode,"'", sep=""))
+  soilcode = fieldDF$soilcode[1]
   soil = sqlQuery(msAccessCon,paste("SELECT * FROM genesoil WHERE soilcode='", soilcode,"'", sep=""))
-  merge(plotDF, soil, by="soilcode")
+  merge(fieldDF, soil, by="soilcode")
 }
 
 #Native windows Fr access format on queries (MM-dd-YYYY) or (YYYY-MM-dd)
@@ -114,17 +114,17 @@ loadSimObs <- function(simcode)
   res
 }
 
-loadSimDetails <- function(itkcode, variety, plotcode, wscode, startDate, endDate)
+loadSimDetails <- function(itkcode, variety, fieldcode, wscode, startDate, endDate)
 {
   vardf = loadVariety(variety)
   itkdf = loadItk(itkcode)
   wsdf = loadws(wscode)
-  plotdf = loadplot(plotcode)
+  fielddf = loadfield(fieldcode)
 
   # merge results
   #res = merge(sim, itkdf, by="itkcode")
   res = merge(itkdf, wsdf)
-  res = merge(res, plotdf)
+  res = merge(res, fielddf)
   res = merge(res, vardf)
 
   # clean df and set julian dates
@@ -136,7 +136,7 @@ loadSimDetails <- function(itkcode, variety, plotcode, wscode, startDate, endDat
   res$variety <- NULL
   res$soilcode <-NULL
   res$cropcode <-NULL
-  res$plotcode <-NULL
+  res$fieldcode <-NULL
   res$name <-NULL
   res$namesoil <-NULL
   res$wscode <-NULL
@@ -161,20 +161,20 @@ loadSim <- function(simCode)
   variety = sim$variety[1]
   itkcode = sim$itkcode[1]
   wscode = sim$wscode[1]
-  plotcode = sim$plotcode[1]
+  fieldcode = sim$fieldcode[1]
   beginDate = sim$startingdate[1]
   endDate = sim$endingdate[1]
-  #loadSimDetails(itkcode, variety, plotcode, wscode, beginDate, endDate)
+  #loadSimDetails(itkcode, variety, fieldcode, wscode, beginDate, endDate)
 
   vardf = loadVariety(variety)
   itkdf = loadItk(itkcode)
   wsdf = loadws(wscode)
-  plotdf = loadplot(plotcode)
+  fielddf = loadfield(fieldcode)
 
   # merge results
   res = merge(sim, itkdf, by="itkcode")
   res = merge(res, wsdf, by="wscode")
-  res = merge(res, plotdf, by="plotcode")
+  res = merge(res, fielddf, by="fieldcode")
   res = merge(res, vardf, by="variety", all.x=TRUE, all.y=FALSE)
 
   # clean df and set julian dates
@@ -186,7 +186,7 @@ loadSim <- function(simCode)
   res$variety <- NULL
   res$soilcode <-NULL
   res$cropcode <-NULL
-  res$plotcode <-NULL
+  res$fieldcode <-NULL
   res$name <-NULL
   res$namesoil <-NULL
   res$wscode <-NULL

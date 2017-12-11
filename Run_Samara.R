@@ -22,17 +22,17 @@ connectDB('D:/PAMStudio/dev/git/BdD_Sorghum_20151107.accdb')
 
 #Boucle de simulations depuis un fichier Xls
  simulist = read.xls("D:/PAMStudio/dev/git/rSamara/simulation.xlsx")
- launchFromList <- function (simcode, itkcode, variety, plotcode, wscode, startingdate, endingdate) {
+ launchFromList <- function (simcode, itkcode, variety, fieldcode, wscode, startingdate, endingdate) {
     print(simcode)
     meteoxls <- loadMeteo(wscode,startingdate,endingdate)
-    paramsXls = loadSimDetails(itkcode,variety,plotcode,wscode,startingdate,endingdate)
+    paramsXls = loadSimDetails(itkcode,variety,fieldcode,wscode,startingdate,endingdate)
     xlsresults = rsamara::run2DF(paramsXls,meteoxls)
     filename = paste(simcode, ".csv")
 
     write.table(format(xlsresults, digits=18), filename, sep='\t',row.names=F)
     print(paste(simcode, " written"))
  }
- mapply(launchFromList, simulist$simcode, simulist$itkcode, simulist$variety, simulist$plotcode, simulist$wscode, simulist$startingdate, simulist$endingdate)
+ mapply(launchFromList, simulist$simcode, simulist$itkcode, simulist$variety, simulist$fieldcode, simulist$wscode, simulist$startingdate, simulist$endingdate)
 
  ### load from sim Table
  # initSim('D:/PAMStudio_dev/git/BdD_Sorghum_10geno.accdb', '06SB15-fev13-D1_SV21')
