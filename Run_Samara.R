@@ -10,7 +10,7 @@ options(digits=18)
 
 
 ### load each info separated
-connectDB('D:/PAMStudio/dev/git/BdD_Sorghum_20151107.accdb')
+connectDB('D:/PAMStudio/dev/git/Bd_SAMARA.accdb')
 
 #Simulation depuis la clé d'un fichier Excel
 # .GlobalEnv$params <- loadSim("BAMA2014S1621B","D:/PAMStudio/dev/git/rSamara/simulation.xlsx")
