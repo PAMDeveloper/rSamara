@@ -5,8 +5,9 @@
 #include "utils/juliancalculator.h"
 #include "parameters.h"
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters);
-pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters);
+enum SamaraLogType {SMALL, COMPLETE, ECOTROP};
+pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters, SamaraLogType log = SMALL);
+pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters, SamaraLogType log = SMALL);
 
 void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
