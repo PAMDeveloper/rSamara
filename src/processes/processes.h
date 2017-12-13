@@ -2076,10 +2076,9 @@ void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double co
     try {
         if(  ( NumPhase > 1 ) )
         {
-            SlaMitch = SlaMin + ( SlaMax - SlaMin ) * pow( AttenMitch , ( SDJ -
-                                                                            SDJLevee ) );
-            SlaNew = SlaMin + ( SlaMitch - SlaMin ) * pow( DegresDuJour / ( TOpt1 -
-                                                                              TBase ) , TempSla );
+            SlaMitch = SlaMin + ( SlaMax - SlaMin ) * pow( AttenMitch , ( SDJ - SDJLevee ) );
+
+            SlaNew = SlaMin + ( SlaMitch - SlaMin ) * pow( DegresDuJour / ( TOpt1 - TBase ) , TempSla );
 
             SlaNew = SlaNew + ( SlaNew * 0.8 * ( 1 - min( PAR/6 , 1.0 ) ) );
             // Increased SL for the day's new leaf mass if Par < 6 , at PAR = 1, increase is 50%
@@ -2641,7 +2640,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
             RUE = 0;
             CumTr = 0.00001;
             CumEt = 0.00001;
-            CumWUse = 0.00001;
+            CumWUse = 0;
             CumWReceived = 0;
             CumIrrig = 0;
             CumDr = 0;

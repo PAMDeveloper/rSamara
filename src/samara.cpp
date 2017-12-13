@@ -440,7 +440,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
         if (crop) samara2_1::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
         if (crop) samara2_1::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara2_1::EvalTranspi(TrPot, Cstr, Tr);
-        samara2_1::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
+        if(!NumPhase == 0 && !(NumPhase == 1 && ChangePhase == 1)) samara2_1::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
         if (crop) samara2_1::RS_EvolConsRes_Flood_V2(NumPhase, RuRac, RuSurf, CapaREvap, Tr, Evap, CapaRDE, CapaRFE, EpaisseurSurf, EpaisseurProf, ResUtil, StockRac,
                                                      StockSurface, StockTotal, ValRFE, ValRDE, ValRSurf, FloodwaterDepth, StockMacropores);
 
@@ -993,7 +993,7 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
         if(Vt == 0) {
             VPDCalc = VPDCalc;
         }
-        if ((ETP == NilValue)) {
+//        if ((ETP == NilValue)) {
             double eActual; double eSat; double RgRgMax; double TLat; double delta; double KPsy; double Eaero; double Erad; double Rn; double G;
             eSat = 0.3054 * (exp(17.27 * TMax * 1.0 / (TMax + 237.3)) +
                              exp(17.27 * TMin * 1.0 / (TMin + 237.3)));
@@ -1026,9 +1026,9 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             Eaero = (900 * 1.0 / (TMoyCalc + 273.16)) * ((eSat - eActual) * Vt) * KPsy * 1.0 /
                     (delta + KPsy * (1 + 0.34 * Vt));
             ETo = Erad + Eaero;
-        } else {
-            ETo = ETP;
-        }
+//        } else {
+//            ETo = ETP;
+//        }
         TMoyPrec = TMoyCalc;
 
     } catch (...) {
@@ -1528,7 +1528,7 @@ void init_all_variables_2_3(){
     CumSupplyTot = 0;
     CumTr = 0.00001;
     CumWReceived = 0;
-    CumWUse = 0.00001;
+    CumWUse = 0;
     CumWUseFin = 0;
     DAF = 0;
     DayLength = 0;
