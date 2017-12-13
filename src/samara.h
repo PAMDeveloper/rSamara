@@ -29,9 +29,10 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             double const &TMoy, double const &Vt, double &ETo,
             double &TMoyPrec, double &VPDCalc);
 void kill_crop();
-void reset_variables();
+void reset_variables_2_1();
 void reset_variables_2_3();
 void init_culture();
-void init_all_variables();
+void init_all_variables_2_1();
+void init_all_variables_2_3();
 
 #endif // SAMARA_H

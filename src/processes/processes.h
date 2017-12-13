@@ -2639,7 +2639,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
         {
             CumPar = 0;
             RUE = 0;
-            CumTr = 0;
+            CumTr = 0.00001;
             CumEt = 0.00001;
             CumWUse = 0.00001;
             CumWReceived = 0;
