@@ -7,6 +7,7 @@
 
 enum SamaraLogType {SMALL, COMPLETE, ECOTROP};
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters, SamaraLogType log = SMALL);
+pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log = SMALL);
 pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters, SamaraLogType log = SMALL);
 
 void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
@@ -30,9 +31,11 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             double &TMoyPrec, double &VPDCalc);
 void kill_crop();
 void reset_variables_2_1();
+void reset_variables_2_1_micha();
 void reset_variables_2_3();
 void init_culture();
 void init_all_variables_2_1();
+void init_all_variables_2_1_micha();
 void init_all_variables_2_3();
 
 #endif // SAMARA_H

@@ -1,7 +1,7 @@
 #ifndef PROCESSES_H
 #define PROCESSES_H
 
-namespace samara2_1 {
+namespace samara {
 
 int MonCompteur;
 void CalculeLaMoyenne(double const &LaValeur,   int const &LeCompteur,
@@ -2070,7 +2070,7 @@ void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolli
 void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double const& AttenMitch, double const& SDJ,
                            double const& SDJLevee, double const& NumPhase, double const& DegresDuJour, double const& TOpt1,
                            double const& TBase, double const& TempSla, double const& DryMatStructLeafPop,
-                           double const& GrowthStructLeafPop, double const& PAR,
+                           double const& GrowthStructLeafPop, double const& PAR, double const& PARCritSLA,
                            double & SlaMitch, double & SlaNew, double & sla)
 {
     try {
@@ -2080,7 +2080,7 @@ void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double co
 
             SlaNew = SlaMin + ( SlaMitch - SlaMin ) * pow( DegresDuJour / ( TOpt1 - TBase ) , TempSla );
 
-            SlaNew = SlaNew + ( SlaNew * 0.8 * ( 1 - min( PAR/6 , 1.0 ) ) );
+            SlaNew = SlaNew + ( SlaNew * 0.8 * ( 1 - min( PAR/PARCritSLA , 1.0 ) ) );
             // Increased SL for the day's new leaf mass if Par < 6 , at PAR = 1, increase is 50%
 
             sla = ( ( sla * DryMatStructLeafPop ) + ( SlaNew * GrowthStructLeafPop ) ) /

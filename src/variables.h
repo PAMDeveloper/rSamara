@@ -60,6 +60,7 @@ double LeafLengthMax;
 double LifeSavingDrainage;
 double Mulch;
 double PanStructMassMax;
+double PARCritSLA;
 double PercolationMax;
 double PEvap;
 double PFactor;
