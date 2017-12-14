@@ -330,7 +330,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
 pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
-    init_all_variables_2_1();
+    init_all_variables_2_1_micha();
     double DateDebutSimul = parameters->getDouble("startingdate");
     double DateFinSimul = parameters->getDouble("endingdate");
     double DateSemis = parameters->getDouble("sowing");
@@ -341,7 +341,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
     double NbJAS = DateEnCours - DateSemis;
     double NbDaysSinceGermination = NilValue;
 
-    init_parameters(parameters);
+    init_parameters_2_1_micha(parameters);
     init_parcelle(VolMacropores, HumSat, HumFC, ResUtil
                   , ProfRu, EpaisseurSurf, EpaisseurProf
                   , RuSurf, CapaREvap, CapaRFE, CapaRDE
@@ -357,14 +357,14 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
 
     bool crop = false;
     //Compute day before for TMoyPrec
-    set_meteo_vars(parameters, -1,
-                   TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
-                   Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
-    EToFao(ETP, Altitude, RgMax, RgCalc,
-           TMin, TMax,
-           HMin, HMax, HMoyCalc,
-           TMoyCalc, Vt, ETo,
-           TMoyPrec, VPDCalc);
+//    set_meteo_vars(parameters, -1,
+//                   TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
+//                   Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
+//    EToFao(ETP, Altitude, RgMax, RgCalc,
+//           TMin, TMax,
+//           HMin, HMax, HMoyCalc,
+//           TMoyCalc, Vt, ETo,
+//           TMoyPrec, VPDCalc);
     //
 
     double cumRain = 0;
@@ -382,7 +382,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
             crop = true;
         }
 
-        samara::RS_Transplanting_V2(NumPhase, DensityNursery, DensityField, DurationNursery, PlantsPerHill, Transplanting, NurseryStatus, ChangeNurseryStatus,
+        if(crop) samara::RS_Transplanting_V2(NumPhase, DensityNursery, DensityField, DurationNursery, PlantsPerHill, Transplanting, NurseryStatus, ChangeNurseryStatus,
                                        CounterNursery, Density, DryMatStructLeafPop, DryMatStructSheathPop, DryMatStructRootPop, DryMatStructInternodePop,
                                        DryMatStructPaniclePop, DryMatResInternodePop);
 
@@ -432,6 +432,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
                                                      StockSurface, StockTotal, ValRFE, ValRDE, ValRSurf, FloodwaterDepth, StockMacropores);
 
         /*if (crop) */samara::RS_EvalTMaxMoy(TMax, NumPhase, NumSsPhase, TmaxMoy);
+//        samara::RS_EvalTMaxMoy_V2_3(TMax, TMin, HMax, HMin, NumPhase, NumSsPhase, TmaxMoy);
         /*if (crop) */samara::RS_EvalTMinMoy(TMin, NumPhase, NumSsPhase, TminMoy);
 
         samara::RS_EvalFtswMoy(FTSW, NumPhase, NumSsPhase, FtswMoy);
@@ -590,8 +591,28 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
         /** OUTPUT VECTORS **/
         vector <double> result;
         if(LOG == ECOTROP) {
-            vector <double> r{NbJAS,NumPhase,DegresDuJour,DegresDuJourCor,Lai,MaxLai,FTSW,Cstr,RootFront,ETo,ETM,ETR,RUE,ConversionEff,Ic,CulmsPerPlant,CulmsPop,CulmsPerHill,GrainYieldPop,DryMatStructLeafPop,DryMatStructSheathPop,DryMatStructRootPop,DryMatStructInternodePop,DryMatResInternodePop,DryMatStructPaniclePop,DryMatStructTotPop,DryMatVegeTotPop,DryMatPanicleTotPop,DryMatStemPop,DryMatAboveGroundPop,DryMatTotPop,SterilityCold,SterilityHeat,SterilityDrought,SterilityTot,HarvestIndex,PanicleNumPop,PanicleNumPlant,GrainYieldPanicle,SpikeNumPop,SpikeNumPanicle,FertSpikeNumPop,GrainFillingStatus,PhaseStemElongation,Sla,HaunIndex,ApexHeight,PlantHeight,PlantWidth,VitesseRacinaireDay,Kcl,KRolling,LIRkdfcl,LTRkdfcl,AssimPot,Assim,RespMaintTot,SupplyTot,AssimSurplus,AssimNotUsed,AssimNotUsedCum,IcMean,CstrMean,TillerDeathPop,PlantLeafNumTot,DeadLeafdrywtPop,LaiDead,ResCapacityInternodePop,InternodeResStatus,DayLength,Par,RgCalc,VPDCalc,TMoyCalc,HMoyCalc,KceReal,StockTotal,EauDispo,StockSurface,StockRac,RuRac,Kcp,Kce,EvapPot,Evap,TrPot,Tr,Lr,Dr,PARIntercepte,SumDegresDay,VitesseRacinaire,CstrAssim,RayExtra,CumPAR,SumDegreDayCor,SumPP,SumDDPhasePrec,SeuilTemp,RespMaintDebt,TminMoy,TmaxMoy,FtswMoy,ResInternodeMobiliDay,RootShootRatio,TrEff,WueEt,WueTot,ConversionEff,SlaMitch,FloodwaterDepth,IrrigAutoDay,IrrigTotDay,FractionPlantHeightSubmer,Density,RootMassPerVol,CumEt,CumWUse,cumRain,CumWReceived,CumDr,CumLr,TrEffInst,VolMacropores,StockMacropores,IcCum,CstrCum,SlaNew,LTRkdf,LIRkdf,RelPotLeafLength,ApexHeightGain,HaunGain,Conversion,RootFrontOld,SimStartGermin,SimEmergence,SimStartPSP,SimPanIni,SimAnthesis50,SimStartMatu2,SimEndCycle,StressCold,CulmsPerPlantMax,CulmsPerHillMax,DurGermFlow,DurGermMat,LaiFin,CulmsPerHillFin,CulmsPerPlantFin,GrainYieldPopFin,DryMatAboveGroundPopFin,ReservePopFin,FractionRootsLogged,ResUtil,KcTot,DryMatAboveGroundTotPop,DemResInternodePop,LastLeafLengthPot,LastLeafLength,CumSupplyTot,DryMatResInternodePopOld,CumGrowthPop,GrowthPop,A_DemStructLeaf,A_GrowthStructLeaf,A_DemStructTot,A_GrowthStructTot,CoeffCO2Tr,CoeffCO2Assim,A_AssimSurplus,A_IncreaseResInternodePop,A_ResInternodeMobiliDay,CumCarbonUsedPop,DryMatTotPopFin,GrainFillingStatusFin,SterilityTotFin,CumIrrigFin,CumWUseFin,GrowthDryMatPop
-                        , Conversion, CumTr};
+            vector <double> r{
+                NbJAS,NumPhase,NumSsPhase,DegresDuJour,DegresDuJourCor,Lai,MaxLai,FTSW,Cstr,RootFront,ETo,ETM,ETR,RUE,
+                ConversionEff,Ic,CulmsPerPlant,CulmsPop,CulmsPerHill,GrainYieldPop,DryMatStructLeafPop,DryMatStructSheathPop,
+                DryMatStructRootPop,DryMatStructInternodePop,DryMatResInternodePop,DryMatStructPaniclePop,DryMatStructTotPop,
+                DryMatVegeTotPop,DryMatPanicleTotPop,DryMatStemPop,DryMatAboveGroundPop,DryMatTotPop,SterilityCold,SterilityHeat,
+                SterilityDrought,SterilityTot,HarvestIndex,PanicleNumPop,PanicleNumPlant,GrainYieldPanicle,SpikeNumPop,
+                SpikeNumPanicle,FertSpikeNumPop,GrainFillingStatus,PhaseStemElongation,Sla,HaunIndex,ApexHeight,PlantHeight,
+                PlantWidth,VitesseRacinaireDay,Kcl,KRolling,LIRkdfcl,LTRkdfcl,AssimPot,Assim,RespMaintTot,SupplyTot,AssimSurplus,
+                AssimNotUsed,AssimNotUsedCum,IcMean,CstrMean,TillerDeathPop,PlantLeafNumTot,DeadLeafdrywtPop,LaiDead,
+                ResCapacityInternodePop,InternodeResStatus,DayLength,Par,RgCalc,VPDCalc,TMoyCalc,HMoyCalc,KceReal,StockTotal,
+                EauDispo,StockSurface,StockRac,RuRac,Kcp,Kce,EvapPot,Evap,TrPot,Tr,Lr,Dr,PARIntercepte,SumDegresDay,
+                VitesseRacinaire,CstrAssim,RayExtra,CumPAR,SumDegreDayCor,SumPP,SumDDPhasePrec,SeuilTemp,RespMaintDebt,
+                TminMoy,TmaxMoy,FtswMoy,ResInternodeMobiliDay,RootShootRatio,TrEff,WueEt,WueTot,ConversionEff,SlaMitch,
+                FloodwaterDepth,IrrigAutoDay,IrrigTotDay,FractionPlantHeightSubmer,Density,RootMassPerVol,CumEt,CumWUse,
+                /*cumRain*/CumWReceived,CumWReceived,CumDr,CumLr,TrEffInst,VolMacropores,StockMacropores,IcCum,CstrCum,SlaNew,LTRkdf,LIRkdf,
+                RelPotLeafLength,ApexHeightGain,HaunGain,Conversion,RootFrontOld,SimStartGermin,SimEmergence,SimStartPSP,SimPanIni,
+                SimAnthesis50,SimStartMatu2,SimEndCycle,StressCold,CulmsPerPlantMax,CulmsPerHillMax,DurGermFlow,DurGermMat,LaiFin,
+                CulmsPerHillFin,CulmsPerPlantFin,GrainYieldPopFin,DryMatAboveGroundPopFin,ReservePopFin,FractionRootsLogged,ResUtil,
+                KcTot,DryMatAboveGroundTotPop,DemResInternodePop,LastLeafLengthPot,LastLeafLength,CumSupplyTot,DryMatResInternodePopOld,
+                CumGrowthPop,GrowthPop,A_DemStructLeaf,A_GrowthStructLeaf,A_DemStructTot,A_GrowthStructTot,CoeffCO2Tr,CoeffCO2Assim,
+                A_AssimSurplus,A_IncreaseResInternodePop,A_ResInternodeMobiliDay,CumCarbonUsedPop,DryMatTotPopFin,GrainFillingStatusFin,
+                SterilityTotFin,CumIrrigFin,CumWUseFin,GrowthDryMatPop,Conversion,CumTr};
             result = r;
         } else if (LOG == COMPLETE) {
             vector <double> r {ApexHeight,ApexHeightGain,Assim,AssimNotUsed,AssimNotUsedCum,AssimPot,AssimSurplus,A_AssimSurplus,A_DemStructLeaf,A_DemStructTot,A_GrowthStructLeaf,A_GrowthStructTot,A_IncreaseResInternodePop,A_ResInternodeMobiliDay,CapaRDE,CapaREvap,CapaRFE,ChangeNurseryStatus,ChangePhase,ChangeSsPhase,CoeffCO2Assim,CoeffCO2Tr,CoeffStressLogging,Conversion,ConversionEff,CounterNursery,Cstr,CstrAssim,CstrCum,CstrMean,CstrPhase2,CstrPhase3,CstrPhase4,CstrPhase5,CstrPhase6,CulmsPerHill,CulmsPerHillFin,CulmsPerHillMax,CulmsPerPlant,CulmsPerPlantFin,CulmsPerPlantMax,CulmsPop,CumCarbonUsedPop,CumCstrPhase2,CumCstrPhase3,CumCstrPhase4,CumCstrPhase5,CumCstrPhase6,CumDr,CumEt,CumFTSWPhase2,CumFTSWPhase3,CumFTSWPhase4,CumFTSWPhase5,CumFTSWPhase6,CumGrowthPop,CumIcPhase2,CumIcPhase3,CumIcPhase4,CumIcPhase5,CumIcPhase6,CumIrrig,CumIrrigFin,CumLr,CumPAR,CumSupplyTot,CumTr,CumWReceived,CumWUse,CumWUseFin,DAF,DayLength,DeadLeafdrywtPop,Decli,DegresDuJour,DegresDuJourCor,DemLeafAreaPlant,DemPanicleFillPop,DemResInternodePop,DemStructInternodePlant,DemStructInternodePop,DemStructLeafPlant,DemStructLeafPop,DemStructPaniclePlant,DemStructPaniclePop,DemStructRootPlant,DemStructRootPop,DemStructSheathPop,DemStructTotPop,Density,Dr,DryMatAboveGroundPop,DryMatAboveGroundPopFin,DryMatAboveGroundTotPop,DryMatPanicleTotPop,DryMatResInternodePop,DryMatResInternodePopOld,DryMatStructInternodePop,DryMatStructLeafPop,DryMatStructPaniclePop,DryMatStructRootPop,DryMatStructSheathPop,DryMatStemPop,DryMatStructTotPop,DryMatTotPop,DryMatTotPopFin,DryMatVegeTotPop,DurGermFlow,DurGermMat,DurPhase1,DurPhase2,DurPhase3,DurPhase4,DurPhase5,DurPhase6,EauDispo,ETM,ETo,ETR,Evap,EvapPot,FertSpikeNumPop,FloodwaterDepth,FloodwaterGain,FractionPlantHeightSubmer,FractionRootsLogged,FTSW,FtswMoy,FtswPhase2,FtswPhase3,FtswPhase4,FtswPhase5,FtswPhase6,GainRootSystSoilSurfPop,GainRootSystVolPop,GrainFillingStatus,GrainFillingStatusFin,GrainYieldPanicle,GrainYieldPop,GrainYieldPopFin,GrowthDryMatPop,GrowthPop,GrowthResInternodePop,GrowthStructDeficit,GrowthStructInternodePop,GrowthStructLeafPop,GrowthStructPaniclePop,GrowthStructRootPop,GrowthStructSheathPop,GrowthStructTotPop,HarvestIndex,HaunGain,HaunIndex,HMoyCalc,Hum,Ic,IcCum,IcMean,IcPhase2,IcPhase3,IcPhase4,IcPhase5,IcPhase6,IncreaseResInternodePop,InternodeResStatus,Irrigation,IrrigAutoDay,IrrigTotDay,Kce,KceReal,Kcl,Kcp,KcTot,Kr,KRolling,Lai,LaiDead,LaiFin,LastLeafLength,LastLeafLengthPot,LatRad,LeafDeathPop,LIRkdf,LIRkdfcl,Lr,LTRkdf,LTRkdfcl,MaxLai,MobiliLeafDeath,NumPhase,NumSsPhase,NurseryStatus,PanicleFilDeficit,PanicleFilPop,PanicleNumPlant,PanicleNumPop,PanicleSinkPop,PanStructMass,Par,PARIntercepte,PhaseStemElongation,PlantHeight,PlantLeafNumNew,PlantLeafNumTot,PlantWidth,ProfRu,RayExtra,RelPotLeafLength,ResCapacityInternodePop,ReservePopFin,ResInternodeMobiliDay,ResInternodeMobiliDayPot,RespMaintDebt,RespMaintTot,ResUtil,RgCalc,RgMax,RootFront,RootFrontOld,RootMassPerVol,RootShootRatio,RootSystSoilSurfPop,RootSystSoilSurfPopOld,RootSystVolPop,RootSystVolPopOld,RUE,RUEGreen,RuRac,RuSurf,SDJCorPhase4,SeuilCstrMortality,SeuilTemp,SeuilTempSsPhase,SimAnthesis50,SimEmergence,SimEndCycle,SimPanIni,SimStartGermin,SimStartMatu2,SimStartPSP,Sla,SlaMitch,SlaNew,SommeDegresJourMax,SpikeNumPanicle,SpikeNumPop,SterilityCold,SterilityDrought,SterilityHeat,SterilityTot,SterilityTotFin,StockMacropores,StockRac,StockSurface,StockTotal,StressCold,StRuMax,SumDDPhasePrec,SumDegreDayCor,SumDegresDay,SumPP,SunDistance,SunPosi,SupplyTot,TempLai,TillerDeathPop,TmaxMoy,TminMoy,TMoyCalc,TMoyPrec,Tr,TrEff,TrEffInst,TrPot,ValRDE,ValRFE,ValRSurf,VPDCalc,VitesseRacinaire,VitesseRacinaireDay,VolMacropores,VolRelMacropores,WueEt,WueTot,
@@ -618,7 +639,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
     /** OUTPUT VECTORS **/
     vector <string> names;
     if(LOG == ECOTROP) {
-        vector <string> n {"Jour","NbJas","NumPhase","DegresDuJour","DegresDuJourCor","Lai","MaxLai","FTSW","Cstr","RootFront","Eto","ETM","ETR","RUE","ConversionEff","Ic","CulmsPerPlant","CulmsPop","CulmsPerHill","GrainYieldPop","DryMatStructLeafPop","DryMatStructSheathPop","DryMatStructRootPop","DryMatStructInternodePop","DryMatResInternodePop","DryMatStructPaniclePop","DryMatStructTotPop","DryMatVegeTotPop","DryMatPanicleTotPop","DryMatStemPop","DryMatAboveGroundPop","DryMatTotPop","SterilityCold","SterilityHeat","SterilityDrought","SterilityTot","HarvestIndex","PanicleNumPop","PanicleNumPlant","GrainYieldPanicle","SpikeNumPop","SpikeNumPanicle","FertSpikeNumPop","GrainFillingStatus","PhaseStemElongation","Sla","HaunIndex","ApexHeight","PlantHeight","PlantWidth","VitesseRacinaireDay","Kcl","KRolling","LIRkdfcl","LTRkdfcl","AssimPot","Assim","RespMaintTot","SupplyTot","AssimSurplus","AssimNotUsed","AssimNotUsedCum","IcMean","CstrMean","TillerDeathPop","PlantLeafNumTot","DeadLeafdrywtPop","LaiDead","ResCapacityInternodePop","InternodeResStatus","DayLength","Par","RgCalc","VDPCalc","TMoyCalc","HMoyCalc","KceReal","StockTotal","EauDispo","StockSurface","StockRac","RURac","Kcp","Kce","EvapPot","Evap","TrPot","Tr","Lr","Dr","ParIntercepte","SumDegresDay","VitesseRacinaire","CstrAssim","RayExtra","CumPAR","SumDegreDayCor","SumPP","SumDDPhasePrec","SeuilTemp","RespMaintDebt","TMinMoy","TMaxMoy","FtswMoy","ResInternodeMobiliDay","RootShootRatio","TrEffInst","TrEff","WueEt","WueTot","SlaMitch","FloodwaterDepth","IrrigAutoDay","IrrigTotDay","FractionPlantHeightSubmer","Density","RootMassPerVol","CumTr","CumEt","CumWUse","CumWReceived","CumIrrig","CumDr","CumLr","VolMacropores","StockMacropores","IcCum","CstrCum","SlaNew","LTRkdf","LIRkdf","RelPotLeafLength","ApexHeightGain","Haungain","Conversion","RootFrontOld","SimStartGermin","SimEmergence","SimStartPSP","SimPanIni","SimAnthesis50","SimStartMatu2","SimEndCycle","StressCold","CulmsPerPlantMax","CulmsPerHillMax","DurGermFlow","DurGermMat","LaiFin","CulmsPerHillFin","CulmsPerPlantFin","GrainYieldPopFin","DryMatAboveGroundPopFin","ReservePopFin","FractionRootsLogged","ResUtil","KcTot","DryMatAboveGroundTotPop","DemResInternodePop","LastLeafLengthPot","LastLeafLength","CumSupplyTot","DryMatResInternodePopOld","CumGrowthPop","GrowthPop","A_DemStructLeaf","A_GrowthStructLeaf","A_DemStructTot","A_GrowthStructTot","CoeffCO2Tr","CoeffCO2Assim","A_AssimSurplus","A_IncreaseResInternodePop","A_ResInternodeMobiliDay","CumCarbonUsedPop","DryMatTotPopFin","GrainFillingStatusFin","SterilityTotFin","CumIrrigFin","CumWUseFin","GrowthDryMatPop_V2_1"
+        vector <string> n {"Jour","NbJas","NumPhase","NumSsPhase","DegresDuJour","DegresDuJourCor","Lai","MaxLai","FTSW","Cstr","RootFront","Eto","ETM","ETR","RUE","ConversionEff","Ic","CulmsPerPlant","CulmsPop","CulmsPerHill","GrainYieldPop","DryMatStructLeafPop","DryMatStructSheathPop","DryMatStructRootPop","DryMatStructInternodePop","DryMatResInternodePop","DryMatStructPaniclePop","DryMatStructTotPop","DryMatVegeTotPop","DryMatPanicleTotPop","DryMatStemPop","DryMatAboveGroundPop","DryMatTotPop","SterilityCold","SterilityHeat","SterilityDrought","SterilityTot","HarvestIndex","PanicleNumPop","PanicleNumPlant","GrainYieldPanicle","SpikeNumPop","SpikeNumPanicle","FertSpikeNumPop","GrainFillingStatus","PhaseStemElongation","Sla","HaunIndex","ApexHeight","PlantHeight","PlantWidth","VitesseRacinaireDay","Kcl","KRolling","LIRkdfcl","LTRkdfcl","AssimPot","Assim","RespMaintTot","SupplyTot","AssimSurplus","AssimNotUsed","AssimNotUsedCum","IcMean","CstrMean","TillerDeathPop","PlantLeafNumTot","DeadLeafdrywtPop","LaiDead","ResCapacityInternodePop","InternodeResStatus","DayLength","Par","RgCalc","VDPCalc","TMoyCalc","HMoyCalc","KceReal","StockTotal","EauDispo","StockSurface","StockRac","RURac","Kcp","Kce","EvapPot","Evap","TrPot","Tr","Lr","Dr","ParIntercepte","SumDegresDay","VitesseRacinaire","CstrAssim","RayExtra","CumPAR","SumDegreDayCor","SumPP","SumDDPhasePrec","SeuilTemp","RespMaintDebt","TMinMoy","TMaxMoy","FtswMoy","ResInternodeMobiliDay","RootShootRatio","TrEffInst","TrEff","WueEt","WueTot","SlaMitch","FloodwaterDepth","IrrigAutoDay","IrrigTotDay","FractionPlantHeightSubmer","Density","RootMassPerVol","CumTr","CumEt","CumWUse","CumWReceived","CumIrrig","CumDr","CumLr","VolMacropores","StockMacropores","IcCum","CstrCum","SlaNew","LTRkdf","LIRkdf","RelPotLeafLength","ApexHeightGain","Haungain","Conversion","RootFrontOld","SimStartGermin","SimEmergence","SimStartPSP","SimPanIni","SimAnthesis50","SimStartMatu2","SimEndCycle","StressCold","CulmsPerPlantMax","CulmsPerHillMax","DurGermFlow","DurGermMat","LaiFin","CulmsPerHillFin","CulmsPerPlantFin","GrainYieldPopFin","DryMatAboveGroundPopFin","ReservePopFin","FractionRootsLogged","ResUtil","KcTot","DryMatAboveGroundTotPop","DemResInternodePop","LastLeafLengthPot","LastLeafLength","CumSupplyTot","DryMatResInternodePopOld","CumGrowthPop","GrowthPop","A_DemStructLeaf","A_GrowthStructLeaf","A_DemStructTot","A_GrowthStructTot","CoeffCO2Tr","CoeffCO2Assim","A_AssimSurplus","A_IncreaseResInternodePop","A_ResInternodeMobiliDay","CumCarbonUsedPop","DryMatTotPopFin","GrainFillingStatusFin","SterilityTotFin","CumIrrigFin","CumWUseFin","GrowthDryMatPop_V2_1"
                            , "Conversion", "MonCumTr"};
         names = n;
     } else if (LOG == COMPLETE) {
@@ -1104,6 +1125,127 @@ void init_parameters(SamaraParameters * params) {
     VRacRPR = parameters.getDouble("vracrpr");
     WaterLoggingSens = parameters.getDouble("waterloggingsens");
     WtRatioLeafSheath = parameters.getDouble("wtratioleafsheath");
+}
+
+void init_parameters_2_1_micha(SamaraParameters * params) {
+    SamaraParameters parameters = *params;
+    Altitude = parameters.getDouble("wsalt");
+    ASScstr = parameters.getDouble("asscstr");
+    AttenMitch = parameters.getDouble("attenmitch");
+    BundHeight = parameters.getDouble("bundheight");
+    Ca = parameters.getDouble("ca");
+    CO2Cp = parameters.getDouble("co2cp");
+    CO2Exp = parameters.getDouble("co2exp");
+    CO2Slopetr = parameters.getDouble("co2slopetr");
+    CoeffAssimSla = parameters.getDouble("coeffassimsla");
+    CoefficientQ10 = parameters.getDouble("coefficientq10");
+    CoeffInternodeMass = parameters.getDouble("coeffinternodemass");
+    CoeffInternodeNum = parameters.getDouble("coeffinternodenum");
+    CoeffLeafDeath = parameters.getDouble("coeffleafdeath");
+    CoeffLeafWLRatio = parameters.getDouble("coeffleafwlratio");
+    CoeffPanicleMass = parameters.getDouble("coeffpaniclemass");
+    CoeffPanSinkPop = parameters.getDouble("coeffpansinkpop");
+    CoeffResCapacityInternode = parameters.getDouble("coeffrescapacityinternode");
+    CoeffReserveSink = parameters.getDouble("coeffreservesink");
+    CoeffRootMassPerVolMax = parameters.getDouble("coeffrootmasspervolmax");
+    CoeffTillerDeath = parameters.getDouble("coefftillerdeath");
+    CoeffTransplantingShock = parameters.getDouble("coefftransplantingshock");
+    DensityField = parameters.getDouble("densityfield");
+    DensityNursery = parameters.getDouble("densitynursery");
+    DEVcstr = parameters.getDouble("devcstr");
+    DurationNursery = parameters.getDouble("durationnursery");
+    EpaisseurProf = parameters.getDouble("epaisseurprof");
+    EpaisseurSurf = parameters.getDouble("epaisseursurf");
+    ExcessAssimToRoot = parameters.getDouble("excessassimtoroot");
+    FTSWIrrig = parameters.getDouble("ftswirrig");
+    HaunCritTillering = parameters.getDouble("hauncrittillering");
+    HumFC = parameters.getDouble("humfc");
+    HumPF = parameters.getDouble("humpf");
+    HumSat = parameters.getDouble("humsat");
+    IcTillering = parameters.getDouble("ictillering");
+    InternodeLengthMax = parameters.getDouble("internodelengthmax");
+    IrrigAuto = parameters.getDouble("irrigauto");
+    IrrigAutoResume = parameters.getDouble("irrigautoresume");
+    IrrigAutoStop = parameters.getDouble("irrigautostop");
+    IrrigAutoTarget = parameters.getDouble("irrigautotarget");
+    KcMax = parameters.getDouble("kcmax");
+    KCritSterCold1 = parameters.getDouble("kcritstercold1");
+    KCritSterCold2 = parameters.getDouble("kcritstercold2");
+    KCritSterFtsw1 = parameters.getDouble("kcritsterftsw1");
+    KCritSterFtsw2 = parameters.getDouble("kcritsterftsw2");
+    KCritSterHeat1 = parameters.getDouble("kcritsterheat1");
+    KCritSterHeat2 = parameters.getDouble("kcritsterheat2");
+    KCritStressCold1 = parameters.getDouble("kcritstresscold1");
+    KCritStressCold2 = parameters.getDouble("kcritstresscold2");
+    Kdf = parameters.getDouble("kdf");
+    KPar = parameters.getDouble ("kpar");
+    KRespInternode = parameters.getDouble("krespinternode");
+    KRespMaintLeaf = parameters.getDouble("krespmaintleaf");
+    KRespMaintRoot = parameters.getDouble("krespmaintroot");
+    KRespMaintSheath = parameters.getDouble("krespmaintsheath");
+    KRespPanicle = parameters.getDouble("kresppanicle");
+    KTempMaint = parameters.getDouble("ktempmaint");
+    Latitude = parameters.getDouble("wslat");
+    LeafLengthMax = parameters.getDouble("leaflengthmax");
+    LifeSavingDrainage = parameters.getDouble("lifesavingdrainage");
+    Mulch = parameters.getDouble("mulch");
+    PanStructMassMax = parameters.getDouble("panstructmassmax");
+    PARCritSLA = parameters.getDouble("parcritsla");
+    PercolationMax = parameters.getDouble("percolationmax");
+    PEvap = parameters.getDouble("pevap");
+    PFactor = parameters.getDouble("pfactor");
+    Phyllo = parameters.getDouble("phyllo");
+    PlantsPerHill = parameters.getDouble("plantsperhill");
+    PlotDrainageDAF = parameters.getDouble("plotdrainagedaf");
+    PoidsSecGrain = parameters.getDouble("poidssecgrain");
+    PourcRuiss = parameters.getDouble("pourcruiss");
+    PPCrit = parameters.getDouble("ppcrit");
+    PPExp = parameters.getDouble("ppexp");
+    PPSens = parameters.getDouble("ppsens");
+    PriorityPan = parameters.getDouble("prioritypan");
+    ProfRacIni = parameters.getDouble("profracini");
+    RankLongestLeaf = parameters.getDouble("ranklongestleaf");
+    RelMobiliInternodeMax = parameters.getDouble("relmobiliinternodemax");
+    RelPhylloPhaseStemElong = parameters.getDouble("relphyllophasestemelong");
+    RollingBase = parameters.getDouble("rollingbase");
+    RollingSens = parameters.getDouble("rollingsens");
+    RootCstr = parameters.getDouble("rootcstr");
+    RootFrontMax = parameters.getDouble("rootfrontmax");
+    RootPartitMax = parameters.getDouble("rootpartitmax");
+    SDJBVP = parameters.getDouble("sdjbvp");
+    SDJLevee = parameters.getDouble("sdjlevee");
+    SDJMatu1 = parameters.getDouble("sdjmatu1");
+    SDJMatu2 = parameters.getDouble("sdjmatu2");
+    SDJRPR = parameters.getDouble("sdjrpr");
+    SeuilPP = parameters.getDouble("seuilpp");
+    SeuilRuiss = parameters.getDouble("seuilruiss");
+    SlaMax = parameters.getDouble("slamax");
+    SlaMin = parameters.getDouble("slamin");
+    StockIniProf = parameters.getDouble("stockiniprof");
+    StockIniSurf = parameters.getDouble("stockinisurf");
+    TBase = parameters.getDouble("tbase");
+    TempSLA = parameters.getDouble("tempsla");
+    TilAbility = parameters.getDouble("tilability");
+    TLim = parameters.getDouble("tlim");
+    TOpt1 = parameters.getDouble("topt1");
+    TOpt2 = parameters.getDouble("topt2");
+    Transplanting = parameters.getDouble("transplanting");
+    TransplantingDepth = parameters.getDouble("transplantingdepth");
+    TxAssimBVP = parameters.getDouble("txassimbvp");
+    TxAssimMatu1 = parameters.getDouble("txassimmatu1");
+    TxAssimMatu2 = parameters.getDouble("txassimmatu2");
+    TxConversion = parameters.getDouble("txconversion");
+    TxResGrain = parameters.getDouble("txresgrain");
+    TxRuSurfGermi = parameters.getDouble("txrusurfgermi");
+    VRacBVP = parameters.getDouble("vracbvp");
+    VRacLevee = parameters.getDouble("vraclevee");
+    VRacMatu1 = parameters.getDouble("vracmatu1");
+    VRacMatu2 = parameters.getDouble("vracmatu2");
+    VRacPSP = parameters.getDouble("vracpsp");
+    VRacRPR = parameters.getDouble("vracrpr");
+    WaterLoggingSens = parameters.getDouble("waterloggingsens");
+    WtRatioLeafSheath = parameters.getDouble("wtratioleafsheath");
+    StockIniSurf = 0;
 }
 
 void reset_variables_2_1() {
@@ -2122,6 +2264,7 @@ void init_all_variables_2_1_micha(){
     VolRelMacropores = 0;
     WueEt = 0;
     WueTot = 0;
+    StockIniSurf = 0;
 }
 
 void init_all_variables_2_3(){
