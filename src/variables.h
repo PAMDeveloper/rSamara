@@ -179,6 +179,7 @@ double CumCstrPhase4 = 0;
 double CumCstrPhase5 = 0;
 double CumCstrPhase6 = 0;
 double CumDr = 0;
+double CumDrFin = 0;
 double CumEt = 0;
 double CumFTSWPhase2 = 0;
 double CumFTSWPhase3 = 0;

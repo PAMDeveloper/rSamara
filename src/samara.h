@@ -14,8 +14,9 @@ void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, doubl
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc);
-void init_parameters(SamaraParameters * params);
+void init_parameters_2_1(SamaraParameters * params);
 void init_parameters_2_1_micha(SamaraParameters * params);
+void init_parameters_2_3(SamaraParameters * params);
 void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double &ResUtil
                    , double &ProfRu, double &EpaisseurSurf, double &EpaisseurProf
                    , double &RuSurf, double &CapaREvap, double &CapaRFE, double &CapaRDE
