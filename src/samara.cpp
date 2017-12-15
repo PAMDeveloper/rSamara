@@ -733,7 +733,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
     //
 
     double cumRain = 0;
-    bool simulationFinished;
+    bool simulationFinished = false;
     //Main loop
     for (DateEnCours; DateEnCours < DateFinSimul; DateEnCours++) {
         A_ResInternodeMobiliDay = 0;
