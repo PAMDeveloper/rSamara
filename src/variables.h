@@ -116,6 +116,23 @@ double VRacRPR;
 double WaterLoggingSens;
 double WtRatioLeafSheath;
 
+//TODO tmp lodging
+//var
+double MatuSDJ = 0;
+double MatuProgress = 0;
+double GrainMoisture = 0;
+double FreshMatPanicleTotPop = 0;
+double StemVigor = 0;
+double LodgingIndex = 0;
+double FreshMatAbovegroundPop = 0;
+double LodgingResistance = 0;
+double LodgingDay = 0;
+double Lodging = 0;
+
+//params
+double CoeffLodging;
+//
+
 //variables parameters
 double TMax;
 double TMin;
