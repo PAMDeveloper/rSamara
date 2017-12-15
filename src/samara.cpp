@@ -899,11 +899,9 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
 
         if(crop)samara::RS_EvalClumpAndLightInter_V2_1(NumPhase, KRolling, Density, PlantWidth, PlantHeight, Kdf, Lai, FractionPlantHeightSubmer, LIRkdf, LIRkdfcl, LTRkdf, LTRkdfcl);
 
-        if(crop)samara::RS_EvalSlaMitch(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
-                                                TempSLA, DryMatStructLeafPop, GrowthStructLeafPop, SlaMitch, SlaNew, Sla);
-//        if(crop)samara::RS_EvalSlaMitch_V2_2(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
-//                                             TempSLA, DryMatStructLeafPop, Par, PARCritSLA,
-//                                             GrowthStructLeafPop, SlaMitch, SlaNew, Sla);
+        if(crop)samara::RS_EvalSlaMitch_V2_2(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
+                                             TempSLA, DryMatStructLeafPop, Par, PARCritSLA,
+                                             GrowthStructLeafPop, SlaMitch, SlaNew, Sla);
 
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                              VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
