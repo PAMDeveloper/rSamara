@@ -50,7 +50,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
     bool simulationFinished = false;
     //Main loop
     for (DateEnCours; DateEnCours < DateFinSimul; DateEnCours++) {
-        set_meteo_vars(parameters, DateEnCours-DateDebutSimul,
+        set_meteo_vars(parameters, (int)(DateEnCours-DateDebutSimul),
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
                        Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
         NbJAS = DateEnCours - DateSemis;
@@ -373,7 +373,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
         A_ResInternodeMobiliDay = 0;
         ResInternodeMobiliDay = 0;
 
-        set_meteo_vars(parameters, DateEnCours-DateDebutSimul,
+        set_meteo_vars(parameters, (int)(DateEnCours-DateDebutSimul),
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
                        Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
         NbJAS = DateEnCours - DateSemis;
@@ -739,7 +739,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
         A_ResInternodeMobiliDay = 0;
         ResInternodeMobiliDay = 0;
 
-        set_meteo_vars(parameters, DateEnCours-DateDebutSimul,
+        set_meteo_vars(parameters, (int)(DateEnCours-DateDebutSimul),
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
                        Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc);
         NbJAS = DateEnCours - DateSemis;
@@ -1915,7 +1915,7 @@ void reset_variables_2_3() {
 }
 
 
-void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
+void set_meteo_vars(SamaraParameters * parameters, int t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc) {
@@ -2007,7 +2007,7 @@ void eval_Par(double t) {
 }
 
 
-void EToFao(double const &ETP, double const &Alt, double const &RgMax, double const &RgCalc,
+void EToFao(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, double const &RgCalc,
             double const &TMin, double const &TMax,
             double const &HMin, double const &HMax, double const &HMoyCalc,
             double const &TMoyCalc, double const &Vt, double &ETo,
