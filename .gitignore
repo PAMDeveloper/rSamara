@@ -9,3 +9,4 @@ src-x64/
 src-i386/
 .Rproj.user
 RcppExports*
+src/rsamara.dll

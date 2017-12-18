@@ -60,6 +60,7 @@ double LeafLengthMax;
 double LifeSavingDrainage;
 double Mulch;
 double PanStructMassMax;
+double PARCritSLA;
 double PercolationMax;
 double PEvap;
 double PFactor;
@@ -114,6 +115,23 @@ double VRacPSP;
 double VRacRPR;
 double WaterLoggingSens;
 double WtRatioLeafSheath;
+
+//TODO tmp lodging
+//var
+double MatuSDJ = 0;
+double MatuProgress = 0;
+double GrainMoisture = 0;
+double FreshMatPanicleTotPop = 0;
+double StemVigor = 0;
+double LodgingIndex = 0;
+double FreshMatAbovegroundPop = 0;
+double LodgingResistance = 0;
+double LodgingDay = 0;
+double Lodging = 0;
+
+//params
+double CoeffLodging;
+//
 
 //variables parameters
 double TMax;
@@ -178,6 +196,7 @@ double CumCstrPhase4 = 0;
 double CumCstrPhase5 = 0;
 double CumCstrPhase6 = 0;
 double CumDr = 0;
+double CumDrFin = 0;
 double CumEt = 0;
 double CumFTSWPhase2 = 0;
 double CumFTSWPhase3 = 0;
@@ -231,7 +250,7 @@ double DryMatStructLeafPop = 0;
 double DryMatStructPaniclePop = 0;
 double DryMatStructRootPop = 0;
 double DryMatStructSheathPop = 0;
-double DryMatStructStemPop = 0;
+double DryMatStemPop = 0;
 double DryMatStructTotPop = 0;
 double DryMatTotPop = 0;
 double DryMatTotPopFin = 0;

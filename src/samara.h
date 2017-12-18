@@ -5,14 +5,19 @@
 #include "utils/juliancalculator.h"
 #include "parameters.h"
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters);
-pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters);
+enum SamaraLogType {SMALL, COMPLETE, ECOTROP};
+pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters, SamaraLogType log = SMALL);
+pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log = SMALL);
+pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters, SamaraLogType log = SMALL);
+pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging(SamaraParameters * parameters, SamaraLogType log = SMALL);
 
 void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc);
-void init_parameters(SamaraParameters * params);
+void init_parameters_2_1(SamaraParameters * params);
+void init_parameters_2_1_micha(SamaraParameters * params);
+void init_parameters_2_3(SamaraParameters * params);
 void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double &ResUtil
                    , double &ProfRu, double &EpaisseurSurf, double &EpaisseurProf
                    , double &RuSurf, double &CapaREvap, double &CapaRFE, double &CapaRDE
@@ -28,9 +33,12 @@ void EToFao(double const &ETP, double const &Alt, double const &RgMax, double co
             double const &TMoy, double const &Vt, double &ETo,
             double &TMoyPrec, double &VPDCalc);
 void kill_crop();
-void reset_variables();
+void reset_variables_2_1();
+void reset_variables_2_1_micha();
 void reset_variables_2_3();
 void init_culture();
-void init_all_variables();
+void init_all_variables_2_1();
+void init_all_variables_2_1_micha();
+void init_all_variables_2_3();
 
 #endif // SAMARA_H
