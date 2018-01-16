@@ -480,7 +480,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
 
     try {
         if ((PhaseStemElongation == 1)) {
-            ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.2), cstr) * StressCold
+            ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.1), cstr) * StressCold
                     * InternodeLengthMax;
             ApexHeightGain = ApexHeightGain * CoeffInternodeNum;
         } else {
@@ -1275,7 +1275,11 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
 
             double LowerOrderTillersPop = CulmsPop - 2 * (PlantsPerHill * Density);
 
-            TillerDeathPop = max(0.,min((1 - (min(Ic, 1.)) * CoeffTillerDeath * LowerOrderTillersPop),0.06 * CulmsPop));
+            TillerDeathPop = max(0.,
+                                 min(
+                                     (1 - min(Ic,1.)) * CoeffTillerDeath * LowerOrderTillersPop,
+                                     0.06 * CulmsPop)
+                                 );
             // Introduced rate limitation of tiller abortion (not more than 6%/day)in V2.2; additional provision added that TillerDeathPop cannot be negative
 
             CulmsPop = max(Density * PlantsPerHill, CulmsPop - TillerDeathPop);
