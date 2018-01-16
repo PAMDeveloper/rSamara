@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <iostream>
 using namespace std;
 
 struct Climate {
@@ -56,11 +57,11 @@ public:
 
     double getDouble(string s) {
         if(doubles.find(s) == doubles.end()) {
-//            qDebug() << "Missing" << QString::fromStdString(s);
+            std::cout << "Missing" << s;
             return -999;
         }
         if( doubles[s].first != doubles[s].first ) {
-//            qDebug() << "NAN" << QString::fromStdString(s);
+            std::cout << "NAN" << s;
             return -999;
         }
         return doubles[s].first;

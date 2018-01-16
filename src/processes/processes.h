@@ -120,7 +120,10 @@ void RS_Transplanting_V2(double const &NumPhase, double const &DensityNursery, d
 }
 
 
-void EvolPhenoPSPStress(double const &SumPP, double const &PPsens, double const &SommeDegresJour, double const &SeuilTempLevee, double const &SeuilTempBVP, double const &SeuilTempRPR, double const &SeuilTempMatu1, double const &SeuilTempMatu2, double const &StockSurface, double const &PourcRuSurfGermi, double const &RuSurf, double const &DateDuJour, double const &DateSemis, double const &stRu,
+void EvolPhenoPSPStress(double const &SumPP, double const &PPsens, double const &SommeDegresJour,
+                        double const &SeuilTempLevee, double const &SeuilTempBVP, double const &SeuilTempRPR,
+                        double const &SeuilTempMatu1, double const &SeuilTempMatu2, double const &StockSurface,
+                        double const &PourcRuSurfGermi, double const &RuSurf, double const &/*DateDuJour*/, double const &/*DateSemis*/, double const &stRu,
                         double &NumPhase, double &SommeDegresJourPhasePrec, double &SeuilTempPhaseSuivante, double &ChangePhase, double &SeuilTempSousPhaseSuivante, double &ChangeSousPhase, double &NumSousPhase)
 /*Procedure speciale pour inclure le module photoperiodique de Vaksman & Dingkuhn
 qui fonctionne en degres jours et declanche IP lorsque SumPP est inferieur à PPsens*/
@@ -474,7 +477,9 @@ void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, doubl
 // and LeafLengthMax.
 // -----------------------------------------------------------------------------
 
-void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, double const &CoeffInternodeNum, double const &HaunGain, double const &cstr, double const &InternodeLengthMax, double const &RelPotLeafLength, double const &LeafLengthMax, double const &CulmsPerHill, double const &IcMean, double const &Kdf, double const &Ic, double const &WtRatioLeafSheath, double const &StressCold, double const &CstrMean,
+void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, double const &CoeffInternodeNum,
+                                          double const &HaunGain, double const &cstr, double const &InternodeLengthMax,
+                                          double const &RelPotLeafLength, double const &LeafLengthMax, double const &/*CulmsPerHill*/, double const &IcMean, double const &Kdf, double const &Ic, double const &WtRatioLeafSheath, double const &StressCold, double const &CstrMean,
                                   double &ApexHeightGain, double &ApexHeight, double &PlantHeight, double &PlantWidth) {
     double CorrectedCstrMean;
 
@@ -503,7 +508,9 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
     }
 }
 
-void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double const &CoeffInternodeNum, double const &HaunGain, double const &cstr, double const &InternodeLengthMax, double const &RelPotLeafLength, double const &LeafLengthMax, double const &CulmsPerHill, double const &IcMean, double const &Kdf, double const &Ic, double const &WtRatioLeafSheath, double const &StressCold, double const &CstrMean,
+void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double const &CoeffInternodeNum,
+                                  double const &HaunGain, double const &cstr, double const &InternodeLengthMax,
+                                  double const &RelPotLeafLength, double const &LeafLengthMax, double const &/*CulmsPerHill*/, double const &IcMean, double const &Kdf, double const &Ic, double const &WtRatioLeafSheath, double const &StressCold, double const &CstrMean,
                                   double &ApexHeightGain, double &ApexHeight, double &PlantHeight, double &PlantWidth) {
     double CorrectedCstrMean;
 
@@ -557,7 +564,9 @@ void RS_EvalEvapPot(double const &Etp, double const &Kce,   double &EvapPot) {
 }
 
 
-void RS_EvolEvapSurfRFE_RDE_V2_1(double const &NumPhase, double const &Kce, double const &EvapPot, double const &CapaREvap, double const &CapaRDE, double const &CapaRFE, double const &RuRac, double const &RuSurf, double const &BundHeight, double const &EpaisseurSurf, double const &EpaisseurProf, double const &RootFront, double const &ResUtil,
+void RS_EvolEvapSurfRFE_RDE_V2_1(double const &NumPhase, double const &Kce, double const &EvapPot,
+                                 double const &CapaREvap, double const &CapaRDE, double const &CapaRFE,
+                                 double const &RuRac, double const &RuSurf, double const &/*BundHeight*/, double const &EpaisseurSurf, double const &EpaisseurProf, double const &RootFront, double const &ResUtil,
                                  double &Evap, double &ValRSurf, double &ValRFE, double &ValRDE, double &StockRac, double &StockTotal, double &StockSurface, double &Kr, double &KceReal, double &FloodwaterDepth, double &StockMacropores) {
     double ValRSurfPrec; double EvapRU;
     double Evap1; double Evap2;
@@ -731,7 +740,9 @@ void EvalETRETM(double const &Evap, double const &Tr, double const &Trpot,   dou
 }
 
 
-void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double const &RuSurf, double const &CapaREvap, double const &Tr, double const &Evap, double const &CapaRDE, double const &CapaRFE, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ResUtil,
+void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double const &RuSurf,
+                             double const &CapaREvap, double const &Tr, double const &Evap,
+                             double const &/*CapaRDE*/, double const &/*CapaRFE*/, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ResUtil,
                              double &StockRac, double &StockSurface, double &StockTotal, double &ValRFE, double &ValRDE, double &ValRSurf, double &FloodwaterDepth, double &StockMacropores) {
     double TrSurf;
     double WaterDeficit;
@@ -1360,8 +1371,8 @@ void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, doubl
 }
 
 
-void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &PhaseStemElongation, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
-                                 double &RespMaintDebt, double &AssimNotUsed, double &AssimNotUsedCum, double &AssimSurplus, double &SupplyTot, double &CumSupplyTot) {
+void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
+                                 double &RespMaintDebt, double &/*AssimNotUsed*/, double &/*AssimNotUsedCum*/, double &/*AssimSurplus*/, double &SupplyTot, double &CumSupplyTot) {
     try {
         SupplyTot = Assim + MobiliLeafDeath - RespMaintTot;// - max(0., RespMaintDebt);
         /*NEW*/
@@ -1401,8 +1412,8 @@ void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &PhaseStem
 }
 
 
-void RS_EvalSupplyTot_V2_1(double const &NumPhase, double const &PhaseStemElongation, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
-                           double &RespMaintDebt, double &AssimNotUsed, double &AssimNotUsedCum, double &AssimSurplus, double &SupplyTot, double &CumSupplyTot) {
+void RS_EvalSupplyTot_V2_1(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
+                           double &RespMaintDebt, double &/*AssimNotUsed*/, double &/*AssimNotUsedCum*/, double &/*AssimSurplus*/, double &SupplyTot, double &CumSupplyTot) {
     try {
         SupplyTot = Assim + MobiliLeafDeath - RespMaintTot - max(0., RespMaintDebt);
         /*NEW*/
@@ -1485,7 +1496,7 @@ void RS_EvalDemandStructSheath(double const &NumPhase, double const &DemStructLe
 
 
 void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density,
-                                double CoeffRootMassPerVolMax, double RootPartitMax, double GrowthStructTotPop, double RootFront, double SupplyTot, double DemStructLeafPop, double DemStructSheathPop, double DryMatStructRootPop,
+                                double CoeffRootMassPerVolMax, double RootPartitMax, double /*GrowthStructTotPop*/, double RootFront, double /*SupplyTot*/, double DemStructLeafPop, double DemStructSheathPop, double DryMatStructRootPop,
                                 double &RootSystSoilSurfPop, double &RootSystVolPop, double &GainRootSystVolPop, double &GainRootSystSoilSurfPop, double &DemStructRootPop, double &RootSystSoilSurfPopOld, double &RootFrontOld, double &RootSystVolPopOld, double &DemStructRootPlant) {
     try {
         RootSystSoilSurfPop = min(RootFront * RootFront * Density / 1000000
@@ -1552,7 +1563,9 @@ void RS_EvalDemandStructPanicle_V2(double const &NumPhase, double const &CoeffPa
 }
 
 
-void RS_EvalDemandTotAndIcPreFlow_V2_1(double const &NumPhase, double const &RespMaintTot, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DemStructRootPop, double const &DemStructInternodePop, double const &DemStructPaniclePop, double const &SupplyTot, double const &NbDaysSinceGermination, double const &PlantHeight, double const &cstr, double const &DemResInternodePop,
+void RS_EvalDemandTotAndIcPreFlow_V2_1(double const &NumPhase, double const &/*RespMaintTot*/, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DemStructRootPop,
+                                       double const &DemStructInternodePop, double const &DemStructPaniclePop, double const &SupplyTot,
+                                       double const &NbDaysSinceGermination, double const &PlantHeight, double const &cstr, double const &DemResInternodePop,
                                        double &DemStructTotPop, double &Ic, double &IcCumul, double &IcMean, double &CstrCumul, double &CstrMean, double &A_DemStructTot)
 
 {
@@ -1778,7 +1791,7 @@ void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot
 }
 
 
-void RS_AddResToGrowthStructPop_V2_1(double const &NumPhase, double const &Ic, double const &PhaseStemElongation, double const &DryMatResInternodePop, double const &DemStructTotPop, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DemStructRootPop, double const &DemStructInternodePop, double const &DemStructPaniclePop, double const &RelMobiliInternodeMax, double const &GrowthResInternodePop,
+void RS_AddResToGrowthStructPop_V2_1(double const &NumPhase, double const &Ic, double const &/*PhaseStemElongation*/, double const &/*DryMatResInternodePop*/, double const &DemStructTotPop, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DemStructRootPop, double const &DemStructInternodePop, double const &DemStructPaniclePop, double const &/*RelMobiliInternodeMax*/, double const &GrowthResInternodePop,
                                      double &ResInternodeMobiliDayPot, double &GrowthStructDeficit, double &GrowthStructLeafPop, double &GrowthStructSheathPop, double &GrowthStructRootPop, double &GrowthStructInternodePop, double &GrowthStructPaniclePop, double &GrowthStructTotPop, double &ResInternodeMobiliDay, double &A_GrowthStructLeaf, double &A_GrowthStructTot, double &A_ResInternodeMobiliDay) {
     try {
         if ((NumPhase > 1)) {
@@ -1913,7 +1926,7 @@ void RS_EvolPanicleFilPop_V2_1(double const &NumPhase, double const &Ic, double 
 }
 
 bool start = false;
-void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &PhaseStemElongation, double const &DryMatStructInternodePop, double const &DryMatStructSheathPop, double const &CoeffResCapacityInternode, double const &AssimSurplus, double const &ResInternodeMobiliDay,
+void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &DryMatStructInternodePop, double const &DryMatStructSheathPop, double const &CoeffResCapacityInternode, double const &AssimSurplus, double const &ResInternodeMobiliDay,
                                         double &ResCapacityInternodePop, double &IncreaseResInternodePop, double &DryMatResInternodePop, double &AssimNotUsed, double &AssimNotUsedCum, double &GrowthResInternodePop, double &DryMatResInternodePopOld, double &A_IncreaseResInternodePop) {
     try {
         //if ((PhaseStemElongation = 1) or (NumPhase >= 5)) then
@@ -1954,7 +1967,7 @@ void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &Ph
 }
 
 
-void RS_EvolGrowthReserveInternode(double const &NumPhase, double const &PhaseStemElongation,
+void RS_EvolGrowthReserveInternode(double const &NumPhase, double const &/*PhaseStemElongation*/,
                                    double const &DryMatStructInternodePop, double const &DryMatStructSheathPop,
                                    double const &CoeffResCapacityInternode, double const &AssimSurplus,
                                    double const &ResInternodeMobiliDay, double &ResCapacityInternodePop,
@@ -1980,7 +1993,7 @@ void RS_EvolGrowthReserveInternode(double const &NumPhase, double const &PhaseSt
 
 void RS_EvolGrowthTot_V2_1(double const &NumPhase, double const &GrowthStructLeafPop, double const &GrowthStructSheathPop,
                            double const &GrowthStructRootPop, double const &GrowthStructInternodePop, double const &GrowthStructPaniclePop,
-                           double const &GrowthResInternodePop, double const &PanicleFilPop, double const &DryMatResInternodePop, double const &DryMatResInternodePopOld,
+                           double const &/*GrowthResInternodePop*/, double const &PanicleFilPop, double const &DryMatResInternodePop, double const &DryMatResInternodePopOld,
                            double &GrowthStructTotPop, double &GrowthDryMatPop, double &A_GrowthStructTot) {
     try {
         if ((NumPhase < 5)) {
@@ -2027,7 +2040,7 @@ void RS_ExcessAssimilToRoot_V2(double const &NumPhase, double const &ExcessAssim
 }
 
 
-void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, double const &PlantsPerHill, double const &TxResGrain, double const &PoidsSecGrain, double const &Densite, double const &GrowthStructLeafPop, double const &GrowthStructSheathPop, double const &GrowthStructRootPop, double const &GrowthStructInternodePop, double const &GrowthStructPaniclePop, double const &GrowthStructTotPop, double const &GrowthResInternodePop, double const &GrainYieldPop, double const &ResCapacityInternodePop, double const &CulmsPerPlant, double const &CoeffPanSinkPop, double const &SterilityTot, double const &DeadLeafDrywtPop, double const &DryMatResInternodePopOld, double const &PanicleFilPop, double const &AssimNotUsedCum, double const &MobiliLeafDeath,
+void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, double const &PlantsPerHill, double const &TxResGrain, double const &PoidsSecGrain, double const &Densite, double const &GrowthStructLeafPop, double const &GrowthStructSheathPop, double const &GrowthStructRootPop, double const &GrowthStructInternodePop, double const &GrowthStructPaniclePop, double const &/*GrowthStructTotPop*/, double const &/*GrowthResInternodePop*/, double const &GrainYieldPop, double const &ResCapacityInternodePop, double const &CulmsPerPlant, double const &CoeffPanSinkPop, double const &SterilityTot, double const &DeadLeafDrywtPop, double const &DryMatResInternodePopOld, double const &PanicleFilPop, double const &AssimNotUsedCum, double const &MobiliLeafDeath,
 
                            double &DryMatStructLeafPop, double &DryMatStructSheathPop, double &DryMatStructRootPop, double &DryMatStructInternodePop, double &DryMatStructPaniclePop, double &DryMatStemPop, double &DryMatStructTotPop, double &DryMatResInternodePop, double &DryMatVegeTotPop, double &DryMatPanicleTotPop, double &DryMatAboveGroundPop, double &DryMatTotPop, double &HarvestIndex, double &InternodeResStatus, double &PanicleNumPop, double &PanicleNumPlant, double &GrainYieldPanicle, double &SpikeNumPop, double &SpikeNumPanicle, double &FertSpikeNumPop, double &GrainFillingStatus, double &RootShootRatio, double &DryMatAboveGroundTotPop, double &CumGrowthPop, double &GrowthPop, double &CumCarbonUsedPop) {
     try {
@@ -2163,7 +2176,9 @@ void RS_LeafRolling_V2_1(double const &NumPhase, double const &RollingBase, doub
 }
 
 
-void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolling, double const &Density, double const &PlantWidth, double const &PlantHeight, double const &Kdf, double const &Lai, double const &FractionPlantHeightSubmer,
+void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolling, double const &Density,
+                                    double const &PlantWidth, double const &/*PlantHeight*/, double const &Kdf,
+                                    double const &Lai, double const &FractionPlantHeightSubmer,
                                     double &LIRkdf, double &LIRkdfcl, double &LTRkdf, double &LtrKdfcl) {
     double RolledLai;
 
@@ -2239,7 +2254,11 @@ void RS_EvalSlaMitch(double const &SlaMax, double const &SlaMin, double const &A
 }
 
 
-void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, double const &SeuilRuiss, double const &PourcRuiss, double const &BundHeight, double const &Irrigation, double const &PlantHeight, double const &LifeSavingDrainage, double const &PlotDrainageDAF, double const &VolMacropores, double const &SuilRuiss, double const &PercolationMax, double const &DAF,
+void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, double const &SeuilRuiss,
+                               double const &PourcRuiss, double const &BundHeight, double const &Irrigation,
+                               double const &PlantHeight, double const &LifeSavingDrainage, double const &PlotDrainageDAF,
+                               double const &VolMacropores, double const &SuilRuiss, double const &/*PercolationMax*/,
+                               double const &DAF,
                                double &StockMacropores, double &FloodwaterDepth, double &EauDispo, double &Lr) {
     double CorrectedIrrigation;
     double CorrectedBundheight;
@@ -2324,7 +2343,7 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
 
 void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto,
                                  double const &IrrigAutoTarget, double const &BundHeight,
-                                 double const &PlantHeight, double const &Irrigation, double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &VolRelMacropores, double const &Rain, double const &FTSWIrrig, double const &IrrigAutoStop, double const &IrrigAutoResume, double const &ChangeNurseryStatus, double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &ResUtil, double const &RootFront, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ProfRacIni,
+                                 double const &PlantHeight, double const &Irrigation, double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &/*VolRelMacropores*/, double const &Rain, double const &FTSWIrrig, double const &IrrigAutoStop, double const &IrrigAutoResume, double const &ChangeNurseryStatus, double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &ResUtil, double const &RootFront, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ProfRacIni,
                                  double &FloodwaterDepth, double &IrrigAutoDay, double &IrrigTotDay, double &StockMacropores, double &EauDispo, double &RuRac, double &StockRac, double &FTSW, double &Lr) {
     double IrrigAutoTargetCor;
     double CorrectedIrrigation;
@@ -2434,8 +2453,8 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
 }
 
 
-void RS_EvolRempliResRFE_RDE_V2(double const &NumPhase, double const &RuSurf, double const &EauDispo, double const &RuRac, double const &CapaRFE, double const &CapaREvap, double const &CapaRDE, double const &StRuMax, double const &PercolationMax, double const &BundHeight, double const &EpaisseurSurf, double const &EpaisseurProf, double const &VolMacropores,
-                                double &FloodwaterDepth, double &StockTotal, double &StockRac, double &Hum, double &StockSurface, double &Dr, double &ValRDE, double &ValRFE, double &ValRSurf, double &FloodWaterGain, double &StockMacropores) {
+void RS_EvolRempliResRFE_RDE_V2(double const &/*NumPhase*/, double const &/*RuSurf*/, double const &EauDispo, double const &RuRac, double const &CapaRFE, double const &CapaREvap, double const &CapaRDE, double const &StRuMax, double const &PercolationMax, double const &BundHeight, double const &/*EpaisseurSurf*/, double const &/*EpaisseurProf*/, double const &VolMacropores,
+                                double &FloodwaterDepth, double &StockTotal, double &StockRac, double &Hum, double &StockSurface, double &Dr, double &ValRDE, double &ValRFE, double &ValRSurf, double &/*FloodWaterGain*/, double &StockMacropores) {
     double EauReste; double ValRSurfPrec; double EauTranspi;
 
     try {
@@ -2549,7 +2568,7 @@ void RS_EvalStressWaterLogging_V2(double const &StockMacropores, double const &V
 
 
 
-void RS_EvolRempliMacropores_V2(double const &NumPhase, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ResUtil, double const &StockMacropores, double const &RootFront, double const &CapaRDE, double const &CapaRFE, double const &FloodwaterDepth,
+void RS_EvolRempliMacropores_V2(double const &/*NumPhase*/, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ResUtil, double const &StockMacropores, double const &RootFront, double const &CapaRDE, double const &CapaRFE, double const &FloodwaterDepth,
                                 double &StockTotal, double &Hum, double &StockSurface, double &StockRac, double &ValRDE, double &ValRFE, double &ValRSurf) {
     try {
         if (((StockMacropores + FloodwaterDepth) > 0)) {
@@ -2571,8 +2590,8 @@ void RS_EvolRempliMacropores_V2(double const &NumPhase, double const &EpaisseurS
 }
 
 
-void RS_EvolRurRFE_RDE_V2_1(double const &VitesseRacinaire, double const &Hum, double const &ResUtil, double const &StockSurface, double const &RuSurf, double const &ProfRacIni, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ValRDE, double const &ValRFE, double const &NumPhase, double const &ChangePhase, double const &FloodwaterDepth, double const &StockMacropores, double const &RootFrontMax, double const &ChangeNurseryStatus, double const &Transplanting, double const &TransplantingDepth,
-                            double &RuRac, double &StockRac, double &StockTotal, double &FloodWaterGain, double &RootFront) {
+void RS_EvolRurRFE_RDE_V2_1(double const &VitesseRacinaire, double const &Hum, double const &ResUtil, double const &/*StockSurface*/, double const &RuSurf, double const &ProfRacIni, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ValRDE, double const &ValRFE, double const &NumPhase, double const &ChangePhase, double const &FloodwaterDepth, double const &StockMacropores, double const &RootFrontMax, double const &ChangeNurseryStatus, double const &Transplanting, double const &TransplantingDepth,
+                            double &RuRac, double &StockRac, double &StockTotal, double &/*FloodWaterGain*/, double &RootFront) {
     double DeltaRur;
 
     try {
@@ -2743,7 +2762,7 @@ void RS_EvolSomDegresJourCor(double const &DegresDuJourCor, double const &NumPha
 
 // Modified 8/19/13
 void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double const& PARIntercepte, double const& DryMatTotPop,
-                      double const& DeadLeafDrywtPop, double const& DryMatStructRootPop, double const& Tr, double const& Evap,
+                      double const& /*DeadLeafDrywtPop*/, double const& /*DryMatStructRootPop*/, double const& Tr, double const& Evap,
                       double const& Dr, double const& Lr, double const& SupplyTot, double const& AssimNotUsed, double const& Irrigation,
                       double const& IrrigAutoDay, double const& Pluie, double const& Assim, double const& AssimPot, double const& Conversion,
                       double const& NbJas, double const& Transplanting, double const& NurseryStatus, double const& Density, double const& DensityNursery,
@@ -2835,7 +2854,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
 }
 
 void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double const &PARIntercepte, double const &DryMatTotPop,
-                     double const &DeadLeafDrywtPop, double const &DryMatStructRootPop, double const &Tr, double const &Evap,
+                     double const &/*DeadLeafDrywtPop*/, double const &/*DryMatStructRootPop*/, double const &Tr, double const &Evap,
                      double const &Dr, double const &Lr, double const &SupplyTot, double const &AssimNotUsed, double const &Irrigation,
                      double const &IrrigAutoDay, double const &Pluie, double const &Assim, double const &AssimPot, double const &Conversion,
                      double const &NbJas, double const &Transplanting, double const &NurseryStatus, double const &Density, double const &DensityNursery,

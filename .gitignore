@@ -8,4 +8,5 @@ src-x64/
 .Rproj.user/
 src-i386/
 .Rproj.user
+RcppExports*
 src/rsamara.dll

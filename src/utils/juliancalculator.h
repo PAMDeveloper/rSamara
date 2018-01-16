@@ -78,7 +78,7 @@ public:
         for (int i = 0; i < date.month - 1; i++) {
             nbDays += months[i];
         }
-        return nbDays + date.day;
+        return nbDays + (int)date.day;
     }
 
     static dateInts parseString(string date, DateFormat format, char sep) {

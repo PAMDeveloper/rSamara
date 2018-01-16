@@ -2,8 +2,9 @@
 #define SAMARA_H
 
 #include "samara_defines.h"
-#include "utils/juliancalculator.h"
 #include "parameters.h"
+
+#include "utils/juliancalculator.h"
 
 enum SamaraLogType {SMALL, COMPLETE, ECOTROP};
 pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters, SamaraLogType log = SMALL);
@@ -12,7 +13,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
 pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging(SamaraParameters * parameters, SamaraLogType log = SMALL);
 pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging_test(SamaraParameters * parameters, SamaraLogType log = SMALL);
 
-void set_meteo_vars(SamaraParameters * parameters, double t, double &TMax, double &TMin, double &TMoy
+void set_meteo_vars(SamaraParameters * parameters, int t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc);
@@ -29,6 +30,11 @@ void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double 
                    , double &CounterNursery, double &VolRelMacropores);
 void eval_Par(double t);
 void EToFao(double const &ETP, double const &Alt, double const &RgMax, double const &RgCalc,
+            double const &TMin, double const &TMax,
+            double const &HMin, double const &HMax, double const &HMoy,
+            double const &TMoy, double const &Vt, double &ETo,
+            double &TMoyPrec, double &VPDCalc);
+void EToFao_2_3(double const &ETP, double const &Alt, double const &RgMax, double const &RgCalc,
             double const &TMin, double const &TMax,
             double const &HMin, double const &HMax, double const &HMoy,
             double const &TMoy, double const &Vt, double &ETo,
