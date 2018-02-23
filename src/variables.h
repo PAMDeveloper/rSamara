@@ -129,8 +129,14 @@ double LodgingResistance = 0;
 double LodgingDay = 0;
 double Lodging = 0;
 
+double StemSurfMean = 0;
+double StemDiaMean = 0;
+double StemDiaBase = 0;
+double LodgingPot = 0;
+
 //params
 double CoeffLodging;
+double StemPorosity;
 //
 
 //variables parameters

@@ -485,7 +485,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
 
     try {
         if ((PhaseStemElongation == 1)) {
-            ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.1), cstr) * StressCold
+            ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.2), cstr) * StressCold
                     * InternodeLengthMax;
             ApexHeightGain = ApexHeightGain * CoeffInternodeNum;
         } else {
@@ -497,14 +497,13 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
         } else {
             CorrectedCstrMean = CstrMean;
         }
-        PlantHeight = ApexHeight + (1.5 * (1 - Kdf) * RelPotLeafLength *
-                                    LeafLengthMax * sqrt(IcMean) * CorrectedCstrMean * (1 + 1 /
-                                                                                        WtRatioLeafSheath));
+        PlantHeight = ApexHeight + ((1 - Kdf) * RelPotLeafLength *
+                                    LeafLengthMax * sqrt(IcMean) * CorrectedCstrMean);
         PlantWidth = std::pow(Kdf, 1.5) * 2 * sqrt(IcMean) * RelPotLeafLength * LeafLengthMax;/*DELETED LB*/ /**
       Min(1.4, (1 + 0.1 * (CulmsPerHill - 1)));*/
 
     } catch (...) {
-        error_message("RS_EvolHauteur_SDJ_cstr_V2_1", URisocas);
+        error_message("RS_EvolHauteur_SDJ_cstr_V2_1_lodging", URisocas);
     }
 }
 
@@ -1277,7 +1276,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
     try {
-        if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR ) )
+        if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= 0.7 * SeuilTempRPR ) )
                && ( CulmsPerPlant >= 1 ) ) )
         {
             //TillerDeathPop := (1 - (Min(Ic, 1))) * CulmsPop * CoeffTillerDeath;
@@ -2944,9 +2943,10 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
 
 void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, double const &DryMatStructLeafPop,
                            double const &DryMatStemPop, double const &DeadLeafDrywtPop, double const &DryMatPanicleTotPop,
-                           double const &PlantHeight, double const &CoeffLodging,
+                           double const &PlantHeight, double const &CoeffLodging, double const &StemPorosity,
                            double &GrainMoisture, double &FreshMatPanicleTotPop, double &StemVigor, double &LodgingIndex,
-                           double &FreshMatAbovegroundPop, double &LodgingResistance) {
+                           double &FreshMatAbovegroundPop, double &LodgingResistance, double &StemSurfMean,
+                           double &StemDiaMean, double &StemDiaBase) {
     try {
         if ( NumPhase > 4) {
             GrainMoisture = 0.7 - 0.5 * pow(MatuProgress, 2);
@@ -2960,6 +2960,15 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
             //calculated in grams and meters units; LodgingIndex is an output variable
             LodgingResistance = CoeffLodging / LodgingIndex;
             //CoeffLodging is a new varietal parameter that depends on stem chemistry and anatomy, traits we cannot simulate. Its value is empirical and can only be estimated if lodging has been observed in an experiment and compared with simulated LodgingIncidence. LodgingResistance is an output variable and will be used to calculate actual lodging on the basis of wind speed and rain in module EvalLodging_Incidence.
+
+
+//            // Estimation of stem thickness
+            StemSurfMean = 100 * StemVigor * 2.5 / StemPorosity;
+            // StemPorosity is a new crop parameter expressing fraction air spaces in stem; default value is 0.67 (two-thirds); coefficient of 2.5 estimates water content (w/w); in cm3
+            StemDiaMean = 10 * 2 * sqrt(StemSurfMean / M_PI); //in mm
+            StemDiaBase = StemDiaMean * 1.3;
+//            // rough estimate of stem thickness distribution bottom to top; coefficient should be smaller in sorghum because it has less sheath around the culm at the base.
+
         }
     } catch (...) {
         error_message("EvalLodgingResistance", URiz);
@@ -2968,12 +2977,13 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
 
 void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistance, double const &Vt,
                           double const &Pluie,
-                          double &LodgingDay, double &Lodging) {
+                          double &LodgingDay, double &Lodging, double &LodgingPot) {
     try {
         if ( NumPhase > 4) {
             LodgingDay = Vt * Pluie / LodgingResistance;
             //It may be necessary to introduce a Vt * Pluie threshold, to be studied
-            Lodging = max(Lodging, LodgingDay);
+            LodgingPot = max(Lodging, LodgingDay);
+            Lodging = min(LodgingPot, 100.);
             //Please don’t forget to initialize Lodging to zero!
         }
     } catch (...) {
