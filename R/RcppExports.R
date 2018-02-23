@@ -17,6 +17,30 @@ runDF <- function(from_date, to_date, simulation, variety, plot, itinerary, stat
     .Call('rsamara_runDF', PACKAGE = 'rsamara', from_date, to_date, simulation, variety, plot, itinerary, station, meteo)
 }
 
+runSimpleSamara2_1 <- function(params, meteo) {
+    .Call('rsamara_runSimpleSamara2_1', PACKAGE = 'rsamara', params, meteo)
+}
+
+runSamara2_1 <- function(from_date, to_date, simulation, variety, plot, itinerary, station, meteo) {
+    .Call('rsamara_runSamara2_1', PACKAGE = 'rsamara', from_date, to_date, simulation, variety, plot, itinerary, station, meteo)
+}
+
+runSimpleSamara2_3 <- function(params, meteo) {
+    .Call('rsamara_runSimpleSamara2_3', PACKAGE = 'rsamara', params, meteo)
+}
+
+runSamara2_3 <- function(from_date, to_date, simulation, variety, plot, itinerary, station, meteo) {
+    .Call('rsamara_runSamara2_3', PACKAGE = 'rsamara', from_date, to_date, simulation, variety, plot, itinerary, station, meteo)
+}
+
+runSimpleSamara2_3_lodging <- function(params, meteo) {
+    .Call('rsamara_runSimpleSamara2_3_lodging', PACKAGE = 'rsamara', params, meteo)
+}
+
+runSamara2_3_lodging <- function(from_date, to_date, simulation, variety, plot, itinerary, station, meteo) {
+    .Call('rsamara_runSamara2_3_lodging', PACKAGE = 'rsamara', from_date, to_date, simulation, variety, plot, itinerary, station, meteo)
+}
+
 rcpp_reduceVobs <- function(vObs, results) {
     .Call('rsamara_rcpp_reduceVobs', PACKAGE = 'rsamara', vObs, results)
 }

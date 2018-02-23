@@ -60,6 +60,96 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// runSimpleSamara2_1
+List runSimpleSamara2_1(List params, List meteo);
+RcppExport SEXP rsamara_runSimpleSamara2_1(SEXP paramsSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSimpleSamara2_1(params, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runSamara2_1
+List runSamara2_1(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo);
+RcppExport SEXP rsamara_runSamara2_1(SEXP from_dateSEXP, SEXP to_dateSEXP, SEXP simulationSEXP, SEXP varietySEXP, SEXP plotSEXP, SEXP itinerarySEXP, SEXP stationSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type from_date(from_dateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type to_date(to_dateSEXP);
+    Rcpp::traits::input_parameter< List >::type simulation(simulationSEXP);
+    Rcpp::traits::input_parameter< List >::type variety(varietySEXP);
+    Rcpp::traits::input_parameter< List >::type plot(plotSEXP);
+    Rcpp::traits::input_parameter< List >::type itinerary(itinerarySEXP);
+    Rcpp::traits::input_parameter< List >::type station(stationSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSamara2_1(from_date, to_date, simulation, variety, plot, itinerary, station, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runSimpleSamara2_3
+List runSimpleSamara2_3(List params, List meteo);
+RcppExport SEXP rsamara_runSimpleSamara2_3(SEXP paramsSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSimpleSamara2_3(params, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runSamara2_3
+List runSamara2_3(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo);
+RcppExport SEXP rsamara_runSamara2_3(SEXP from_dateSEXP, SEXP to_dateSEXP, SEXP simulationSEXP, SEXP varietySEXP, SEXP plotSEXP, SEXP itinerarySEXP, SEXP stationSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type from_date(from_dateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type to_date(to_dateSEXP);
+    Rcpp::traits::input_parameter< List >::type simulation(simulationSEXP);
+    Rcpp::traits::input_parameter< List >::type variety(varietySEXP);
+    Rcpp::traits::input_parameter< List >::type plot(plotSEXP);
+    Rcpp::traits::input_parameter< List >::type itinerary(itinerarySEXP);
+    Rcpp::traits::input_parameter< List >::type station(stationSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSamara2_3(from_date, to_date, simulation, variety, plot, itinerary, station, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runSimpleSamara2_3_lodging
+List runSimpleSamara2_3_lodging(List params, List meteo);
+RcppExport SEXP rsamara_runSimpleSamara2_3_lodging(SEXP paramsSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSimpleSamara2_3_lodging(params, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// runSamara2_3_lodging
+List runSamara2_3_lodging(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo);
+RcppExport SEXP rsamara_runSamara2_3_lodging(SEXP from_dateSEXP, SEXP to_dateSEXP, SEXP simulationSEXP, SEXP varietySEXP, SEXP plotSEXP, SEXP itinerarySEXP, SEXP stationSEXP, SEXP meteoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type from_date(from_dateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type to_date(to_dateSEXP);
+    Rcpp::traits::input_parameter< List >::type simulation(simulationSEXP);
+    Rcpp::traits::input_parameter< List >::type variety(varietySEXP);
+    Rcpp::traits::input_parameter< List >::type plot(plotSEXP);
+    Rcpp::traits::input_parameter< List >::type itinerary(itinerarySEXP);
+    Rcpp::traits::input_parameter< List >::type station(stationSEXP);
+    Rcpp::traits::input_parameter< List >::type meteo(meteoSEXP);
+    rcpp_result_gen = Rcpp::wrap(runSamara2_3_lodging(from_date, to_date, simulation, variety, plot, itinerary, station, meteo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_reduceVobs
 List rcpp_reduceVobs(List vObs, List results);
 RcppExport SEXP rsamara_rcpp_reduceVobs(SEXP vObsSEXP, SEXP resultsSEXP) {

@@ -180,8 +180,101 @@ List runDF(Rcpp::String from_date, Rcpp::String to_date, List simulation, List v
                                                                     pair <double, string>(toJulianDayCalc(from_date), "simulation") ));
   parameters->doubles.insert( pair<string ,pair <double, string> >( "endingdate",
                                                                     pair <double, string>(toJulianDayCalc(to_date), "simulation") ));
-  init_parameters(parameters);
   List result = resultToList(run_samara_2_1(parameters));
+  delete parameters;
+  return result;
+}
+
+// [[Rcpp::export]]
+List runSimpleSamara2_1(List params, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, params, "");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  pair <vector <string>, vector < vector <double> > > results = run_samara_2_1(parameters);
+  List result = resultToList(results);
+  delete parameters;
+  return result;
+}
+
+// [[Rcpp::export]]
+List runSamara2_1(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, simulation, "simulation");
+  fillMapWithDoubleList(parameters->doubles, variety, "variete");
+  fillMapWithDoubleList(parameters->doubles, plot, "parcelle");
+  fillMapWithDoubleList(parameters->doubles, itinerary, "itinerairetechnique");
+  fillMapWithDoubleList(parameters->doubles, station, "station");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "startingdate",
+                                                                    pair <double, string>(toJulianDayCalc(from_date), "simulation") ));
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "endingdate",
+                                                                    pair <double, string>(toJulianDayCalc(to_date), "simulation") ));
+  List result = resultToList(run_samara_2_1(parameters));
+  delete parameters;
+  return result;
+}
+
+
+// [[Rcpp::export]]
+List runSimpleSamara2_3(List params, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, params, "");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  pair <vector <string>, vector < vector <double> > > results = run_samara_2_3(parameters);
+  List result = resultToList(results);
+  delete parameters;
+  return result;
+}
+
+// [[Rcpp::export]]
+List runSamara2_3(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, simulation, "simulation");
+  fillMapWithDoubleList(parameters->doubles, variety, "variete");
+  fillMapWithDoubleList(parameters->doubles, plot, "parcelle");
+  fillMapWithDoubleList(parameters->doubles, itinerary, "itinerairetechnique");
+  fillMapWithDoubleList(parameters->doubles, station, "station");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "startingdate",
+                                                                    pair <double, string>(toJulianDayCalc(from_date), "simulation") ));
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "endingdate",
+                                                                    pair <double, string>(toJulianDayCalc(to_date), "simulation") ));
+  List result = resultToList(run_samara_2_3(parameters));
+  delete parameters;
+  return result;
+}
+
+// [[Rcpp::export]]
+List runSimpleSamara2_3_lodging(List params, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, params, "");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  pair <vector <string>, vector < vector <double> > > results = run_samara_2_3_lodging(parameters);
+  List result = resultToList(results);
+  delete parameters;
+  return result;
+}
+
+// [[Rcpp::export]]
+List runSamara2_3_lodging(Rcpp::String from_date, Rcpp::String to_date, List simulation, List variety, List plot, List itinerary, List station, List meteo)
+{
+  SamaraParameters * parameters = new SamaraParameters();
+  fillMapWithDoubleList(parameters->doubles, simulation, "simulation");
+  fillMapWithDoubleList(parameters->doubles, variety, "variete");
+  fillMapWithDoubleList(parameters->doubles, plot, "parcelle");
+  fillMapWithDoubleList(parameters->doubles, itinerary, "itinerairetechnique");
+  fillMapWithDoubleList(parameters->doubles, station, "station");
+  fillClimaticVectorWithList(parameters->climatics, meteo);
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "startingdate",
+                                                                    pair <double, string>(toJulianDayCalc(from_date), "simulation") ));
+  parameters->doubles.insert( pair<string ,pair <double, string> >( "endingdate",
+                                                                    pair <double, string>(toJulianDayCalc(to_date), "simulation") ));
+  List result = resultToList(run_samara_2_3_lodging(parameters));
   delete parameters;
   return result;
 }
