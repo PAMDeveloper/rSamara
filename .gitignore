@@ -10,3 +10,5 @@ src-i386/
 .Rproj.user
 RcppExports*
 src/rsamara.dll
+/src/RcppExports.cpp
+/R/RcppExports.R

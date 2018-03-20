@@ -1,12 +1,13 @@
 Package: rsamara
 Type: Package
-Title: Discrete time hierachical simulation kernel
-Version: 1.0
-Date: 2017-01-20
-Author: Eric Ramat
-Maintainer: Eric Ramat <eric.ramat@gmail.com>
-Description: One paragraph description of what the package does as one
-        or more full sentences.
+Title: Samara simulator package for R
+Version: 2.3
+Date: 2018-03-20
+Author: Gregory Beurier
+Maintainer: Gregory Beurier <gregory.beurier@cirad.fr>
+Description: The package contains the Samara simulation engine and the scripts
+			 for parameters estimation et sensitivity analysis. Package initiated
+			 by Eric Ramat.
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.9)
 LinkingTo: Rcpp
