@@ -103,6 +103,7 @@ loadObs <- function(trialcode, variety, startDate, endDate)
                 "Observation_resultat.AppLeaves as appleaves, Observation_resultat.AppTill as culmsperplant,",
                 " [Observation_resultat]![GrainYield]/[Observation_resultat]![TotBiom] AS haunindex, ",
                 "Observation_resultat.PanGrainNb as drymatstructpaniclepop, ",
+                "Observation_resultat.NumPhase as NumPhase, ",
                 "[Observation_resultat]![StemDM]*10+[Observation_resultat]![leafDM]*10+IIf(IsNull([Observation_resultat]![PanicleDM]*10),0,",
                 "[Observation_resultat]![PanicleDM]*10) AS drymatabovegroundpop,",
                 " [Observation_resultat]![lai]/([Observation_resultat]![leafDM]*10) AS sla,",
