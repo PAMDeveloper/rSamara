@@ -2857,7 +2857,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
                      double const &Dr, double const &Lr, double const &SupplyTot, double const &AssimNotUsed, double const &Irrigation,
                      double const &IrrigAutoDay, double const &Pluie, double const &Assim, double const &AssimPot, double const &Conversion,
                      double const &NbJas, double const &Transplanting, double const &NurseryStatus, double const &Density, double const &DensityNursery,
-                     double const &DryMatAboveGroundTotPop, double &RUE, double &CumPar, double &CumTr, double &CumEt, double &CumWUse,
+                     double const &DryMatAboveGroundTotPop, double const &DryMatAboveGroundPop, double &RUE, double &CumPar, double &CumTr, double &CumEt, double &CumWUse,
                      double &CumWReceived, double &CumIrrig, double &CumDr, double &CumLr, double &TrEffInst, double &TrEff, double &WueEt,
                      double &WueTot, double &ConversionEff, double & RUEgreen) {
     double CorrectedIrrigation;
@@ -2943,7 +2943,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
 
 void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, double const &DryMatStructLeafPop,
                            double const &DryMatStemPop, double const &DeadLeafDrywtPop, double const &DryMatPanicleTotPop,
-                           double const &PlantHeight, double const &CoeffLodging, double const &StemPorosity,
+                           double const &PlantHeight, double const &CoeffLodging, double const &StemPorosity, double const &ApexHeight, double const &CulmsPop,
                            double &GrainMoisture, double &FreshMatPanicleTotPop, double &StemVigor, double &LodgingIndex,
                            double &FreshMatAbovegroundPop, double &LodgingResistance, double &StemSurfMean,
                            double &StemDiaMean, double &StemDiaBase) {

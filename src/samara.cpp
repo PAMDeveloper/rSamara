@@ -1,14 +1,13 @@
 #include "samara.h"
 
-#include "variables.h"
 #include "processes/processes.h"
 
 #include <iostream>
 #include <algorithm>
 #include <string>
 
-SamaraLogType LOG;
-pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParameters * parameters, SamaraLogType log) {
+
+pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
     init_all_variables_2_1();
@@ -230,7 +229,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
 
         samara::RS_EvalRUE_V2_1(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
-                                DryMatAboveGroundTotPop, /*DryMatAboveGroundPop,*/ RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
+                                DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
@@ -249,7 +248,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
         }
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
-                reset_variables_2_1();
+//                reset_variables_2_1();
             }
             DryMatResInternodePop = 0;
         }
@@ -271,7 +270,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
 
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
-                kill_crop();
+//                kill_crop();
                 crop = false;
                 simulationFinished = true;
             }
@@ -317,7 +316,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1(SamaraParamet
     return pair <vector <string>, vector < vector <double> > > (names, results);
 }
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log) {
+pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
     init_all_variables_2_1_micha();
@@ -543,7 +542,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
 
         samara::RS_EvalRUE_V2_1(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
-                                DryMatAboveGroundTotPop, /*DryMatAboveGroundPop,*/ RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
+                                DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
@@ -671,7 +670,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_1_micha(SamaraP
 }
 
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParameters * parameters, SamaraLogType log) {
+pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
     init_all_variables_2_3();
@@ -1001,7 +1000,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3(SamaraParamet
     return pair <vector <string>, vector < vector <double> > > (names, results);
 }
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging(SamaraParameters * parameters, SamaraLogType log) {
+pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodging(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
     init_all_variables_2_3();
@@ -1250,7 +1249,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging(Samar
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,
-                                       PlantHeight,  CoeffLodging, StemPorosity,
+                                       PlantHeight,  CoeffLodging, StemPorosity, ApexHeight, CulmsPop,
                                        GrainMoisture,  FreshMatPanicleTotPop,  StemVigor,  LodgingIndex,
                                        FreshMatAbovegroundPop,  LodgingResistance,
                                        StemSurfMean, StemDiaMean, StemDiaBase);
@@ -1359,7 +1358,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging(Samar
 }
 
 
-pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging_test(SamaraParameters * parameters, SamaraLogType log) {
+pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodging_test(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
     //Simu parameters
     init_all_variables_2_3();
@@ -1615,7 +1614,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging_test(
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,
-                                       PlantHeight,  CoeffLodging, StemPorosity,
+                                       PlantHeight,  CoeffLodging, StemPorosity, ApexHeight, CulmsPop,
                                        GrainMoisture,  FreshMatPanicleTotPop,  StemVigor,  LodgingIndex,
                                        FreshMatAbovegroundPop,  LodgingResistance,
                                        StemSurfMean, StemDiaMean, StemDiaBase);
@@ -1724,7 +1723,7 @@ pair <vector <string>, vector < vector <double> > > run_samara_2_3_lodging_test(
     return pair <vector <string>, vector < vector <double> > > (names, results);
 }
 
-void init_parameters_2_1(SamaraParameters * params) {
+void Samara::init_parameters_2_1(SamaraParameters * params) {
     SamaraParameters parameters = *params;
     Altitude = parameters.getDouble("wsalt");
     ASScstr = parameters.getDouble("asscstr");
@@ -1845,7 +1844,7 @@ void init_parameters_2_1(SamaraParameters * params) {
     StockIniProf = 0;
 }
 
-void init_parameters_2_3(SamaraParameters * params) {
+void Samara::init_parameters_2_3(SamaraParameters * params) {
     SamaraParameters parameters = *params;
     Altitude = parameters.getDouble("wsalt");
     ASScstr = parameters.getDouble("asscstr");
@@ -1969,7 +1968,7 @@ void init_parameters_2_3(SamaraParameters * params) {
     StemPorosity = parameters.getDouble("stemporosity");
 }
 
-void init_parameters_2_1_micha(SamaraParameters * params) {
+void Samara::init_parameters_2_1_micha(SamaraParameters * params) {
     SamaraParameters parameters = *params;
     Altitude = parameters.getDouble("wsalt");
     ASScstr = parameters.getDouble("asscstr");
@@ -2090,7 +2089,7 @@ void init_parameters_2_1_micha(SamaraParameters * params) {
     StockIniSurf = 0;
 }
 
-void reset_variables_2_1() {
+void Samara::reset_variables_2_1() {
     ConversionEff = 0;
     CstrMean = 0;
     IcMean = 0;
@@ -2144,7 +2143,7 @@ void reset_variables_2_1() {
     DryMatAboveGroundTotPop = 0;
 }
 
-void reset_variables_2_1_micha() {
+void Samara::reset_variables_2_1_micha() {
     ConversionEff = 0;
     CstrMean = 0;
     IcMean = 0;
@@ -2198,7 +2197,7 @@ void reset_variables_2_1_micha() {
     DryMatAboveGroundTotPop = 0;
 }
 
-void reset_variables_2_3() {
+void Samara::reset_variables_2_3() {
     ConversionEff = 0;
     CstrMean = 0;
     IcMean = 0;
@@ -2254,7 +2253,7 @@ void reset_variables_2_3() {
 }
 
 
-void set_meteo_vars(SamaraParameters * parameters, int t, double &TMax, double &TMin, double &TMoy
+void Samara::set_meteo_vars(SamaraParameters * parameters, int t, double &TMax, double &TMin, double &TMoy
                     , double &HMax, double &HMin, double &HMoy
                     , double &Vt, double &Ins, double &Rg, double &ETP
                     , double &Pluie, double & TMoyCalc, double & HMoyCalc) {
@@ -2282,7 +2281,7 @@ void set_meteo_vars(SamaraParameters * parameters, int t, double &TMax, double &
 }
 
 
-void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double &ResUtil
+void Samara::init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double &ResUtil
                    , double &ProfRu, double &EpaisseurSurf, double &EpaisseurProf
                    , double &RuSurf, double &CapaREvap, double &CapaRFE, double &CapaRDE
                    , double &StRuMax, double &StockIniProf, double &StockIniSurf
@@ -2321,7 +2320,7 @@ void init_parcelle(double &VolMacropores, double &HumSat, double &HumFC, double 
     }
 }
 
-void eval_Par(double t) {
+void Samara::eval_Par(double t) {
     try {
         double tDay = JulianCalculator::dayNumber(t);
         Decli = 0.409 * sin(0.0172 * tDay - 1.39);
@@ -2346,7 +2345,7 @@ void eval_Par(double t) {
 }
 
 
-void EToFao_2_3(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, double const &RgCalc,
+void Samara::EToFao_2_3(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, double const &RgCalc,
                 double const &TMin, double const &TMax,
                 double const &HMin, double const &HMax, double const &HMoyCalc,
                 double const &TMoyCalc, double const &Vt, double &ETo,
@@ -2399,7 +2398,7 @@ void EToFao_2_3(double const &/*ETP*/, double const &/*Alt*/, double const &RgMa
 }
 
 
-void EToFao(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, double const &RgCalc,
+void Samara::EToFao(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, double const &RgCalc,
             double const &TMin, double const &TMax,
             double const &HMin, double const &HMax, double const &HMoyCalc,
             double const &TMoyCalc, double const &Vt, double &ETo,
@@ -2451,7 +2450,7 @@ void EToFao(double const &/*ETP*/, double const &/*Alt*/, double const &RgMax, d
     }
 }
 
-void kill_crop(){
+void Samara::kill_crop(){
     WueTot = 0;
     A_AssimSurplus = 0;
     A_DemStructLeaf = 0;
@@ -2486,7 +2485,7 @@ void kill_crop(){
 }
 
 
-void init_culture() {
+void Samara::init_culture() {
     try {
         NumPhase = 0;
         SommeDegresJourMax = SDJLevee + SDJBVP + SDJRPR + SDJMatu1 + SDJMatu2;
@@ -2588,7 +2587,7 @@ void init_culture() {
 
 
 
-void init_all_variables_2_1(){
+void Samara::init_all_variables_2_1(){
     ApexHeight = 0;
     ApexHeightGain = 0;
     Assim = 0;
@@ -2875,7 +2874,7 @@ void init_all_variables_2_1(){
 }
 
 
-void init_all_variables_2_1_micha(){
+void Samara::init_all_variables_2_1_micha(){
     ApexHeight = 0;
     ApexHeightGain = 0;
     Assim = 0;
@@ -3162,7 +3161,7 @@ void init_all_variables_2_1_micha(){
     StockIniSurf = 0;
 }
 
-void init_all_variables_2_3(){
+void Samara::init_all_variables_2_3(){
     ApexHeight = 0;
     ApexHeightGain = 0;
     Assim = 0;
