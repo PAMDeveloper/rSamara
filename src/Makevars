@@ -1,3 +1,2 @@
-PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"D:/Lib/boost_1_62_0" $(FPICFLAGS) $(SHLIB_FFLAGS) \
-PKG_LIBS +=`Rscript -e 'Rcpp:::LdFlags()'` -L"D:/Lib/boost_1_62_0/stage/lib" -lboost_date_time-mgw49-mt-1_62 -lboost_system-mgw49-mt-1_62 \
-CXX_STD = CXX11
+PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'`-I"." $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
+PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
