@@ -78,6 +78,7 @@ public:
         for (int i = 0; i < date.month - 1; i++) {
             nbDays += months[i];
         }
+		delete months;
         return nbDays + (int)date.day;
     }
 
