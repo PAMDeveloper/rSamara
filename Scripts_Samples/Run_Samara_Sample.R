@@ -5,7 +5,7 @@ if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
 #detailled load
-source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
+source('R/AccessLoader.R')
 options(digits=18)
 
 
@@ -13,12 +13,12 @@ options(digits=18)
 connectDB('D:/PAMStudio/dev/git/Bd_SAMARA.accdb')
 
 #Simulation depuis la clé d'un fichier Excel
-# .GlobalEnv$params <- loadSim("BAMA2014S1621B","D:/PAMStudio/dev/git/rSamara/simulation.xlsx")
+#.GlobalEnv$params <- loadSim("BAMA2014S1621B","D:/PAMStudio/dev/git/rSamara/simulation.xlsx")
 
 #Simulation depuis la base de données directement
- # .GlobalEnv$params <- loadSimDetails('BAMA2014S1', 'CSM63E', 'SotubaPCDA_SV21', '5', '2014/06/01', '2014/11/21')
- # .GlobalEnv$meteo <- loadMeteo('5', '2014/06/01', '2014/11/21')
- # .GlobalEnv$obs <- loadObs('BAMA2014S1G5', 'CSM63E', '2014/06/01', '2014/11/21')
+.GlobalEnv$params <- loadSimDetails('BAMA2014S1', 'CSM63E', 'SotubaPCDA_SV21', '5', '2014/06/01', '2014/11/21')
+.GlobalEnv$meteo <- loadMeteo('5', '2014/06/01', '2014/11/21')
+.GlobalEnv$obs <- loadObs('BAMA2014S1G5', 'CSM63E', '2014/06/01', '2014/11/21')
 
 #Boucle de simulations depuis un fichier Xls
  simulist = read.xls("D:/PAMStudio/dev/git/rSamara/simulation.xlsx")

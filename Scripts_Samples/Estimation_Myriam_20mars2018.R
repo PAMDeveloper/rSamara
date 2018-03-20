@@ -2,7 +2,7 @@
 #Authors : Florian Larue, Gregory Beurier, Lauriane Rouan -- (PAM, AGAP, BIOS, CIRAD)
 
 ###Set informations for parameter estimation###
-source('D:/PAMStudio/dev/git/rSamara/Scripts_Samples/AccessLoader.R')
+source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
 connectDB('D:/PAMStudio/dev/git/Basedonnee_Malick.accdb')
 
 ParamOfInterest <- c("co2slopetr", "coeffrescapacityinternode", "krespinternode")
@@ -30,9 +30,11 @@ lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
 # VName <- "vobs.txt"
 # VECName <- "vobsEC.txt"
 #Get data for simulation
-meteo <- loadMeteo('5', '2014/06/01', '2014/11/21')
-paramInit <- loadSimDetails('BAMA2014S1', 'CSM63E', 'SotubaPCDA_SV21', '5', '2014/06/01', '2014/11/21')
-vObs <- loadObs('BAMA2014S1G5', 'CSM63E', '2014/06/01', '2014/11/21')
+meteo <- loadMeteo('4', '2014/07/07', '2014/12/20')
+paramInit <- loadSimDetails('SINT2014S1', 'SK5912', 'SIN2_SOL', '4', '2014/07/07', '2014/12/20')
+#paramInit <- loadSimDetails('BAMA2014S1', 'CSM63E', 'SotubaPCDA_SV21', '5', '2014/06/01', '2014/11/21')
+#vObs <- loadObs('BAMA2014S1G5', 'CSM63E', '2014/06/01', '2014/11/21')
+vObs <- loadObs('SINT2014S1G6', 'SK5912', '2014/07/07', '2014/12/20')
 odbcCloseAll()
 
 # obsET <- recomeristem::rcpp_get_vObs(paste(VPath,paste("/",VECName, sep=""), sep=""))
