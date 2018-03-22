@@ -248,7 +248,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         }
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
-//                reset_variables_2_1();
+                reset_variables_2_1();
             }
             DryMatResInternodePop = 0;
         }
@@ -270,7 +270,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
-//                kill_crop();
+                kill_crop();
                 crop = false;
                 simulationFinished = true;
             }
@@ -279,7 +279,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
         currentResults.push_back(result);
         FractionRootsLogged = 0;
-        if(simulationFinished) break;
+//        if(simulationFinished) break;
     }
 
 

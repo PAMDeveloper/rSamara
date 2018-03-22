@@ -97,32 +97,38 @@ loadMeteo <- function(wscode, beginDate, endDate)
 loadObs <- function(trialcode, variety, startDate, endDate)
 {
 
-  query = paste("SELECT Observation_resultat.Id as id, Observation_resultat.obsplantdate as obsplantdate, ",
-                "Observation_resultat.DAP as nbjas, [Observation_resultat]![Pl_Height]*10 AS plantheight, ",
-                "Observation_resultat.lai as lai, Observation_resultat.GrainYield as grainyieldpop, ",
-                "Observation_resultat.AppLeaves as appleaves, Observation_resultat.AppTill as culmsperplant,",
-                " [Observation_resultat]![GrainYield]/[Observation_resultat]![TotBiom] AS haunindex, ",
-                "Observation_resultat.PanGrainNb as drymatstructpaniclepop, ",
-                "Observation_resultat.NumPhase as NumPhase, ",
-                "[Observation_resultat]![StemDM]*10+[Observation_resultat]![leafDM]*10+IIf(IsNull([Observation_resultat]![PanicleDM]*10),0,",
-                "[Observation_resultat]![PanicleDM]*10) AS drymatabovegroundpop,",
-                " [Observation_resultat]![lai]/([Observation_resultat]![leafDM]*10) AS sla,",
-                " [Observation_resultat.leafDM]*10 as leafdm, [Observation_resultat.StemDM]*10 as stemdm, ",
-                "[Observation_resultat.PanicleDM]*10 as panicledm FROM Observation_resultat "
-                ," WHERE id='", trialcode,
-                "' AND obsplantdate > (#", startDate, "#)-1",
-                " AND obsplantdate < #", endDate, "#",
+  query = paste("SELECT Observation_resultat.Id as id,",
+                "Observation_resultat.obsplantdate as obsplantdate,",
+                "Observation_resultat.DAP as nbjas,",
+                "[Observation_resultat]![Pl_Height]*10 AS plantheight,",
+                "Observation_resultat.lai as lai,",
+                "Observation_resultat.GrainYieldPopFin as grainyieldpopfin,",
+                "Observation_resultat.AppLeaves as haunindex,",
+                "([Observation_resultat]![AppTill]+1) as culmsperplant,",
+                "Observation_resultat.PanGrainNb as spikenumpanicle,",
+                "Observation_resultat.NumPhase as NumPhase,",
+                "[Observation_resultat]![StemDM]*10+[Observation_resultat]![leafDM]*10+IIf(IsNull([Observation_resultat]![PanicleDM]*10),0,[Observation_resultat]![PanicleDM]*10) AS drymatabovegroundpop,",
+                "[Observation_resultat]![lai]/([Observation_resultat]![leafDM]*10) AS sla,",
+                "[Observation_resultat.leafDM]*10 as drymatstructleafpop,",
+                "[Observation_resultat.StemDM]*10 as drymatstempop,",
+                "[Observation_resultat.PanicleDM]*10 as drymatpanicletotpop,",
+                "Observation_resultat.TotBiom as drymatabovegroundpopfin ",
+                "FROM Observation_resultat ",
+                "WHERE id='",
+                trialcode,
+                "' AND obsplantdate > (#",
+                startDate,
+                "#)-1",
+                " AND obsplantdate < #",
+                endDate,
+                "#",
                 sep="")
-  # print(query)
+  #print(query)
   obs = sqlQuery(msAccessCon,query)
 
-  #obs = sqlQuery(msAccessCon,paste("SELECT * FROM ObservationsSamara WHERE trialcode='", trialcode,
-   #                         "' AND varcode='", variety, "'",
-    #                        " AND obsplantdate > (#", startDate, "#)-2",
-     #                       " AND obsplantdate < #", endDate, "#+1",
-      #                      sep=""))
-  obs$trialcode <- NULL
-  obs$varcode <- NULL
+
+  #obs$trialcode <- NULL
+  #obs$varcode <- NULL
   obs$obsplantdate <- sapply(obs$obsplantdate, julianDayFromDB)
   obs <- obs[,colSums(is.na(obs))<nrow(obs)]
   obs
