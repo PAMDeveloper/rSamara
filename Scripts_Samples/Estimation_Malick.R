@@ -9,134 +9,89 @@ ParamOfInterest <- c("InternodeLengthMax","LeafLengthMax","CoeffLeafWLRatio","Sl
 MinValue <- c(90,750,0.08,0.0015,0.0005,0.02,0.05,0.05,0.15,3,5)
 MaxValue <- c(120,1100,0.15,0.002,0.0015,0.06,0.15,0.1,0.3,8,10)
 obsCoef <- c(85.5,910,0.11,0.00135,0.001,0.04,0.1,0.7,0.22,5,8)
-Optimizer <- "D" #(D = DE, G = RGenoud, A = Simulated Annealing)
-RmseM <- "RC" #(RS = RSME-sum, REC = RMSE-EC, RC = RMSE-coef, RECC = RMSE-EC-coef)
 MaxIter <- 50
 SolTol <- 0.05
 ###End informations for parameter estimation###
 
 #Install and load packages
-list.of.packages <- c("rsamara", "RODBC", "parallel","pso", "rgenoud", "ABCoptim", "DEoptim", "truncnorm")
+list.of.packages <- c("rsamara", "RODBC", "parallel", "DEoptim")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
-
-# PPath <- "D:/Workspace/R/testestim"
-# MPath <- "D:/Workspace/R/testestim"
-# VPath <- "D:/Workspace/R/testestim"
-# VName <- "vobs.txt"
-# VECName <- "vobsEC.txt"
 #Get data for simulation
-meteo <- loadMeteo('4', '2014/07/07', '2014/12/06')
+meteo1 <- loadMeteo('4', '2014/07/07', '2014/12/06')
+meteo2 <- loadMeteo('4', '2014/07/07', '2014/12/06')
+meteo3 <- loadMeteo('4', '2014/07/07', '2014/12/06')
+vObs1 <- loadObs('SINT2014S1G9', '621B','2014/07/07', '2014/12/06')
+vObs2 <- loadObs('SINT2014S1G9', '621B','2014/07/07', '2014/12/06')
+vObs3 <- loadObs('SINT2014S1G9', '621B','2014/07/07', '2014/12/06')
+
 paramInit <- loadSimDetails('SINT2014S1', '621B', 'SIN2_SOL', '4', '2014/07/07', '2014/12/06')
-vObs <- loadObs('SINT2014S1G9', '621B','2014/07/07', '2014/12/06')
 odbcCloseAll()
 
-# obsET <- recomeristem::rcpp_get_vObs(paste(VPath,paste("/",VECName, sep=""), sep=""))
-# ParamList <- as.character(names(paramInit))
-# paramInitTrans <- as.data.frame(matrix(ncol=length(ParamList)))
-# colnames(paramInitTrans) <- ParamList
-# paramInitTrans[1,] <- paramInit$Values
 paramInitTrans <- paramInit
 NbParam <- length(ParamOfInterest)
 Bounds <- matrix(c(MinValue,MaxValue),ncol=2)
 
 #First model run and matrix reduction
-resulttmp <- rsamara::run2DF(paramInit,meteo)
-obsRed <- rsamara::rcpp_reduceVobs(vObs, resulttmp)
-# obsETRed <- rsamara::rcpp_reduceVobs(obsET, resulttmp)
-resRed <- rsamara::rcpp_reduceResults(resulttmp, vObs)
-#resRed <- rsamara::rcpp_reduceResults(resulttmp, obsRed)
+resulttmp1 <- rsamara::run2DF(paramInit,meteo1)
+resulttmp2 <- rsamara::run2DF(paramInit,meteo2)
+resulttmp3 <- rsamara::run2DF(paramInit,meteo3)
 
-VarList <- names(obsRed)
-res <- list()
+obsRed1 <- rsamara::rcpp_reduceVobs(vObs1, resulttmp1)
+obsRed2 <- rsamara::rcpp_reduceVobs(vObs2, resulttmp2)
+obsRed3 <- rsamara::rcpp_reduceVobs(vObs3, resulttmp3)
+
+resRed1 <- rsamara::rcpp_reduceResults(resulttmp1, vObs1)
+resRed2 <- rsamara::rcpp_reduceResults(resulttmp2, vObs2)
+resRed3 <- rsamara::rcpp_reduceResults(resulttmp3, vObs3)
 
 #Functions
 Optim_Samara_funct <- function(p){
   paramInitTrans[ParamOfInterest] <- p
-  parameters <- paramInitTrans #data.frame(Name=ParamList, Values=unlist(paramInitTrans[1,]))
-  Res_samara <- rsamara::run2DF(parameters,meteo)
-  res <- rsamara::rcpp_reduceResults(Res_samara, vObs)
-  switch(RmseM,
-         "RS" = {
-           diff <- ((obsRed - res)/obsRed)^2
-           return(sum(sqrt((colSums(diff, na.rm=T))/(colSums(!is.na(diff)))),na.rm=T))
-         }
-         ,
-         # "REC" = {
-         #   diff = ((abs(obsRed - res) - abs(obsETRed))/obsRed)^2
-         #   return(sum(sqrt((colSums(diff, na.rm=T))/(colSums(!is.na(diff)))), na.rm=T))
-         # }
-         # ,
-         "RC" = {
-           diff <- ((obsRed - res)/obsRed)^2
-           rmse = sqrt((colSums(diff, na.rm=T))/(colSums(!is.na(diff))))
-           return(sum(rmse*obsCoef, na.rm=T))
-         }
+  parameters <- paramInitTrans
 
-         # ,
-         # "RECC" = {
-         #   diff = ((abs(obsRed - res) - abs(obsETRed))/obsRed)^2
-         #   rmse = sqrt((colSums(diff, na.rm=T))/(colSums(!is.na(diff))))
-         #   return(sum(rmse*obsCoef, na.rm=T))
-         # }
-         )
+  Res_samara1 <- rsamara::run2DF(parameters,meteo1)
+  Res_samara2 <- rsamara::run2DF(parameters,meteo2)
+  Res_samara3 <- rsamara::run2DF(parameters,meteo3)
+
+  res1 <- rsamara::rcpp_reduceResults(Res_samara1, vObs1)
+  res2 <- rsamara::rcpp_reduceResults(Res_samara2, vObs2)
+  res3 <- rsamara::rcpp_reduceResults(Res_samara3, vObs3)
+
+
+  diff1 <- ((obsRed1[-nrow(obsRed1),] - res1[-nrow(obsRed1),])/obsRed1[-nrow(obsRed1),])^2
+  rmae1 = sum(sqrt((colSums(diff1, na.rm=T))/(colSums(!is.na(diff1)))),na.rm=T)
+
+  diff2 <- ((obsRed2[-nrow(obsRed2),] - res2[-nrow(obsRed2),])/obsRed2[-nrow(obsRed2),])^2
+  rmae2 = sum(sqrt((colSums(diff2, na.rm=T))/(colSums(!is.na(diff2)))),na.rm=T)
+
+  diff3 <- ((obsRed3[-nrow(obsRed3),] - res3[-nrow(obsRed3),])/obsRed3[-nrow(obsRed3),])^2
+  rmae3 = sum(sqrt((colSums(diff3, na.rm=T))/(colSums(!is.na(diff3)))),na.rm=T)
+
+  diffEnd1 <- ((obsRed1[nrow(obsRed1),] - res1[nrow(res1),])/obsRed1[nrow(res1),])^2
+  rmse1 = (sum(sqrt((colSums(diffEnd1, na.rm=T))/(colSums(!is.na(diffEnd1)))),na.rm=T))
+
+  diffEnd2 <- ((obsRed2[nrow(obsRed2),] - res2[nrow(res2),])/obsRed2[nrow(res2),])^2
+  rmse2 = (sum(sqrt((colSums(diffEnd2, na.rm=T))/(colSums(!is.na(diffEnd2)))),na.rm=T))
+
+  diffEnd3 <- ((obsRed3[nrow(obsRed3),] - res3[nrow(res3),])/obsRed3[nrow(res3),])^2
+  rmse3 = (sum(sqrt((colSums(diffEnd3, na.rm=T))/(colSums(!is.na(diffEnd3)))),na.rm=T))
+
+  return (rmae1 + rmae2 + rmae3 + rmse1 + rmse2 + rmse3)
 }
-simulatedAnnealing <- function(func, start_par, lower, upper, itermax = 1000, step = 0.1, printlvl = 100) {
-  best_par <- current_par <- neighbor_par <- start_par
-  best_value <- current_value <- neighbor_value <- func(start_par)
 
-  message("It\tBest\tCurrent")
-  message(sprintf("%i\t%.4f\t%.4f", 0L, best_value, current_value))
-
-  for (k in 1:itermax) {
-    temp <- (1 - step)^k
-    neighbor_par <- rtruncnorm(length(start_par),lower, upper, current_par, 1)
-    neighbor_value <- func(neighbor_par)
-
-    if (neighbor_value < current_value || runif(1,0,1) < exp(-(neighbor_value - current_value) / temp)) {
-      current_par <- neighbor_par
-      current_value <- neighbor_value
-    }
-
-    if (neighbor_value < best_value) {
-      best_par <- neighbor_par
-      best_value <- neighbor_value
-    }
-
-    if(k%%printlvl == 0) {
-      message(sprintf("%i\t%.4f\t%.4f", k, best_value, current_value))
-    }
-  }
-  return(list(iterations = itermax, value = best_value, par = best_par))
-}
 optimisation <- function(Optimizer, MaxIter, SolTol, NbParam, Bounds, NbEnv, SDate, EDate) {
   set.seed(224)
-  switch(Optimizer,
-         "D" = {
-           resOptim <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=SolTol,itermax=MaxIter, strategy=2, trace=max(1,MaxIter/20)))
-           res$optimizer <- "Diffential Evolution Optimization"
-           res$par <- resOptim$optim$bestmem
-           res$value <- resOptim$optim$bestval
-         },
-         "G" = {
-           resOptim <- genoud(Optim_Samara_funct, NbParam, max=FALSE, pop.size=100, max.generations=MaxIter, wait.generations=max(10,MaxIter/10), hard.generation.limit=TRUE, MemoryMatrix=TRUE, starting.values=NULL, Domains=Bounds, print.level = 2, boundary.enforcement = 0, gradient.check=FALSE, solution.tolerance=SolTol)
-           res$optimizer <- "Genetic Optimization Using Derivatives"
-           res$par <- resOptim$par
-           res$value <- resOptim$value
-         },
-         "A" = {
-           resOptim <- simulatedAnnealing(Optim_Samara_funct, start_par=Bounds[,1], lower=Bounds[,1], upper=Bounds[,2], itermax=MaxIter, step=SolTol, printlvl=max(1,MaxIter/20))
-           res$optimizer <- "Simulated Annealing"
-           res$par <- resOptim$par
-           res$value <- resOptim$value
-         }
-  )
+  resOptim <- DEoptim(Optim_Samara_funct, lower=Bounds[,1], upper=Bounds[,2], DEoptim.control(VTR=SolTol,itermax=MaxIter, strategy=2, trace=max(1,MaxIter/20)))
+  res$optimizer <- "Diffential Evolution Optimization"
+  res$par <- resOptim$optim$bestmem
+  res$value <- resOptim$optim$bestval
   print("End of estimation, type res for optimisation results, type resPlot() to see plots of observation variables, allPlot() to see plots of all computed variables and dePlot() for convergence plot (in case of optimizer = D)")
   return(list(res,resOptim))
-
 }
+
 resPlot <- function() {
   bestp <- as.vector(res$par)
   paramInitTrans[ParamOfInterest] <- bestp
@@ -159,14 +114,14 @@ resPlot <- function() {
   }
   sapply(VarList, plotF)
 }
+
 dePlot <- function() {
-  if(Optimizer == "D") {
     par(mfrow=c(1,1))
     plot(resOptim, type="b")
     par(mfrow=c(1,1))
     plot(resOptim, plot.type="bestvalit",type="l")
-  }
 }
+
 allPlot <- function() {
   bestp <- as.vector(res$par)
   paramInitTrans[ParamOfInterest] <- bestp
