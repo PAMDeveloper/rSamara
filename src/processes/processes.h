@@ -497,7 +497,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
         } else {
             CorrectedCstrMean = CstrMean;
         }
-        PlantHeight = ApexHeight + ((1 - Kdf) * RelPotLeafLength *
+        PlantHeight = ApexHeight + (1.2 * (1 - Kdf) * RelPotLeafLength *
                                     LeafLengthMax * sqrt(IcMean) * CorrectedCstrMean);
         PlantWidth = std::pow(Kdf, 1.5) * 2 * sqrt(IcMean) * RelPotLeafLength * LeafLengthMax;/*DELETED LB*/ /**
       Min(1.4, (1 + 0.1 * (CulmsPerHill - 1)));*/
@@ -2963,9 +2963,9 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
 
 
 //            // Estimation of stem thickness
-            StemSurfMean = 100 * StemVigor * 2.5 / StemPorosity;
-            // StemPorosity is a new crop parameter expressing fraction air spaces in stem; default value is 0.67 (two-thirds); coefficient of 2.5 estimates water content (w/w); in cm3
-            StemDiaMean = 10 * 2 * sqrt(StemSurfMean / M_PI); //in mm
+            StemSurfMean = StemVigor * 2.5 / (1-StemPorosity);
+            // StemPorosity is a new crop parameter expressing fraction air spaces in stem; default value is 0.67 (two-thirds); coefficient of 2.5 estimates water content (w/w); in mm2
+            StemDiaMean = 2 * sqrt(StemSurfMean / M_PI); //in mm
             StemDiaBase = StemDiaMean * 1.3;
 //            // rough estimate of stem thickness distribution bottom to top; coefficient should be smaller in sorghum because it has less sheath around the culm at the base.
 
