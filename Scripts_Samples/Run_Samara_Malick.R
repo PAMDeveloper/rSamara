@@ -5,11 +5,11 @@ if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
 #detailled load
-source('C:/Users/USER/Desktop/installation samara/rSamara/R/AccessLoader.R')
+source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
 options(digits=18)
 ### load each info separated
-connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
-###"simulation phéno SK5912 (G6)
+connectDB('D:/PAMStudio/dev/git/Basedonnee_Malick.accdb')
+###"simulation ph?no SK5912 (G6)
 
 .GlobalEnv$paramsSN14S1_G6 <- loadSimDetails('SINT2014S1', 'SK5912', 'SIN2_SOL', '4', '2014/07/07', '2014/12/20')
 .GlobalEnv$meteoSN14S1G6 <- loadMeteo('4', '2014/07/07', '2014/12/20')
@@ -42,15 +42,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G6 <- loadSimDetails('BBY2013S1', 'SK5912', 'BAM_SOL', '380084', '2013/07/07', '2013/12/20')
 # .GlobalEnv$meteoB13S1G6 <- loadMeteo('380084', '2013/07/07', '2013/12/20')
 # #.GlobalEnv$obsB13S1_G6<- loadObs('BBY2013S1G6', 'SK5912','2013/07/07', '2013/12/20')
-# 
+#
 # .GlobalEnv$paramsB13S2_G6 <- loadSimDetails('BBY2013S2', 'SK5912', 'BAM_SOL', '380084', '2013/07/21', '2013/12/30')
 # .GlobalEnv$meteoB13S2G6 <- loadMeteo('380084', '2013/07/21', '2013/12/30')
 # #.GlobalEnv$obsB13S2_G6<- loadObs('BBY2013S2G6', 'SK5912','2013/07/21', '2013/12/30')
-# 
+#
 # .GlobalEnv$paramsN15S1_G6 <- loadSimDetails('NIO2015S1', 'SK5912', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/20')
 # .GlobalEnv$meteoN15S1G6 <- loadMeteo('330114', '2015/07/06', '2015/12/20')
 # #.GlobalEnv$obsN15S1_G6<- loadObs('NIO2015S1G6', 'SK5912','2015/07/06', '2015/12/20')
-# 
+#
 # .GlobalEnv$paramsN15S2_G6 <- loadSimDetails('NIO2015S2', 'SK5912', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/30')
 # .GlobalEnv$meteoN15S2G6 <- loadMeteo('330114', '2015/08/03', '2015/12/30')
 # #.GlobalEnv$obsN15S2_G6<- loadObs('NIO2015S2G6', 'SK5912','2015/08/03', '2015/12/30')
@@ -87,15 +87,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G1 <- loadSimDetails('BBY2013S1', 'FADDA', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G1 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G1<- loadObs('BBY2013S1G1', 'FADDA','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G1 <- loadSimDetails('BBY2013S2', 'FADDA', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G1 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G1<- loadObs('BBY2013S2G9', 'FADDA','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G1 <- loadSimDetails('NIO2015S1', 'FADDA', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G1 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G1<- loadObs('NIO2015S1G9', '621B','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G1 <- loadSimDetails('NIO2015S2', 'FADDA', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G1 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G1<- loadObs('NIO2015S2G1', 'FADDA','2015/08/03', '2015/12/28')
@@ -132,15 +132,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G2 <- loadSimDetails('BBY2013S1', 'NIELENI', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G2 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G2<- loadObs('BBY2013S1G2', 'NIELENI','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G2 <- loadSimDetails('BBY2013S2', 'NIELENI', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G2 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G2<- loadObs('BBY2013S2G2', 'NIELENI','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G2 <- loadSimDetails('NIO2015S1', 'NIELENI', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G2 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G2<- loadObs('NIO2015S1G2', 'NIELENI','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G2 <- loadSimDetails('NIO2015S2', 'NIELENI', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G2 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G2<- loadObs('NIO2015S2G2', 'NIELENI','2015/08/03', '2015/12/28')
@@ -178,15 +178,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G3 <- loadSimDetails('BBY2013S1', 'IS15401', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G3 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G3<- loadObs('BBY2013S1G3', 'IS15401','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G3 <- loadSimDetails('BBY2013S2', 'IS15401', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G3 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G3<- loadObs('BBY2013S2G3', 'IS15401','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G3 <- loadSimDetails('NIO2015S1', 'IS15401', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G3 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G3<- loadObs('NIO2015S1G3', 'IS15401','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G3 <- loadSimDetails('NIO2015S2', 'IS15401', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G3 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G3<- loadObs('NIO2015S2G3', 'IS15401','2015/08/03', '2015/12/28')
@@ -224,15 +224,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G4 <- loadSimDetails('BBY2013S1', 'PABLO', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G4 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G4<- loadObs('BBY2013S1G4', 'PABLO','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G4 <- loadSimDetails('BBY2013S2', 'PABLO', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G4 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G4<- loadObs('BBY2013S2G4', 'PABLO','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G4 <- loadSimDetails('NIO2015S1', 'PABLO', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G4 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G4<- loadObs('NIO2015S1G4', 'PABLO','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G4 <- loadSimDetails('NIO2015S2', 'PABLO', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G4 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G4<- loadObs('NIO2015S2G4', 'PABLO','2015/08/03', '2015/12/28')
@@ -270,15 +270,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G5 <- loadSimDetails('BBY2013S1', 'CSM63E', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G5 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G5<- loadObs('BBY2013S1G5', 'CSM63E','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G5 <- loadSimDetails('BBY2013S2', 'CSM63E', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G5 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G5<- loadObs('BBY2013S2G5', 'CSM63E','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G5 <- loadSimDetails('NIO2015S1', 'CSM63E', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G5 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G5<- loadObs('NIO2015S1G5', 'CSM63E','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G5 <- loadSimDetails('NIO2015S2', 'CSM63E', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G5 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G5<- loadObs('NIO2015S2G5', 'CSM63E','2015/08/03', '2015/12/28')
@@ -318,15 +318,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G7 <- loadSimDetails('BBY2013S1', 'GRINKAN', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G7 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G7<- loadObs('BBY2013S1G7', 'GRINKAN','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G7 <- loadSimDetails('BBY2013S2', 'GRINKAN', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G7 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G7<- loadObs('BBY2013S2G7', 'GRINKAN','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G7 <- loadSimDetails('NIO2015S1', 'GRINKAN', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G7 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G7<- loadObs('NIO2015S1G7', 'GRINKAN','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G7 <- loadSimDetails('NIO2015S2', 'GRINKAN', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G7 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G7<- loadObs('NIO2015S2G7', 'GRINKAN','2015/08/03', '2015/12/28')
@@ -364,15 +364,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G8 <- loadSimDetails('BBY2013S1', 'SOUMBA', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G8 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G8<- loadObs('BBY2013S1G8', 'SOUMBA','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G8 <- loadSimDetails('BBY2013S2', 'SOUMBA', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G8 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G8<- loadObs('BBY2013S2G8', 'SOUMBA','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G8 <- loadSimDetails('NIO2015S1', 'SOUMBA', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G8 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G8<- loadObs('NIO2015S1G8', 'SOUMBA','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G8 <- loadSimDetails('NIO2015S2', 'SOUMBA', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G8 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G8<- loadObs('NIO2015S2G8', 'SOUMBA','2015/08/03', '2015/12/28')
@@ -457,15 +457,15 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 # .GlobalEnv$paramsB13S1_G10 <- loadSimDetails('BBY2013S1', 'LOCAL', 'BAM_SOL', '380084', '2013/07/07', '2013/12/03')
 # .GlobalEnv$meteoB13S1G10 <- loadMeteo('380084', '2013/07/07', '2013/12/03')
 # #.GlobalEnv$obsB13S1_G10<- loadObs('BBY2013S1G10', 'LOCAL','2013/07/07', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsB13S2_G10 <- loadSimDetails('BBY2013S2', 'LOCAL', 'BAM_SOL', '380084', '2013/07/21', '2013/12/03')
 # .GlobalEnv$meteoB13S2G10 <- loadMeteo('380084', '2013/07/21', '2013/12/03')
 # #.GlobalEnv$obsB13S2_G10<- loadObs('BBY2013S2G10', 'LOCAL','2013/07/21', '2013/12/03')
-# 
+#
 # .GlobalEnv$paramsN15S1_G10 <- loadSimDetails('NIO2015S1', 'LOCAL', 'NIO1_SOL', '330114', '2015/07/06', '2015/12/26')
 # .GlobalEnv$meteoN15S1G10 <- loadMeteo('330114', '2015/07/06', '2015/12/26')
 # #.GlobalEnv$obsN15S1_G10<- loadObs('NIO2015S1G10', 'LOCAL','2015/07/06', '2015/12/26')
-# 
+#
 # .GlobalEnv$paramsN15S2_G10 <- loadSimDetails('NIO2015S2', 'LOCAL', 'NIO2_SOL', '330114', '2015/08/03', '2015/12/28')
 # .GlobalEnv$meteoN15S2G10 <- loadMeteo('330114', '2015/08/03', '2015/12/28')
 # #.GlobalEnv$obsN15S2_G10<- loadObs('NIO2015S2G10', 'LOCAL','2015/08/03', '2015/12/28')
@@ -489,9 +489,9 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  ### load from sim Table
  # initSim('D:/PAMStudio_dev/git/Basedonnee_Malick.accdb', '06SB15-fev13-D1_SV21')
 
- odbcCloseAll()## ferme la base de donnée
- 
-#### résultats SAMARA 
+ odbcCloseAll()## ferme la base de donn?e
+
+#### r?sultats SAMARA
  ##SK5912 (G6)
  results_SamaraSN14S1_G6 =rsamara::run2DF(paramsSN14S1_G6,meteoSN14S1G6)
  results_SamaraSN14S2_G6 =rsamara::run2DF(paramsSN14S2_G6,meteoSN14S2G6)
@@ -516,10 +516,10 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G1 =rsamara::run2DF(paramsB13S2_G1,meteoSB13S2G1)
  # results_SamaraN15S1_G1 =rsamara::run2DF(paramsN15S1_G1,meteoN15S1G1)
  # results_SamaraN15S2_G1 =rsamara::run2DF(paramsN15S2_G1,meteoN15S2G1)
-##Ù figure avec nombre de jours aprés semis
- 
+##? figure avec nombre de jours apr?s semis
+
  ##NIELENI
- 
+
  results_SamaraSN14S1_G2 =rsamara::run2DF(paramsSN14S1_G2,meteoSN14S1G2)
  results_SamaraSN14S2_G2 =rsamara::run2DF(paramsSN14S2_G2,meteoSN14S2G2)
  results_SamaraSN16_G2 =rsamara::run2DF(paramsSN16_G2,meteoSN16G2)
@@ -531,9 +531,9 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G2 =rsamara::run2DF(paramsB13S2_G2,meteoSB13S2G2)
  # results_SamaraN15S1_G2 =rsamara::run2DF(paramsN15S1_G2,meteoN15S1G2)
  # results_SamaraN15S2_G2 =rsamara::run2DF(paramsN15S2_G2,meteoN15S2G2)
- 
+
  ### IS15401
- 
+
  results_SamaraSN14S1_G3 =rsamara::run2DF(paramsSN14S1_G3,meteoSN14S1G3)
  results_SamaraSN14S2_G3 =rsamara::run2DF(paramsSN14S2_G3,meteoSN14S2G3)
  results_SamaraSN16_G3 =rsamara::run2DF(paramsSN16_G3,meteoSN16G3)
@@ -545,9 +545,9 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G3 =rsamara::run2DF(paramsB13S2_G3,meteoSB13S2G3)
  # results_SamaraN15S1_G3 =rsamara::run2DF(paramsN15S1_G3,meteoN15S1G3)
  # results_SamaraN15S2_G3 =rsamara::run2DF(paramsN15S2_G3,meteoN15S2G3)
- 
+
  ### PABLO
- 
+
  results_SamaraSN14S1_G4 =rsamara::run2DF(paramsSN14S1_G4,meteoSN14S1G4)
  results_SamaraSN14S2_G4 =rsamara::run2DF(paramsSN14S2_G4,meteoSN14S2G4)
  results_SamaraSN16_G4 =rsamara::run2DF(paramsSN16_G4,meteoSN16G4)
@@ -558,10 +558,10 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S1_G4 =rsamara::run2DF(paramsB13S1_G4,meteoB13S1G4)
  # results_SamaraB13S2_G4 =rsamara::run2DF(paramsB13S2_G4,meteoSB13S2G4)
  # results_SamaraN15S1_G4 =rsamara::run2DF(paramsN15S1_G4,meteoN15S1G4)
- # results_SamaraN15S2_G4 =rsamara::run2DF(paramsN15S2_G4,meteoN15S2G4) 
- 
+ # results_SamaraN15S2_G4 =rsamara::run2DF(paramsN15S2_G4,meteoN15S2G4)
+
  ## CSM63E
- 
+
  results_SamaraSN14S1_G5 =rsamara::run2DF(paramsSN14S1_G5,meteoSN14S1G5)
  results_SamaraSN14S2_G5 =rsamara::run2DF(paramsSN14S2_G5,meteoSN14S2G5)
  results_SamaraSN16_G5 =rsamara::run2DF(paramsSN16_G5,meteoSN16G5)
@@ -573,9 +573,9 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G5 =rsamara::run2DF(paramsB13S2_G5,meteoSB13S2G5)
  # results_SamaraN15S1_G5 =rsamara::run2DF(paramsN15S1_G5,meteoN15S1G5)
  # results_SamaraN15S2_G5 =rsamara::run2DF(paramsN15S2_G5,meteoN15S2G5)
- 
+
  ### GRINKAN
- 
+
  results_SamaraSN14S1_G7 =rsamara::run2DF(paramsSN14S1_G7,meteoSN14S1G7)
  results_SamaraSN14S2_G7 =rsamara::run2DF(paramsSN14S2_G7,meteoSN14S2G7)
  results_SamaraSN16_G7 =rsamara::run2DF(paramsSN16_G7,meteoSN16G7)
@@ -587,9 +587,9 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G7 =rsamara::run2DF(paramsB13S2_G7,meteoSB13S2G7)
  # results_SamaraN15S1_G7 =rsamara::run2DF(paramsN15S1_G7,meteoN15S1G7)
  # results_SamaraN15S2_G7 =rsamara::run2DF(paramsN15S2_G7,meteoN15S2G7)
- 
+
  ### SOUMBA
- 
+
  results_SamaraSN14S1_G8 =rsamara::run2DF(paramsSN14S1_G8,meteoSN14S1G8)
  results_SamaraSN14S2_G8 =rsamara::run2DF(paramsSN14S2_G8,meteoSN14S2G8)
  results_SamaraSN16_G8 =rsamara::run2DF(paramsSN16_G8,meteoSN16G8)
@@ -601,7 +601,7 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G8 =rsamara::run2DF(paramsB13S2_G8,meteoSB13S2G8)
  # results_SamaraN15S1_G8 =rsamara::run2DF(paramsN15S1_G8,meteoN15S1G8)
  # results_SamaraN15S2_G8 =rsamara::run2DF(paramsN15S2_G8,meteoN15S2G8)
- 
+
  ### 621B
  results_SamaraSN14S1_G9 =rsamara::run2DF(paramsSN14S1_G9,meteoSN14S1G9)
  results_SamaraSN14S2_G9 =rsamara::run2DF(paramsSN14S2_G9,meteoSN14S2G9)
@@ -613,10 +613,10 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S1_G9 =rsamara::run2DF(paramsB13S1_G9,meteoB13S1G9)
  # results_SamaraB13S2_G9 =rsamara::run2DF(paramsB13S2_G9,meteoSB13S2G9)
  # results_SamaraN15S1_G9 =rsamara::run2DF(paramsN15S1_G9,meteoN15S1G9)
- # results_SamaraN15S2_G9 =rsamara::run2DF(paramsN15S2_G9,meteoN15S2G9) 
- 
+ # results_SamaraN15S2_G9 =rsamara::run2DF(paramsN15S2_G9,meteoN15S2G9)
+
  ### LOCAL
- 
+
  results_SamaraSN14S1_G10 =rsamara::run2DF(paramsSN14S1_G10,meteoSN14S1G10)
  results_SamaraSN14S2_G10 =rsamara::run2DF(paramsSN14S2_G10,meteoSN14S2G10)
  results_SamaraSN16_G10 =rsamara::run2DF(paramsSN16_G10,meteoSN16G10)
@@ -628,12 +628,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
  # results_SamaraB13S2_G10 =rsamara::run2DF(paramsB13S2_G10,meteoSB13S2G10)
  # results_SamaraN15S1_G10 =rsamara::run2DF(paramsN15S1_G10,meteoN15S1G10)
  # results_SamaraN15S2_G10 =rsamara::run2DF(paramsN15S2_G10,meteoN15S2G10)
- 
- 
+
+
  #### FIGURE AVEC NOMBRE JOURS APRES SEMIS
  ?par
  ## FADDA
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G1, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G1, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -657,12 +657,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G1, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G1, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G1, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_FADDA") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_FADDA") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## NIELENI
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G2, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G2, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -686,12 +686,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G2, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G2, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G2, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_NIELENI") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_NIELENI") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## IS15401
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G3, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G3, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -715,12 +715,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G3, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G3, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G3, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_IS15401") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_IS15401") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## PABLO
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G4, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G4, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -744,12 +744,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G4, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G4, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G4, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_PABLO") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_PABLO") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## CSM63E
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G5, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G5, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -773,13 +773,13 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G5, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G5, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G5, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_CSM63E") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_CSM63E") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
- 
+
+
  ## SK5912
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G6, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G6, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -803,12 +803,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G6, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G6, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G6, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_SK5912") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_SK5912") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## GRINKAN
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G7, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G7, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -832,12 +832,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G7, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G7, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G7, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_GRINKAN") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_GRINKAN") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## SOUMBA
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G8, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G8, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -861,13 +861,13 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G8, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G8, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G8, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_SOUMBA") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_SOUMBA") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
- 
+
+
  ## 621B
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G9, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G9, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -891,12 +891,12 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G9, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G9, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G9, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_621B") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_621B") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
+
  ## F2-20
- 
+
  ggplot()+
    geom_point( data = obsSN14S1_G10, aes( x=nbjas, y =NumPhase, color = 'SN14S1'))+
    geom_point( data = obsSN14S2_G10, aes( x=nbjas, y =NumPhase, color = 'SN14S2'))+
@@ -920,17 +920,17 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
    # geom_line(data =  results_SamaraB13S2_G10, aes(x = NbJas, y = NumPhase,color= "B13S2"))+
    # geom_line(data =  results_SamaraN15S1_G10, aes(x = NbJas, y = NumPhase,color= "N15S1"))+
    # geom_line(data =  results_SamaraN15S2_G10, aes(x = NbJas, y = NumPhase,color= "N15S2"))+
-   ggtitle("Phénologie_F2-20") +
-   ylab("") + xlab("Jour aprés semis")+
+   ggtitle("Ph?nologie_F2-20") +
+   ylab("") + xlab("Jour apr?s semis")+
    theme(plot.title = element_text(lineheight=.8, face="bold"))
- 
 
- ### comparaison degrés jour
+
+ ### comparaison degr?s jour
  # results_SamaraSN16_G6$degresdujour
  # ggplot()+
  #   geom_line(data =  results_SamaraSN13S1_G1, aes(x = NbJas, y =degresdujour , color= "SN13S1"))+
  #   geom_line(data =  results_SamaraSN16_G1, aes(x = NbJas, y = degresdujour,color= "SN16"))
- # 
+ #
 
  # ggplot()+
  #   #geom_point(data = obs, aes(x = NbJas, y = lai))+
@@ -947,8 +947,8 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
 
 # param = rbind (paramsBama14S1, paramsSN13S1)
 # write.table(format(param, digits=18), 'D:/PAMStudio_dev/git/rSamara/param.csv', sep='\t',row.names=F)
-# 
-# 
+#
+#
 # METEO = rbind (meteoBama14S1, meteoSN13S1)
 # write.table(format(METEO, digits=18), 'D:/PAMStudio_dev/git/rSamara/meteo.csv', sep='\t',row.names=F)
 
@@ -961,55 +961,55 @@ connectDB('C:/Users/USER/Desktop/installation samara/Basedonnee_Malick.accdb')
   write.table(format(results_SamaraSN14S1_G2, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G2.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G2, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G2.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G2, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G2.csv', sep='\t',row.names=F)
-  
+
   ## Write Results IS15401
   write.table(format(results_SamaraSN14S1_G3, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G3.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G3, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G3.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G3, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G3.csv', sep='\t',row.names=F)
-  
+
   ## Write Results PABLO
   write.table(format(results_SamaraSN14S1_G4, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G4.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G4, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G4.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G4, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G4.csv', sep='\t',row.names=F)
-  
+
   ## Write Results CSM63E
   write.table(format(results_SamaraSN14S1_G5, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G5.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G5, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G5.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G5, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G5.csv', sep='\t',row.names=F)
-  
+
   ## Write Results SK5912
   write.table(format(results_SamaraSN14S1_G6, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G6.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G6, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G6.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G6, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G6.csv', sep='\t',row.names=F)
-  
+
   ## Write Results GRINKAN
   write.table(format(results_SamaraSN14S1_G7, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G7.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G7, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G7.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G7, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G7.csv', sep='\t',row.names=F)
-  
+
   ## Write Results SOUMBA
   write.table(format(results_SamaraSN14S1_G8, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G8.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G8, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G8.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G8, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G8.csv', sep='\t',row.names=F)
-  
+
   ## Write Results 621B
   write.table(format(results_SamaraSN14S1_G9, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G9.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G9, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G9.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G9, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G9.csv', sep='\t',row.names=F)
-  
+
   ## Write Results F2_20
   write.table(format(results_SamaraSN14S1_G10, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S1_G10.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN14S2_G10, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN14S2_G10.csv', sep='\t',row.names=F)
   write.table(format(results_SamaraSN16_G10, digits=18), 'C:/Users/USER/Desktop/installation samara/rSamara/Res_SN16S1_G10.csv', sep='\t',row.names=F)
-  
-  
+
+
    ## Plot all results
  # allPlot <- function() {
  #   plotF <- function(x) {
  #     plot(results_Samara[[x]], type="l", xlab="DAS", ylab=x,ylim=c(1.3*min(results_Samara[[x]], na.rm=T),1.3*max(results_Samara[[x]], na.rm=T)))
  #     return("Done")
  #   }
- # 
+ #
  #   sapply(names(results_Samara), plotF)
  # }
  # allPlot()
