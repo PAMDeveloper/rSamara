@@ -20,7 +20,7 @@ struct Climate {
     double Rg;
     double Rain;
     double ETP;
-
+    Climate(){}
     Climate(/*double JulianDay, */double TMax, double TMin, double TMoy,
             double HMax, double HMin, double HMoy,
             double Vt, double Ins, double Rg,
