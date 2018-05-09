@@ -2945,7 +2945,7 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
                            double const &DryMatStemPop, double const &DeadLeafDrywtPop, double const &DryMatPanicleTotPop,
                            double const &PlantHeight, double const &CoeffLodging, double const &StemPorosity, double const &ApexHeight, double const &CulmsPop,
                            double &GrainMoisture, double &FreshMatPanicleTotPop, double &StemVigor, double &LodgingIndex,
-                           double &FreshMatAbovegroundPop, double &LodgingResistance, double &StemSurfMean,
+                           double &FreshMatAbovegroundPop, double &LodgingResistance, double &LodgingResistance2, double &StemSurfMean,
                            double &StemDiaMean, double &StemDiaBase) {
     try {
         if ( NumPhase > 4) {
@@ -2968,6 +2968,8 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
             StemDiaMean = 2 * sqrt(StemSurfMean / M_PI); //in mm
             StemDiaBase = StemDiaMean * 1.3;
 //            // rough estimate of stem thickness distribution bottom to top; coefficient should be smaller in sorghum because it has less sheath around the culm at the base.
+            LodgingResistance2 = LodgingResistance * StemDiaBase;
+            //This is an alternative measure of LR that factors in stem base thickness (to be fitting using StemPorosity parameter). The StemPorosity parameter only effects stem thickness and nothing else in the simulation.
 
         }
     } catch (...) {

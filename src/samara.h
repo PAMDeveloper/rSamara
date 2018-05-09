@@ -139,6 +139,7 @@ public:
     double LodgingIndex = 0;
     double FreshMatAbovegroundPop = 0;
     double LodgingResistance = 0;
+    double LodgingResistance2 = 0;
     double LodgingDay = 0;
     double Lodging = 0;
 
