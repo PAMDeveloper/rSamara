@@ -52,11 +52,11 @@ public:
 //        return result;
 //    }
 
-    map<string, vector<double>> filterVObs( map<string, vector<double>> vObs,
+    map<string, vector<double>> filterVObs( map<string, vector<double> > vObs,
                                             map<string, vector<double> > results,
                                             bool keepDay = true,
                                             map<string, double> constraints = map<string,double>(),
-                                            string dayId = "obsplantdate")
+                                            string dayId = "obsplantdate", bool lowerCase = true)
     {
         double dayMin = results[dayId].front();
         double dayMax = results[dayId].back();
@@ -65,7 +65,8 @@ public:
         map<string, vector<double>> filteredVObs;
         for(auto const &token : vObs) {
             string * s = new string(token.first);
-            transform(s->begin(), s->end(), s->begin(), ::tolower);
+            if(lowerCase)
+                transform(s->begin(), s->end(), s->begin(), ::tolower);
             if(results.find(*s) != results.end() || (keepDay && *s == dayId)) {
                 bool empty = true;
                 for(double val: token.second) {
@@ -100,7 +101,8 @@ public:
                 for(auto token : filteredVObs) {
                     string * h = new string(token.first);
                     string * s = new string(token.first);
-                    transform(s->begin(), s->end(), s->begin(), ::tolower);
+                    if(lowerCase)
+                        transform(s->begin(), s->end(), s->begin(), ::tolower);
                     filteredVObs[*s].push_back(vObs[*h][i]);
                     delete s;
                     delete h;
@@ -115,17 +117,18 @@ public:
     map<string, vector<double>> reduceResults(map<string, vector<double> > results,
                                               map<string, vector<double> > vObs,
                                               map<string, double> constraints = map<string,double>(),
-                                              string dayId = "obsplantdate") {
+                                              string dayId = "obsplantdate", bool lowerCase = true) {
 
       double dayMin = results[dayId].front();
       double dayMax = results[dayId].back();
 
-      map<string, vector<double>> filteredVObs = filterVObs(vObs, results, true, constraints, dayId);
+      map<string, vector<double>> filteredVObs = filterVObs(vObs, results, true, constraints, dayId, lowerCase);
       map<string, vector<double>> reducedResults;
 
         for(auto const &token : filteredVObs) {
             string s = token.first;
-            transform(s.begin(), s.end(), s.begin(), ::tolower);
+            if(lowerCase)
+                transform(s.begin(), s.end(), s.begin(), ::tolower);
             if(results.find(s) != results.end()) {
                 reducedResults.insert( pair<string,vector<double> >(s, vector<double>()) );
             }
