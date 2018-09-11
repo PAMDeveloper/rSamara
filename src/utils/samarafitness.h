@@ -1,4 +1,4 @@
-    #ifndef SAMARAFITNESS_H
+#ifndef SAMARAFITNESS_H
 #define SAMARAFITNESS_H
 
 #include <utils/de.h>
@@ -11,31 +11,40 @@
 #include <QDebug>
 
 using namespace std;
+//struct PARAMS {
+//   static const double min[11];
+//   static const double max[11];
+//   static const string names[11];
+//   static const unsigned int size;
+//};
+
+//const unsigned int PARAMS::size = 11;
+//const double PARAMS::min[11] = {1, 1, 1, 20, 10, 0.01, -0.5, 0.0, 0.0, 0.01, 0.1};
+//const double PARAMS::max[11] = {10, 10, 20, 60, 120, 0.5, 0.5, 2, 0.5, 0.1, 0.5};
+//const *double PARAMS::names[11] = {"Epsib", "Ict", "MGR_init", "plasto_init", "SLAp", "leaf_length_to_IN_length", "coef_MGR_PI", "slope_length_IN", "slope_LL_BL_at_PI", "density_IN1", "density_IN2"};
 
 class SamaraFitness : public de::IOptimizable
 {
 
 public:
-    vector <SamaraParameters *> parametersList;
+    SamaraParameters * parameters;
     vector<string> params;
     vector<pair<double, double> > bounds;
-    vector<map<string,vector<double>>> rObs;
+    map<string,vector<double>> rObs;
 
-    SamaraFitness(vector <SamaraParameters *> parametersList,
-                  vector<string> params,
-                  vector<pair<double, double> > bounds,
-                  vector < map<string,vector<double>> > observations):
-        parametersList(parametersList), params(params), bounds(bounds) {
+    SamaraFitness(SamaraParameters * parameters,
+                  vector<string> params, vector<pair<double, double> > bounds,
+                  map<string,vector<double>> obs):
+        parameters(parameters), params(params), bounds(bounds) {
         ResultParser parser;
         Samara samara;
-        pair <vector <string>, vector < vector <double> > > result = samara.run_samara_2_3(parametersList[0], (Samara::SamaraLogType)1);
+        pair <vector <string>, vector < vector <double> > > result = samara.run_samara_2_3(parameters, (Samara::SamaraLogType)1);
         map<string, vector<double>> mapRes;
         for(int i = 0; i < result.first.size(); i++) {
             mapRes.insert(pair<string,vector<double>>(result.first[i], result.second[i]));
         }
 
-        for(auto obs: observations)
-            rObs.push_back(parser.filterVObs2(obs, mapRes, false, map<string,double>(), "NbJas", false));
+        rObs = parser.filterVObs(obs, mapRes, false, map<string,double>(), "ObsPlantDate", false);
     }
 
     double RMSE(map<string,vector<double>> res, map<string,vector<double>> obs) const{
@@ -49,9 +58,13 @@ public:
                 if(vObs[i] == -999 || vObs[i] == 0) continue;
                 double diff = pow(vObs[i] - vRes[i], 2);
                 col += diff;
+//                qDebug() << diff << " ";
             }
+//            qDebug() << "\n" << QString::fromStdString(key) << ": " << col << "\n";
+//            qDebug() << flush;
             fitness += sqrt(col/vObs.size());
         }
+//        qDebug() << fitness;
         return fitness;
     }
 
@@ -59,32 +72,27 @@ public:
     {
         ResultParser parser;
         //put inputs in parameters
-        double cost = 0;
-        for (int k = 0; k < parametersList.size(); ++k) {
-            SamaraParameters * parameters = parametersList[k];
-            for(int i = 0; i < inputs.size(); i++) {
-                parameters->doubles[params[i]].first = inputs[i];
-            }
-            Samara samara;
-            pair <vector <string>, vector < vector <double> > > result = samara.run_samara_2_3(parameters, (Samara::SamaraLogType)1);
-            map<string, vector<double>> mapRes;
-            for(int i = 0; i < result.first.size(); i++) {
-                mapRes.insert(pair<string,vector<double>>(result.first[i], result.second[i]));
-            }
-            map<string, vector<double>> res = parser.reduceResults(mapRes, rObs[k], map<string,double>(), "NbJas", false);
-            cost += RMSE(res, rObs[k]);
+        for(int i = 0; i < inputs.size(); i++) {
+            parameters->doubles[params[i]].first = inputs[i];
         }
-        return cost;
+        Samara samara;
+        pair <vector <string>, vector < vector <double> > > result = samara.run_samara_2_3(parameters, (Samara::SamaraLogType)1);
+        map<string, vector<double>> mapRes;
+        for(int i = 0; i < result.first.size(); i++) {
+            mapRes.insert(pair<string,vector<double>>(result.first[i], result.second[i]));
+        }
+        map<string, vector<double>> res = parser.reduceResults(mapRes, rObs, map<string,double>(), "ObsPlantDate", false);
+        return RMSE(res, rObs);
     }
 
     unsigned int NumberOfParameters() const override {
-        return (unsigned int)params.size();
+        return params.size();
     }
 
     std::vector<Constraints> GetConstraints() const override {
         std::vector<Constraints> constr(NumberOfParameters());
 
-        for (unsigned int i = 0; i < NumberOfParameters(); ++i) {
+        for (int i = 0; i < NumberOfParameters(); ++i) {
             constr[i] = Constraints(bounds[i].first, bounds[i].second, true);
         }
 
