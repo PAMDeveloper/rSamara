@@ -1494,9 +1494,11 @@ void RS_EvalDemandStructSheath(double const &NumPhase, double const &DemStructLe
 }
 
 
-void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density,
-                                double CoeffRootMassPerVolMax, double RootPartitMax, double /*GrowthStructTotPop*/, double RootFront, double /*SupplyTot*/, double DemStructLeafPop, double DemStructSheathPop, double DryMatStructRootPop,
-                                double &RootSystSoilSurfPop, double &RootSystVolPop, double &GainRootSystVolPop, double &GainRootSystSoilSurfPop, double &DemStructRootPop, double &RootSystSoilSurfPopOld, double &RootFrontOld, double &RootSystVolPopOld, double &DemStructRootPlant) {
+void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density, double const &CoeffRootMassPerVolMax, double const &RootPartitMax, double const &/*GrowthStructTotPop*/,
+								double const &RootFront, double const &/*SupplyTot*/, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DryMatStructRootPop,
+                                double const &RootLignin,
+								double &RootSystSoilSurfPop, double &RootSystVolPop, double &GainRootSystVolPop, double &GainRootSystSoilSurfPop, double &DemStructRootPop, 
+								double &RootSystSoilSurfPopOld, double &RootFrontOld, double &RootSystVolPopOld, double &DemStructRootPlant) {
     try {
         RootSystSoilSurfPop = min(RootFront * RootFront * Density / 1000000
                                   , 10000.);
@@ -1507,6 +1509,8 @@ void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density,
             DemStructRootPop = min((DemStructLeafPop + DemStructSheathPop) *
                                    RootPartitMax, max(0., CoeffRootMassPerVolMax * RootSystVolPop -
                                                       DryMatStructRootPop));
+
+			DemStructRootPop = DemStructRootPop + (DemStructRootPop * (RootLignin / 100) * 1.7);
             DemStructRootPlant = DemStructRootPop * 1000 / Density;
             RootSystSoilSurfPopOld = RootSystSoilSurfPop;
             RootFrontOld = RootFront;
@@ -1667,6 +1671,7 @@ void RS_EvolGrowthStructSheathPop(double const &NumPhase, double const &Ic, doub
 
 
 void RS_EvolGrowthStructRootPop(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructRootPop, double const &DemStructTotPop,
+								double const &RootLignin,
                                 double &GrowthStructRootPop) {
     try {
         if (((NumPhase > 1) && (NumPhase < 5))) {
@@ -1676,6 +1681,8 @@ void RS_EvolGrowthStructRootPop(double const &NumPhase, double const &Ic, double
                 GrowthStructRootPop = DemStructRootPop;
             }
         }
+
+		GrowthStructRootPop = GrowthStructRootPop - (GrowthStructRootPop * (RootLignin / 100) * (1 / 1.7));
 
     } catch (...) {
         error_message("RS_EvolGrowthStructRootPop", URisocas);
@@ -2039,9 +2046,20 @@ void RS_ExcessAssimilToRoot_V2(double const &NumPhase, double const &ExcessAssim
 }
 
 
-void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, double const &PlantsPerHill, double const &TxResGrain, double const &PoidsSecGrain, double const &Densite, double const &GrowthStructLeafPop, double const &GrowthStructSheathPop, double const &GrowthStructRootPop, double const &GrowthStructInternodePop, double const &GrowthStructPaniclePop, double const &/*GrowthStructTotPop*/, double const &/*GrowthResInternodePop*/, double const &GrainYieldPop, double const &ResCapacityInternodePop, double const &CulmsPerPlant, double const &CoeffPanSinkPop, double const &SterilityTot, double const &DeadLeafDrywtPop, double const &DryMatResInternodePopOld, double const &PanicleFilPop, double const &AssimNotUsedCum, double const &MobiliLeafDeath,
+void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, double const &PlantsPerHill, double const &TxResGrain, double const &PoidsSecGrain, double const &Densite, 
+						double const &GrowthStructLeafPop, double const &GrowthStructSheathPop, double const &GrowthStructRootPop, double const &GrowthStructInternodePop, 
+						double const &GrowthStructPaniclePop, double const &/*GrowthStructTotPop*/, double const &/*GrowthResInternodePop*/, double const &GrainYieldPop, 
+						double const &ResCapacityInternodePop, double const &CulmsPerPlant, double const &CoeffPanSinkPop, double const &SterilityTot, double const &DeadLeafDrywtPop, 
+						double const &DryMatResInternodePopOld, double const &PanicleFilPop, double const &AssimNotUsedCum, double const &MobiliLeafDeath,
+						double const &RootLignin,
 
-                           double &DryMatStructLeafPop, double &DryMatStructSheathPop, double &DryMatStructRootPop, double &DryMatStructInternodePop, double &DryMatStructPaniclePop, double &DryMatStemPop, double &DryMatStructTotPop, double &DryMatResInternodePop, double &DryMatVegeTotPop, double &DryMatPanicleTotPop, double &DryMatAboveGroundPop, double &DryMatTotPop, double &HarvestIndex, double &InternodeResStatus, double &PanicleNumPop, double &PanicleNumPlant, double &GrainYieldPanicle, double &SpikeNumPop, double &SpikeNumPanicle, double &FertSpikeNumPop, double &GrainFillingStatus, double &RootShootRatio, double &DryMatAboveGroundTotPop, double &CumGrowthPop, double &GrowthPop, double &CumCarbonUsedPop) {
+                        double &DryMatStructLeafPop, double &DryMatStructSheathPop, double &DryMatStructRootPop, double &DryMatStructInternodePop, double &DryMatStructPaniclePop, 
+						double &DryMatStemPop, double &DryMatStructTotPop, double &DryMatResInternodePop, double &DryMatVegeTotPop, double &DryMatPanicleTotPop, double &DryMatAboveGroundPop, 
+						double &DryMatTotPop, double &HarvestIndex, double &InternodeResStatus, double &PanicleNumPop, double &PanicleNumPlant, double &GrainYieldPanicle, double &SpikeNumPop, 
+						double &SpikeNumPanicle, double &FertSpikeNumPop, double &GrainFillingStatus, double &RootShootRatio, double &DryMatAboveGroundTotPop, double &CumGrowthPop, 
+						double &GrowthPop, double &CumCarbonUsedPop,
+						double &RootLigninPop
+						) {
     try {
 
         /*NEW LB*/
@@ -2061,6 +2079,7 @@ void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, do
                 DryMatStructLeafPop = DryMatStructLeafPop + GrowthStructLeafPop;
                 DryMatStructSheathPop = DryMatStructSheathPop + GrowthStructSheathPop;
                 DryMatStructRootPop = DryMatStructRootPop + GrowthStructRootPop;
+				RootLigninPop = DryMatStructRootPop * RootLignin / 100;
                 DryMatStructInternodePop = DryMatStructInternodePop +
                         GrowthStructInternodePop;
                 DryMatStructPaniclePop = DryMatStructPaniclePop +

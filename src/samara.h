@@ -93,6 +93,7 @@ public:
     double RollingBase;
     double RollingSens;
     double RootCstr;
+	double RootLignin;
     double RootFrontMax;
     double RootPartitMax;
     double SDJBVP;
@@ -452,6 +453,8 @@ public:
     double VolRelMacropores = 0;
     double WueEt = 0;
     double WueTot = 0;
+
+	double RootLigninPop = 0;
 
 
 
