@@ -33,10 +33,11 @@ struct Climate {
 class SamaraParameters {
 public:
     vector < Climate > climatics;
+	vector < double > irrigation;
+
     map < string, pair < double, string > > doubles;
     map < string, pair < string, string > > strings;
-
-
+	
     void clearParameters() {
         doubles.clear();
         strings.clear();
@@ -55,6 +56,7 @@ public:
     }
 
     void clearMeteo() {climatics.clear();}
+	void clearIrrigation() { irrigation.clear(); }
 
     double getDouble(string s) {
         if(doubles.find(s) == doubles.end()) {
@@ -68,7 +70,13 @@ public:
         return doubles[s].first;
     }
     string getString(string s) {return strings[s].first;}
-    Climate getClimate(int t){return climatics[t+1];}
+
+    Climate getClimate(int t){return climatics[t + 1];}
+	double getIrrigation(int t) { 
+		if (t >= irrigation.size())
+			return -999.0;
+		return irrigation[t + 1]; 
+	}
 };
 
 
