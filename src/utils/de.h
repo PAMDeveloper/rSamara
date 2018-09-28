@@ -116,7 +116,7 @@ namespace de
 
             for (auto& agent : m_population)
             {
-                for (int i = 0; i < m_numberOfParameters; i++)
+                for (unsigned int i = 0; i < m_numberOfParameters; i++)
                 {
                     if (m_constraints[i].isConstrained)
                     {
@@ -132,7 +132,7 @@ namespace de
             }
 
             // Initialize minimum cost, best agent and best agent index
-            for (int i = 0; i < m_populationSize; i++)
+            for (unsigned int i = 0; i < m_populationSize; i++)
             {
                 m_minCostPerAgent[i] = m_cost.EvaluteCost(m_population[i]);
 
@@ -151,7 +151,7 @@ namespace de
             double minCost = m_minCostPerAgent[0];
             int bestAgentIndex = 0;
 
-            for (int x = 0; x < m_populationSize; x++)
+            for (unsigned int x = 0; x < m_populationSize; x++)
             {
                 // For x in population select 3 random agents (a, b, c) different from x
                 int a = x;
@@ -168,7 +168,7 @@ namespace de
 
                 // Form intermediate solution z
                 std::vector<double> z(m_numberOfParameters);
-                for (int i = 0; i < m_numberOfParameters; i ++)
+                for (unsigned int i = 0; i < m_numberOfParameters; i ++)
                 {
                     z[i] = m_population[a][i] + m_F * (m_population[b][i] - m_population[c][i]);
                 }
@@ -188,7 +188,7 @@ namespace de
                 std::vector<double> newX(m_numberOfParameters);
 
                 // Execute crossing
-                for (int i = 0; i < m_numberOfParameters; i++)
+                for (unsigned int i = 0; i < m_numberOfParameters; i++)
                 {
                     if (r[i] < m_CR || i == R)
                     {
@@ -242,7 +242,7 @@ namespace de
         std::vector<std::pair<std::vector<double>, double>> GetPopulationWithCosts() const
         {
             std::vector<std::pair<std::vector<double>, double>> toRet;
-            for (int i = 0; i < m_populationSize; i++)
+            for (unsigned int i = 0; i < m_populationSize; i++)
             {
                 toRet.push_back(std::make_pair(m_population[i], m_minCostPerAgent[i]));
             }
@@ -277,7 +277,7 @@ namespace de
                     std::cout << std::fixed << std::setprecision(5);
                     std::cout << "Current minimal cost: " << m_minCost << "\t\t";
                     std::cout << "Best agent: ";
-                    for (int i = 0; i < m_numberOfParameters; i++)
+                    for (unsigned int i = 0; i < m_numberOfParameters; i++)
                     {
                         std::cout<< m_population[m_bestAgentIndex][i] << " ";
                     }

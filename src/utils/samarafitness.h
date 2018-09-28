@@ -86,13 +86,13 @@ public:
     }
 
     unsigned int NumberOfParameters() const override {
-        return params.size();
+        return (unsigned int)params.size();
     }
 
     std::vector<Constraints> GetConstraints() const override {
         std::vector<Constraints> constr(NumberOfParameters());
 
-        for (int i = 0; i < NumberOfParameters(); ++i) {
+        for (unsigned int i = 0; i < NumberOfParameters(); ++i) {
             constr[i] = Constraints(bounds[i].first, bounds[i].second, true);
         }
 
