@@ -1,15 +1,15 @@
 #ifndef PROCESSES_H
 #define PROCESSES_H
-
+//#include <QDebug>
 namespace samara {
 
 int MonCompteur;
 void CalculeLaMoyenne(double const &LaValeur,   int const &LeCompteur,
                       double &LaMoyenne) {
-    try {
+    /*try*/ {
         LaMoyenne = (LaMoyenne * (LeCompteur - 1) + LaValeur) / (LeCompteur);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("CalculeLaMoyenne", URiz);
     }
 }
@@ -23,7 +23,7 @@ void RS_Transplanting_V2_2( double const& NumPhase, double const& DensityNursery
 {
     double DensityChange;
 
-    try {
+    /*try*/ {
         DensityChange = DensityField / ( DensityNursery / PlantsPerHill );
         if(  ( ( Transplanting == 1 ) && ( NumPhase >= 1 ) ) )
         {
@@ -69,7 +69,7 @@ void RS_Transplanting_V2_2( double const& NumPhase, double const& DensityNursery
             ResCapacityInternodePop = ResCapacityInternodePop * DensityChange;
         }
 
-    } catch(...) {error_message( "RS_Transplanting_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_Transplanting_V2_2" , URisocas );
     }
 }
 
@@ -81,7 +81,7 @@ void RS_Transplanting_V2(double const &NumPhase, double const &DensityNursery, d
                          double &DryMatStructInternodePop, double &DryMatStructPaniclePop, double &DryMatResInternodePop) {
     double DensityChange;
 
-    try {
+    /*try*/ {
         DensityChange = DensityField / (DensityNursery / PlantsPerHill);
         if (((Transplanting == 1) && (NumPhase >= 1))) {
             CounterNursery = CounterNursery + 1;
@@ -114,7 +114,7 @@ void RS_Transplanting_V2(double const &NumPhase, double const &DensityNursery, d
             DryMatResInternodePop = DryMatResInternodePop * DensityChange;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_Transplanting_V2", URisocas);
     }
 }
@@ -152,7 +152,7 @@ qui fonctionne en degres jours et declanche IP lorsque SumPP est inferieur à PP
     // on passe en variable un pseudo booléen et non directement ce booléen (pb de moteur)
 
 
-    try {
+    /*try*/ {
         ChangePhase = 0;
         ChangeSousPhase = 0;
         // l'initialisation quotidienne de cette variable à faux permet de stopper le marquage d'une journée de changement de phase
@@ -223,7 +223,7 @@ qui fonctionne en degres jours et declanche IP lorsque SumPP est inferieur à PP
             } // fin du if std::trunc(NumPhase)=4 then
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvolPhenoStress | NumPhase: " + FloatToStr(NumPhase) +
                       " SommeDegresJour: " + FloatToStr(SommeDegresJour) +
                       " SeuilTempPhaseSuivante: " + FloatToStr(SeuilTempPhaseSuivante), URiz);
@@ -233,38 +233,38 @@ qui fonctionne en degres jours et declanche IP lorsque SumPP est inferieur à PP
 
 void RS_EvalSimAnthesis50(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                           double &SimAnthesis50) {
-    try {
+    /*try*/ {
         if ((NumPhase == 5) && (ChangePhase == 1)) {
             SimAnthesis50 = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimAnthesis50", URisocas);
     }
 }
 
 void RS_EvalDateGermination(double const &NumPhase, double const &ChangePhase,
                             double &NbDaysSinceGermination) {
-    try {
+    /*try*/ {
         if (((NumPhase < 1) || ((NumPhase == 1) && (ChangePhase == 1)))) {
             NbDaysSinceGermination = 0;
         } else {
             NbDaysSinceGermination = NbDaysSinceGermination + 1;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDateGermination", URisocas);
     }
 }
 
 void RS_EvalColdStress(double const &KCritStressCold1, double const &KCritStressCold2, double const &TMin,
                        double &StressCold) {
-    try {
+    /*try*/ {
         StressCold = 1 - max(0., min(1., KCritStressCold1 / (KCritStressCold1 -
                                                              KCritStressCold2) - TMin / (KCritStressCold1 - KCritStressCold2)));
         StressCold = max(0.00001, StressCold);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalColdStress", URisocas);
     }
 }
@@ -272,24 +272,24 @@ void RS_EvalColdStress(double const &KCritStressCold1, double const &KCritStress
 
 void RS_EvalSimEmergence(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                          double &SimEmergence) {
-    try {
+    /*try*/ {
         if ((NumPhase == 2) && (ChangePhase == 1)) {
             SimEmergence = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimEmergence", URisocas);
     }
 }
 
 void RS_EvalSimPanIni(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                       double &SimPanIni) {
-    try {
+    /*try*/ {
         if ((NumPhase == 4) && (ChangePhase == 1)) {
             SimPanIni = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimPanIni", URisocas);
     }
 }
@@ -297,12 +297,12 @@ void RS_EvalSimPanIni(double const &NumPhase, double const &ChangePhase, double 
 
 void RS_EvalSimStartGermin(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                            double &SimStartGermin) {
-    try {
+    /*try*/ {
         if ((NumPhase == 1) && (ChangePhase == 1)) {
             SimStartGermin = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimStartGermin", URisocas);
     }
 }
@@ -310,12 +310,12 @@ void RS_EvalSimStartGermin(double const &NumPhase, double const &ChangePhase, do
 
 void RS_EvalSimStartMatu2(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                           double &SimStartMatu2) {
-    try {
+    /*try*/ {
         if ((NumPhase == 6) && (ChangePhase == 1)) {
             SimStartMatu2 = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimStartMatu2", URisocas);
     }
 }
@@ -323,12 +323,12 @@ void RS_EvalSimStartMatu2(double const &NumPhase, double const &ChangePhase, dou
 
 void RS_EvalSimStartPSP(double const &NumPhase, double const &ChangePhase, double const &NbJas,
                         double &SimStartPSP) {
-    try {
+    /*try*/ {
         if ((NumPhase == 3) && (ChangePhase == 1)) {
             SimStartPSP = NbJas;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSimStartPSP", URisocas);
     }
 }
@@ -340,7 +340,7 @@ void RS_EvalDegresJourVitMoy_V2(double const &NumPhase, double const &TMax, doub
     double S1; double S2; double S3;
     double Tn; double Tx;
 
-    try {
+    /*try*/ {
         if ((TMax != TMin)) {
             if (((TMax <= TBase) || (TMin >= TLet))) {
                 v = 0;
@@ -373,7 +373,7 @@ void RS_EvalDegresJourVitMoy_V2(double const &NumPhase, double const &TMax, doub
         }
         DegresDuJourCor = DegresDuJourCor * StressCold;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDegresJourVitMoy | TMax=" + FloatToStr(TMax) +
                       " TMin=" + FloatToStr(TMin) + "TBase=" + FloatToStr(TBase) + " TOpt1=" +
                       FloatToStr(TOpt1) +
@@ -387,25 +387,25 @@ void RS_EvalDegresJourVitMoy_V2(double const &NumPhase, double const &TMax, doub
 
 void RS_EvalSDJPhase4(double const &NumPhase, double const &DegreDuJourCor,
                       double &SDJPhase4) {
-    try {
+    /*try*/ {
         if ((NumPhase == 4)) {
             SDJPhase4 = SDJPhase4 + DegreDuJourCor;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSDJPhase4", URisocas);
     }
 }
 
 void RS_EvalDAF_V2(double const &NumPhase, double &DAF) {
-    try {
+    /*try*/ {
         if ((NumPhase > 4)) {
             DAF = DAF + 1;
         } else {
             DAF = DAF;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDAF_V2", URisocas);
     }
 }
@@ -413,7 +413,7 @@ void RS_EvalDAF_V2(double const &NumPhase, double &DAF) {
 void RS_EvalDAF_V2_lodging(double const &NumPhase, double const &DegresDuJour,
                    double const &SDJMatu1, double const &SDJMatu2,
                    double &DAF, double &MatuSDJ, double &MatuProgress) {
-    try {
+    /*try*/ {
         if ((NumPhase > 4)) {
             DAF = DAF + 1;
             MatuSDJ = MatuSDJ + DegresDuJour; //Please don’t forget to initialize MatuSDJ to zero!
@@ -422,7 +422,7 @@ void RS_EvalDAF_V2_lodging(double const &NumPhase, double const &DegresDuJour,
             DAF = DAF;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDAF_V2", URisocas);
     }
 }
@@ -439,7 +439,7 @@ void RS_EvalDAF_V2_lodging(double const &NumPhase, double const &DegresDuJour,
 
 void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, double const &Phyllo, double const &RelPhylloPhaseStemElong,
                     double &PhaseStemElongation, double &HaunGain, double &HaunIndex) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((((NumPhase > 3) || (HaunIndex > 20)) && (NumPhase < 5))) {
                 PhaseStemElongation = 1;
@@ -462,7 +462,7 @@ void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, doubl
             PhaseStemElongation = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_Phyllochron", URisocas);
     }
 }
@@ -479,11 +479,12 @@ void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, doubl
 
 void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, double const &CoeffInternodeNum,
                                           double const &HaunGain, double const &cstr, double const &InternodeLengthMax,
-                                          double const &RelPotLeafLength, double const &LeafLengthMax, double const &/*CulmsPerHill*/, double const &IcMean, double const &Kdf, double const &Ic, double const &WtRatioLeafSheath, double const &StressCold, double const &CstrMean,
+                                          double const &RelPotLeafLength, double const &LeafLengthMax, double const &/*CulmsPerHill*/, 
+										double const &IcMean, double const &Kdf, double const &Ic, double const &/*WtRatioLeafSheath*/, double const &StressCold, double const &CstrMean,
                                   double &ApexHeightGain, double &ApexHeight, double &PlantHeight, double &PlantWidth) {
     double CorrectedCstrMean;
 
-    try {
+    /*try*/ {
         if ((PhaseStemElongation == 1)) {
             ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.2), cstr) * StressCold
                     * InternodeLengthMax;
@@ -502,7 +503,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1_lodging(double const &PhaseStemElongation, dou
         PlantWidth = std::pow(Kdf, 1.5) * 2 * sqrt(IcMean) * RelPotLeafLength * LeafLengthMax;/*DELETED LB*/ /**
       Min(1.4, (1 + 0.1 * (CulmsPerHill - 1)));*/
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolHauteur_SDJ_cstr_V2_1_lodging", URisocas);
     }
 }
@@ -513,7 +514,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double cons
                                   double &ApexHeightGain, double &ApexHeight, double &PlantHeight, double &PlantWidth) {
     double CorrectedCstrMean;
 
-    try {
+    /*try*/ {
         if ((PhaseStemElongation == 1)) {
             ApexHeightGain = HaunGain * min(pow(min(Ic, 1.), 0.5), cstr) * StressCold
                     * InternodeLengthMax;
@@ -533,7 +534,7 @@ void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double cons
         PlantWidth = std::pow(Kdf, 1.5) * 2 * sqrt(IcMean) * RelPotLeafLength * LeafLengthMax;/*DELETED LB*/ /**
       Min(1.4, (1 + 0.1 * (CulmsPerHill - 1)));*/
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolHauteur_SDJ_cstr_V2_1", URisocas);
     }
 }
@@ -541,23 +542,23 @@ void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double cons
 
 void RS_EvolKcpKceBilhy(double const &LtrKdfcl, double const &KcMax, double const &Mulch,
                         double &Kcp, double &Kce, double &KcTot) {
-    try {
+    /*try*/ {
         Kcp = min((1 - LtrKdfcl) * KcMax, KcMax);
         Kcp = min(Kcp, KcMax);
         Kce = LtrKdfcl * 1 * (Mulch / 100);
         KcTot = Kcp + Kce;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_BilhyEvolKcpLai", URisocas);
     }
 }
 
 
 void RS_EvalEvapPot(double const &Etp, double const &Kce,   double &EvapPot) {
-    try {
+    /*try*/ {
         EvapPot = Kce * Etp;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalEvapPot", URisocas);
     }
 }
@@ -570,7 +571,7 @@ void RS_EvolEvapSurfRFE_RDE_V2_1(double const &NumPhase, double const &Kce, doub
     double ValRSurfPrec; double EvapRU;
     double Evap1; double Evap2;
 
-    try {
+    /*try*/ {
 
         // Evaporation in absence of surface water
         if (((StockMacropores + FloodwaterDepth) == 0) /*DELETED JUNE 19*//*or (NumPhase = 0)*/) {
@@ -664,7 +665,7 @@ void RS_EvolEvapSurfRFE_RDE_V2_1(double const &NumPhase, double const &Kce, doub
         }
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolEvapSurfRFE_RDE_V2_1", URisocas);
     }
 }
@@ -672,7 +673,7 @@ void RS_EvolEvapSurfRFE_RDE_V2_1(double const &NumPhase, double const &Kce, doub
 
 void RS_EvalFTSW_V2(double const &RuRac, double const &StockTotal, double const &StockMacropores, double const &StRuMax,
                     double &StockRac, double &FTSW) {
-    try {
+    /*try*/ {
         StockRac = min(StockRac, (RuRac + (StockMacropores * RuRac / StRuMax)));
         StockRac = min(StockRac, StockTotal);
         if ((RuRac > 0)) {
@@ -681,7 +682,7 @@ void RS_EvalFTSW_V2(double const &RuRac, double const &StockTotal, double const 
             FTSW = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalFTSW | StRurMax: " + FloatToStr(RuRac) + " StRur: "
                       + FloatToStr(StockRac) + " ftsw: " + FloatToStr(FTSW), URisocas);
     }
@@ -692,7 +693,7 @@ void RS_EvalCstrPFactorFAO_V2(double const &PFactor, double const &FTSW, double 
                               double &cstr) {
     double pFact;
 
-    try {
+    /*try*/ {
         pFact = PFactor + 0.04 * (5 - KcTot * Eto);
         pFact = max(0., pFact);
         pFact = min(0.8, pFact);
@@ -702,38 +703,38 @@ void RS_EvalCstrPFactorFAO_V2(double const &PFactor, double const &FTSW, double 
             cstr = cstr * CoeffStressLogging;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalCstrPFactorFAO_V2", URisocas);
     }
 }
 
 
 void DemandePlante_V2_1(double const &Kcp, double const &ETo, double const &Ca, double const &CO2SlopeTr,   double &TrPot, double &CoeffCO2Tr) {
-    try {
+    /*try*/ {
         TrPot = Kcp * ETo;
         CoeffCO2Tr = Ca * CO2SlopeTr - 400 * CO2SlopeTr + 1; // Coefficient for TrPot response to ambient CO2 (Ca), set to 1 for Ca=400ppm (ambient 2013)
         TrPot = TrPot * CoeffCO2Tr;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("DemandePlante_V2_1", UBilEau);
     }
 }
 
 void EvalTranspi(double const &TrPot, double const &cstr,   double &tr) {
-    try {
+    /*try*/ {
         tr = TrPot * cstr;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalTranspi", UBilEau);
     }
 }
 
 void EvalETRETM(double const &Evap, double const &Tr, double const &Trpot,   double &ETM, double &ETR) {
-    try {
+    /*try*/ {
         ETM = Evap + Trpot;
         ETR = Evap + Tr;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalETRETM", UBhyTypeFAO);
     }
 }
@@ -746,7 +747,7 @@ void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double
     double TrSurf;
     double WaterDeficit;
 
-    try {
+    /*try*/ {
         TrSurf = 0;
         StockSurface = ValRFE + ValRDE;
         if ((FloodwaterDepth + StockMacropores == 0) || (NumPhase == 0)) {
@@ -817,7 +818,7 @@ void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolConsRes_Flood_V2", URisocas);
     }
 }
@@ -828,32 +829,31 @@ void RS_EvalTMaxMoy_V2_3( double const& TMax, double const& TMin, double const& 
 {
     double TPanToa;
 
-    try {
+    /*try*/ {
         if(  ( ( NumPhase == 4 ) && ( NumSousPhase == 4 ) ) )
         {
-            // 0.888 reduced to 0.8 09-02-2016
-            TPanToa = ( 0.8 * ( TMax - TMin ) + TMin ) - ( 8.32 - 0.118 * ( ( 1-0.8 )* ( HMax-HMin ) + HMin ) );
-
+            
+			TPanToa = (0.8 * (TMax - TMin) + TMin) - (8.32 - 0.118 * ((1 - 0.8)* (HMax - HMin) + HMin));
             CalculeLaMoyenne( TPanToa , MonCompteur , TMaxMoy );
             //  TPanToa is panicle T at time of anthesis (TOA); TOA is estimated at 10:30h and Tair at this time is estimated to be at 88.8% of the diurnal T amplitude; RH effect on air-panicle T difference (TD) is TD=8.32-0.118RH, and this term is subtracted from the air temperature; RH is thereby estimated to be at (100-88.8)% of the diurnal RH amplitude; data from Julia.
         }
         else if(  NumPhase < 4 )
             TMaxMoy = 0;
 
-    } catch(...) {
+    } /*catch (...)*/ {
         error_message( "RS_EvalTMaxMoy_V2_3" , URiz );
     }
 }
 
 void RS_EvalTMaxMoy(double const &TMax, double const &NumPhase, double const &NumSousPhase,
                     double &TMaxMoy) {
-    try {
+    /*try*/ {
         if (((NumPhase == 4) && (NumSousPhase == 4)))
             CalculeLaMoyenne(TMax, MonCompteur, TMaxMoy);
         else if (NumPhase < 4)
             TMaxMoy = 0;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalTMaxMoy", URiz);
     }
 }
@@ -861,7 +861,7 @@ void RS_EvalTMaxMoy(double const &TMax, double const &NumPhase, double const &Nu
 
 void RS_EvalTMinMoy(double const &TMin, double const &NumPhase, double const &NumSousPhase,
                     double &TMinMoy) {
-    try {
+    /*try*/ {
         if (((NumPhase == 4) && (NumSousPhase == 3))) {
             CalculeLaMoyenne(TMin, MonCompteur, TMinMoy);
         } else {
@@ -870,7 +870,7 @@ void RS_EvalTMinMoy(double const &TMin, double const &NumPhase, double const &Nu
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalTMinMoy", URiz);
     }
 }
@@ -878,7 +878,7 @@ void RS_EvalTMinMoy(double const &TMin, double const &NumPhase, double const &Nu
 
 void RS_EvalFtswMoy(double const &Ftsw, double const &NumPhase, double const &NumSousPhase,
                     double &FtswMoy) {
-    try {
+    /*try*/ {
         if (((NumPhase == 4) && (NumSousPhase == 4))) {
             CalculeLaMoyenne(Ftsw, MonCompteur, FtswMoy);
         } else {
@@ -887,7 +887,7 @@ void RS_EvalFtswMoy(double const &Ftsw, double const &NumPhase, double const &Nu
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalFtswMoy", URiz);
     }
 }
@@ -898,7 +898,7 @@ void RS_EvalSterility(double const &NumPhase, double const &ChangePhase, double 
                       double const &KCritSterFtsw1, double const &KCritSterFtsw2,
                       double const &TMinMoy, double const &TMaxMoy, double const &FtswMoy,
                       double &SterilityCold, double &SterilityHeat, double &SterilityDrought, double &SterilityTot) {
-    try {
+    /*try*/ {
         if (((NumPhase == 5) && (ChangePhase == 1))) {
             SterilityCold = max(0., (min(1., KCritSterCold1 / (KCritSterCold1 -
                                                                KCritSterCold2) - TMinMoy / (KCritSterCold1 - KCritSterCold2))));
@@ -914,7 +914,7 @@ void RS_EvalSterility(double const &NumPhase, double const &ChangePhase, double 
         SterilityTot = min(0.999, 1 - ((1 - SterilityCold) * (1 - SterilityHeat) *
                                        (1 - SterilityDrought)));
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSterility", URisocas);
     }
 }
@@ -924,7 +924,7 @@ void RS_EvalVitesseRacinaire(double const &VRacLevee, double const &RootSpeedBVP
                              double &VitesseRacinaire, double &VitesseRacinaireDay)
 //Modif JCC du 15/03/2005 pour inclure VracLevée différente de VRacBVP
 {
-    try {
+    /*try*/ {
         switch ((int)trunc(NumPhase)) {
         case 1:  VitesseRacinaire = VRacLevee; break;
         case 2:  VitesseRacinaire = RootSpeedBVP; break;
@@ -939,7 +939,7 @@ void RS_EvalVitesseRacinaire(double const &VRacLevee, double const &RootSpeedBVP
         VitesseRacinaireDay = VitesseRacinaire * DegreDuJourCor * std::pow(cstr
                                                                            , RootCstr);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalVitesseRacinaire | NumPhase: " +
                       FloatToStr(NumPhase), URisocas);
     }
@@ -950,7 +950,7 @@ void EvalConversion(double const &NumPhase, double const &EpsiB, double const &A
                     double &Conversion) {
     double KAssim;
 
-    try {
+    /*try*/ {
         switch ((int)std::trunc(NumPhase)) {
         case 2:  KAssim = 1; break;
         case 3:  KAssim = AssimBVP; break;
@@ -964,7 +964,7 @@ void EvalConversion(double const &NumPhase, double const &EpsiB, double const &A
         }
         Conversion = KAssim * EpsiB;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalConversion | NumPhase: " + FloatToStr(NumPhase) +
                       " SommeDegresJour: " + FloatToStr(SommeDegresJour), UMilBilanCarbone);
     }
@@ -976,7 +976,7 @@ void EvalConversion(double const &NumPhase, double const &EpsiB, double const &A
 // -----------------------------------------------------------------------------
 
 void RS_EvalParIntercepte_V2_1(double const &PAR, double const &Lai, double const &Kdf,   double &PARIntercepte, double &LIRkdfcl) {
-    try {
+    /*try*/ {
         /*NEW LB*/
         if ((Lai > 0) && (LIRkdfcl == 0))
             LIRkdfcl = (1 - exp(-Kdf * Lai));
@@ -986,7 +986,7 @@ void RS_EvalParIntercepte_V2_1(double const &PAR, double const &Lai, double cons
 
         PARIntercepte = PAR * LIRkdfcl;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalParIntercepte_V2_1 | PAR: " + FloatToStr(PAR) +
                       " LIRkdfcl: " + FloatToStr(LIRkdfcl), URisocas);
     }
@@ -996,7 +996,7 @@ void RS_EvalParIntercepte_V2_1(double const &PAR, double const &Lai, double cons
 void RS_EvalAssimPot_V2_1(double const &PARIntercepte, double const &PAR, double const &Conversion, double const &TMax, double const &TMin, double const &TBase, double const &TOpt1, double const &DayLength, double const &StressCold, double const &CO2Exp, double const &Ca, double const &CO2Cp, double const &SlaMin, double const &sla, double const &CoeffAssimSla,   double &AssimPot, double &CoeffCO2Assim)
 
 {
-    try {
+    /*try*/ {
         {
 
 
@@ -1034,7 +1034,7 @@ void RS_EvalAssimPot_V2_1(double const &PARIntercepte, double const &PAR, double
             }
         }
 
-    } catch (/*Exception const &E*/ ...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalAssimPot_V2_1 ", URisocas);
     }
 
@@ -1051,20 +1051,20 @@ void RS_EvalAssimPot_V2_1(double const &PARIntercepte, double const &PAR, double
 // -----------------------------------------------------------------------------
 
 void RS_EvalCstrAssim(double const &cstr, double const &ASScstr,   double &cstrassim) {
-    try {
+    /*try*/ {
         cstrassim = std::pow(max(cstr, 0.00000001), ASScstr);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalCstrAssim", URisocas);
     }
 }
 
 
 void RS_EvalAssim(double const &AssimPot, double const &cstrassim,   double &Assim) {
-    try {
+    /*try*/ {
         Assim = max(AssimPot * cstrassim, 0.);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalAssim | AssimPot: " + FloatToStr(AssimPot) +
                       " CstrAssim: " + FloatToStr(cstrassim) + " StressCold: ", URisocas);
     }
@@ -1072,14 +1072,14 @@ void RS_EvalAssim(double const &AssimPot, double const &cstrassim,   double &Ass
 
 
 void RS_TransplantingShock_V2(double const &CounterNursery, double const &CoeffTransplantingShock,   double &Assim) {
-    try {
+    /*try*/ {
         if (((CounterNursery > 0) && (CounterNursery < 8))) {
             Assim = Assim * CoeffTransplantingShock;
         } else {
             Assim = Assim;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_TransplantingShock_V2", URisocas);
     }
 }
@@ -1105,7 +1105,7 @@ void RS_EvalRespMaint_V2_2( double const& kRespMaintLeaf, double const& kRespMai
     double RespMaintPaniclePop;
     double CoeffQ10;
 
-    try {
+    /*try*/ {
         CoeffQ10 = pow( CoefficientQ10 , ( TMoyCalc - kTempMaint ) / 10 );
         RespMaintLeafPop = kRespMaintLeaf * DryMatStructLeafPop * CoeffQ10 * ( 0.3 + 0.7 * min( PAR, 5.0 )/5 );
         RespMaintSheathPop = kRespMaintSheath * DryMatStructSheathPop * CoeffQ10 * ( 0.3 + 0.7 * min( PAR, 5.0 )/5 );
@@ -1116,7 +1116,7 @@ void RS_EvalRespMaint_V2_2( double const& kRespMaintLeaf, double const& kRespMai
         RespMaintTot = RespMaintLeafPop + RespMaintSheathPop + RespMaintRootPop +
                 RespMaintInternodePop + RespMaintPaniclePop;
 
-    } catch(...) {error_message( "RS_EvalRespMaint_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvalRespMaint_V2_2" , URisocas );
     }
 }
 
@@ -1133,7 +1133,7 @@ void RS_EvalRespMaint(double const &kRespMaintLeaf, double const &kRespMaintShea
     double RespMaintPaniclePop;
     double CoeffQ10;
 
-    try {
+    /*try*/ {
         CoeffQ10 = std::pow(CoefficientQ10, (TMoyCalc - kTempMaint) / 10);
         RespMaintLeafPop = kRespMaintLeaf * DryMatStructLeafPop * CoeffQ10;
         RespMaintSheathPop = kRespMaintSheath * DryMatStructSheathPop * CoeffQ10;
@@ -1144,7 +1144,7 @@ void RS_EvalRespMaint(double const &kRespMaintLeaf, double const &kRespMaintShea
         RespMaintTot = RespMaintLeafPop + RespMaintSheathPop + RespMaintRootPop +
                 RespMaintInternodePop + RespMaintPaniclePop;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalRespMaint", URisocas);
     }
 }
@@ -1152,7 +1152,7 @@ void RS_EvalRespMaint(double const &kRespMaintLeaf, double const &kRespMaintShea
 void RS_EvalRelPotLeafLength_V2_2( double const& NumPhase, double const& HaunIndex, double const& RankLongestLeaf,
                                    double & RelPotLeafLength)
 {
-    try {
+    /*try*/ {
         if(  ( NumPhase > 1 ) )
         {
             RelPotLeafLength = min( ( 0.10 + 0.90 * HaunIndex / RankLongestLeaf ) , 1.0 );
@@ -1160,19 +1160,19 @@ void RS_EvalRelPotLeafLength_V2_2( double const& NumPhase, double const& HaunInd
             // 02-05-15 modified 0.10 0.90
         }
 
-    } catch(...) {error_message( "RS_EvalRelPotLeafLength_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvalRelPotLeafLength_V2_2" , URisocas );
     }
 }
 
 
 void RS_EvalRelPotLeafLength(double const &NumPhase, double const &HaunIndex, double const &RankLongestLeaf,
                              double &RelPotLeafLength) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
             RelPotLeafLength = min((0.1 + 0.9 * HaunIndex / RankLongestLeaf), 1.);
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalRelPotLeafLength", URisocas);
     }
 }
@@ -1184,7 +1184,7 @@ void RS_EvolPlantTilNumTot_V2_2( double const& NumPhase, double const& ChangePha
 {
     double TilNewPlant;
 
-    try {
+    /*try*/ {
         if(  ( ( NumPhase == 1 ) && ( ChangePhase == 1 ) ) )
         {
             CulmsPerHill = PlantsPerHill;
@@ -1218,7 +1218,7 @@ void RS_EvolPlantTilNumTot_V2_2( double const& NumPhase, double const& ChangePha
             }
         }
 
-    } catch(...) {error_message( "RS_EvolPlantTilNumTot_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvolPlantTilNumTot_V2_2" , URisocas );
     }
 }
 
@@ -1226,7 +1226,7 @@ void RS_EvolPlantTilNumTot_V2(double const &NumPhase, double const &ChangePhase,
                               double &CulmsPerHill, double &CulmsPerPlant, double &CulmsPop) {
     double TilNewPlant;
 
-    try {
+    /*try*/ {
         if (((NumPhase == 1) && (ChangePhase == 1))) {
             CulmsPerHill = PlantsPerHill;
         } else {
@@ -1249,7 +1249,7 @@ void RS_EvolPlantTilNumTot_V2(double const &NumPhase, double const &ChangePhase,
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolPlantTilNumTot_V2", URisocas);
     }
 }
@@ -1257,7 +1257,7 @@ void RS_EvolPlantTilNumTot_V2(double const &NumPhase, double const &ChangePhase,
 
 void RS_EvolPlantLeafNumTot(double const &NumPhase, double const &CulmsPerHill, double const &HaunGain,
                             double &PlantLeafNumNew, double &PlantLeafNumTot) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             PlantLeafNumNew = HaunGain * CulmsPerHill;
             PlantLeafNumTot = PlantLeafNumTot + PlantLeafNumNew;
@@ -1266,7 +1266,7 @@ void RS_EvolPlantLeafNumTot(double const &NumPhase, double const &CulmsPerHill, 
             PlantLeafNumTot = PlantLeafNumTot;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolPlantLeafNumTot", URisocas);
     }
 }
@@ -1275,7 +1275,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
                                             double const& Density, double const& Ic, double const& PlantsPerHill,
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
-    try {
+    /*try*/ {
         if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= 0.7 * SeuilTempRPR ) )
                && ( CulmsPerPlant >= 1 ) ) )
         {
@@ -1301,7 +1301,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
                     ( CulmsPop + TillerDeathPop );
         }
 
-    } catch(...) {error_message( "RS_EvolMobiliTillerDeath_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvolMobiliTillerDeath_V2_2" , URisocas );
     }
 }
 
@@ -1309,7 +1309,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
 void RS_EvolMobiliTillerDeath_V2_2( double const& NumPhase, double const& SDJPhase4, double const& SeuilTempRPR, double const& CoeffTillerDeath, double const& Density, double const& Ic, double const& PlantsPerHill,
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
-    try {
+    /*try*/ {
         if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR ) )
                && ( CulmsPerPlant >= 1 ) ) )
         {
@@ -1327,13 +1327,13 @@ void RS_EvolMobiliTillerDeath_V2_2( double const& NumPhase, double const& SDJPha
                     ( CulmsPop + TillerDeathPop );
         }
 
-    } catch(...) {error_message( "RS_EvolMobiliTillerDeath_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvolMobiliTillerDeath_V2_2" , URisocas );
     }
 }
 
 void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhase4, double const &SeuilTempRPR, double const &CoeffTillerDeath, double const &Density, double const &Ic, double const &PlantsPerHill,
                                    double &TillerDeathPop, double &CulmsPop, double &CulmsPerPlant, double &CulmsPerHill, double &DryMatStructPaniclePop) {
-    try {
+    /*try*/ {
         if (((NumPhase == 3) || ((NumPhase == 4) && (SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR))
              && (CulmsPerPlant >= 1))) {
             TillerDeathPop = (1 - (min(Ic, 1.))) * CulmsPop * CoeffTillerDeath;
@@ -1346,7 +1346,7 @@ void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhas
             TillerDeathPop = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolMobiliTillerDeath_V2_1", URisocas);
     }
 }
@@ -1355,7 +1355,7 @@ void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhas
 
 void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, double const &CoeffLeafDeath, double const &sla,
                                  double &LeafDeathPop, double &DryMatStructLeafPop, double &MobiliLeafDeath, double &DeadLeafDrywtPop, double &LaiDead) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
             LeafDeathPop = (1 - (min(Ic, 1.))) * DryMatStructLeafPop * CoeffLeafDeath;
             DryMatStructLeafPop = DryMatStructLeafPop - LeafDeathPop;
@@ -1364,7 +1364,7 @@ void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, doubl
             LaiDead = DeadLeafDrywtPop * sla;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolMobiliLeafDeath_V2_1", URisocas);
     }
 }
@@ -1372,7 +1372,7 @@ void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, doubl
 
 void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
                                  double &RespMaintDebt, double &/*AssimNotUsed*/, double &/*AssimNotUsedCum*/, double &/*AssimSurplus*/, double &SupplyTot, double &CumSupplyTot) {
-    try {
+    /*try*/ {
         SupplyTot = Assim + MobiliLeafDeath - RespMaintTot;// - max(0., RespMaintDebt);
         /*NEW*/
 
@@ -1405,7 +1405,7 @@ void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &/*PhaseSt
 
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSupplyTot_V2_1", URisocas);
     }
 }
@@ -1413,7 +1413,7 @@ void RS_EvalSupplyTot_V2_1_micha(double const &NumPhase, double const &/*PhaseSt
 
 void RS_EvalSupplyTot_V2_1(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &Assim, double const &MobiliLeafDeath, double const &RespMaintTot,
                            double &RespMaintDebt, double &/*AssimNotUsed*/, double &/*AssimNotUsedCum*/, double &/*AssimSurplus*/, double &SupplyTot, double &CumSupplyTot) {
-    try {
+    /*try*/ {
         SupplyTot = Assim + MobiliLeafDeath - RespMaintTot - max(0., RespMaintDebt);
         /*NEW*/
 
@@ -1446,7 +1446,7 @@ void RS_EvalSupplyTot_V2_1(double const &NumPhase, double const &/*PhaseStemElon
 
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSupplyTot_V2_1", URisocas);
     }
 }
@@ -1455,7 +1455,7 @@ void RS_EvalDemandStructLeaf_V2_1(double const &NumPhase, double const &PlantLea
                                   double &DemLeafAreaPlant, double &DemStructLeafPlant, double &DemStructLeafPop, double &A_DemStructLeaf) {
     double CorrectedSla;
 
-    try {
+    /*try*/ {
         if (NumPhase > 1 && NumPhase < 5) {
             DemLeafAreaPlant = (pow((RelPotLeafLength * LeafLengthMax), 2) *
                                 CoeffLeafWLRatio * 0.725 * PlantLeafNumNew / 1000000) * min(cstr
@@ -1474,7 +1474,7 @@ void RS_EvalDemandStructLeaf_V2_1(double const &NumPhase, double const &PlantLea
             A_DemStructLeaf = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandStructLeaf_V2_1", URisocas);
     }
 }
@@ -1482,13 +1482,13 @@ void RS_EvalDemandStructLeaf_V2_1(double const &NumPhase, double const &PlantLea
 
 void RS_EvalDemandStructSheath(double const &NumPhase, double const &DemStructLeafPop, double const &WtRatioLeafSheath, double const &SlaMin, double const &SlaMax, double const &sla, double const &StressCold,
                                double &DemStructSheathPop) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             DemStructSheathPop = (1 + ((SlaMax - sla) / (SlaMax - SlaMin))) * 0.5 *
                     DemStructLeafPop / WtRatioLeafSheath * max(0.00001, StressCold);
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandStructSheath", URisocas);
     }
 }
@@ -1499,7 +1499,7 @@ void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density, d
                                 double const &RootLignin,
 								double &RootSystSoilSurfPop, double &RootSystVolPop, double &GainRootSystVolPop, double &GainRootSystSoilSurfPop, double &DemStructRootPop, 
 								double &RootSystSoilSurfPopOld, double &RootFrontOld, double &RootSystVolPopOld, double &DemStructRootPlant) {
-    try {
+    /*try*/ {
         RootSystSoilSurfPop = min(RootFront * RootFront * Density / 1000000
                                   , 10000.);
         RootSystVolPop = RootSystSoilSurfPop * RootFront / 1000;
@@ -1517,7 +1517,7 @@ void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density, d
             RootSystVolPopOld = RootSystVolPop;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandStructRoot_V2", URisocas);
     }
 }
@@ -1525,7 +1525,7 @@ void RS_EvalDemandStructRoot_V2(double const &NumPhase, double const &Density, d
 bool firstTimeDone = false;
 void RS_EvalDemandStructIN_V2_1(double const &PhaseElongation, double const &ApexHeightGain, double const &CulmsPerHill, double const &CoeffInternodeMass, double const &Density, double const &Ic, double const &ResCapacityInternodePop, double const &DryMatResInternodePop, double const &CoeffReserveSink, double const &NumPhase,
                                 double &DemStructInternodePlant, double &DemStructInternodePop, double &DemResInternodePop) {
-    try {
+    /*try*/ {
         if ((PhaseElongation == 1)) {
             DemStructInternodePlant = std::pow(min(Ic, 1.), 0.5) * ApexHeightGain *
                     CulmsPerHill * CoeffInternodeMass;
@@ -1541,7 +1541,7 @@ void RS_EvalDemandStructIN_V2_1(double const &PhaseElongation, double const &Ape
         }
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandStructIN_V2_1", URisocas);
     }
 }
@@ -1549,7 +1549,7 @@ void RS_EvalDemandStructIN_V2_1(double const &PhaseElongation, double const &Ape
 
 void RS_EvalDemandStructPanicle_V2(double const &NumPhase, double const &CoeffPanicleMass, double const &CulmsPerHill, double const &Ic, double const &DryMatStructPaniclePop, double const &Density, double const &PanStructMassMax, double const &StressCold,
                                    double &DemStructPaniclePlant, double &PanStructMass, double &DemStructPaniclePop) {
-    try {
+    /*try*/ {
         if ((NumPhase == 4)) {
             DemStructPaniclePlant = CoeffPanicleMass * CulmsPerHill * sqrt(min(Ic, 1.))
                     * sqrt(max(0.00001, StressCold));
@@ -1560,7 +1560,7 @@ void RS_EvalDemandStructPanicle_V2(double const &NumPhase, double const &CoeffPa
             DemStructPaniclePop = DemStructPaniclePlant * Density / 1000;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandStructPanicle_V2", URisocas);
     }
 }
@@ -1572,7 +1572,7 @@ void RS_EvalDemandTotAndIcPreFlow_V2_1(double const &NumPhase, double const &/*R
                                        double &DemStructTotPop, double &Ic, double &IcCumul, double &IcMean, double &CstrCumul, double &CstrMean, double &A_DemStructTot)
 
 {
-    try {
+    /*try*/ {
 
         if (((NumPhase > 1) && (NumPhase < 5))) {
 
@@ -1620,14 +1620,14 @@ void RS_EvalDemandTotAndIcPreFlow_V2_1(double const &NumPhase, double const &/*R
 
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalDemandTotAndIcPreFlow_V2_1", URisocas);
     }
 }
 
 void RS_EvolGrowthStructLeafPop_V2_1(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructLeafPop, double const &DemStructTotPop,
                                      double &GrowthStructLeafPop, double &A_GrowthStructLeaf) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((Ic < 1)) {
 
@@ -1646,7 +1646,7 @@ void RS_EvolGrowthStructLeafPop_V2_1(double const &NumPhase, double const &Ic, d
 
         /*GrowthView := GrowthStructLeafPop;*/
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructLeafPop_V2_1", URisocas);
     }
 }
@@ -1654,7 +1654,7 @@ void RS_EvolGrowthStructLeafPop_V2_1(double const &NumPhase, double const &Ic, d
 
 void RS_EvolGrowthStructSheathPop(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructSheathPop, double const &DemStructTotPop,
                                   double &GrowthStructSheathPop) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((Ic < 1)) {
                 GrowthStructSheathPop = SupplyTot * (DemStructSheathPop /
@@ -1664,7 +1664,7 @@ void RS_EvolGrowthStructSheathPop(double const &NumPhase, double const &Ic, doub
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructSheathPop", URisocas);
     }
 }
@@ -1673,7 +1673,7 @@ void RS_EvolGrowthStructSheathPop(double const &NumPhase, double const &Ic, doub
 void RS_EvolGrowthStructRootPop(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructRootPop, double const &DemStructTotPop,
 								double const &RootLignin,
                                 double &GrowthStructRootPop) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((Ic < 1)) {
                 GrowthStructRootPop = SupplyTot * (DemStructRootPop / DemStructTotPop);
@@ -1684,7 +1684,7 @@ void RS_EvolGrowthStructRootPop(double const &NumPhase, double const &Ic, double
 
 		GrowthStructRootPop = GrowthStructRootPop - (GrowthStructRootPop * (RootLignin / 100) * (1 / 1.7));
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructRootPop", URisocas);
     }
 }
@@ -1692,7 +1692,7 @@ void RS_EvolGrowthStructRootPop(double const &NumPhase, double const &Ic, double
 
 void RS_EvolGrowthStructINPop_V2_1(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructInternodePop, double const &DemStructTotPop, double const &DemResInternodePop,
                                    double &GrowthStructInternodePop, double &GrowthResInternodePop) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((Ic < 1)) {
                 GrowthStructInternodePop = SupplyTot * (DemStructInternodePop / DemStructTotPop);
@@ -1709,7 +1709,7 @@ void RS_EvolGrowthStructINPop_V2_1(double const &NumPhase, double const &Ic, dou
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructInternodePop_V2_1", URisocas);
     }
 }
@@ -1717,7 +1717,7 @@ void RS_EvolGrowthStructINPop_V2_1(double const &NumPhase, double const &Ic, dou
 
 void RS_EvolGrowthStructPanPop(double const &NumPhase, double const &Ic, double const &SupplyTot, double const &DemStructPaniclePop, double const &DemStructTotPop,
                                double &GrowthStructPaniclePop) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             if ((Ic < 1)) {
                 GrowthStructPaniclePop = SupplyTot * (DemStructPaniclePop /
@@ -1727,7 +1727,7 @@ void RS_EvolGrowthStructPanPop(double const &NumPhase, double const &Ic, double 
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructPaniclePop", URisocas);
     }
 }
@@ -1738,7 +1738,7 @@ void RS_Priority2GrowthPanStrctPop_V2_1(double const &PriorityPan, double const 
     double GrowthPanDeficit;
     double GrowthStructPaniclePlus;
 
-    try {
+    /*try*/ {
         if ((GrowthStructPaniclePop < DemStructPaniclePop) /*NEW LB*/ && (NumPhase == 4)/*NEW LB*/) {
             GrowthPanDeficit = DemStructPaniclePop - GrowthStructPaniclePop;
             /*NEW LB*/
@@ -1758,7 +1758,7 @@ void RS_Priority2GrowthPanStrctPop_V2_1(double const &PriorityPan, double const 
       * GrowthPanDeficit);*/
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_Priority2GrowthPanStrctPop_V2_1", URisocas);
     }
 }
@@ -1767,7 +1767,7 @@ void RS_Priority2GrowthPanStrctPop_V2_1(double const &PriorityPan, double const 
 void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot, double const &GrowthResInternodePop,
                                  double &GrowthStructTotPop, double &AssimSurplus, double &GrowthStructLeafPop,
                                  double &GrowthStructSheathPop, double &GrowthStructRootPop, double &GrowthStructInternodePop, double &GrowthStructPaniclePop, double &A_GrowthStructLeaf, double &A_GrowthStructTot, double &A_AssimSurplus) {
-    try {
+    /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
             GrowthStructTotPop = GrowthStructLeafPop + GrowthStructSheathPop +
                     GrowthStructRootPop +
@@ -1791,7 +1791,7 @@ void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot
         }
         /*/NEW LB*/
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthStructTot_V2_1", URisocas);
     }
 }
@@ -1799,7 +1799,7 @@ void RS_EvolGrowthStructTot_V2_1(double const &NumPhase, double const &SupplyTot
 
 void RS_AddResToGrowthStructPop_V2_1(double const &NumPhase, double const &Ic, double const &/*PhaseStemElongation*/, double const &/*DryMatResInternodePop*/, double const &DemStructTotPop, double const &DemStructLeafPop, double const &DemStructSheathPop, double const &DemStructRootPop, double const &DemStructInternodePop, double const &DemStructPaniclePop, double const &/*RelMobiliInternodeMax*/, double const &GrowthResInternodePop,
                                      double &ResInternodeMobiliDayPot, double &GrowthStructDeficit, double &GrowthStructLeafPop, double &GrowthStructSheathPop, double &GrowthStructRootPop, double &GrowthStructInternodePop, double &GrowthStructPaniclePop, double &GrowthStructTotPop, double &ResInternodeMobiliDay, double &A_GrowthStructLeaf, double &A_GrowthStructTot, double &A_ResInternodeMobiliDay) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
 
 
@@ -1845,7 +1845,7 @@ void RS_AddResToGrowthStructPop_V2_1(double const &NumPhase, double const &Ic, d
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_AddResToGrowthStructPop_V2_1 GrowthStrucTotPop : " + FloatToStr(GrowthStructTotPop), URisocas);
     }
 }
@@ -1853,7 +1853,7 @@ void RS_AddResToGrowthStructPop_V2_1(double const &NumPhase, double const &Ic, d
 
 void RS_EvolDemPanFilPopAndIcPFlow_V2_1(double const &NumPhase, double const &DryMatStructPaniclePop, double const &CoeffPanSinkPop, double const &SterilityTot, double const &DegresDuJourCor, double const &DegresNumPhase5, double const &SupplyTot, double const &Assim, double const &RespMaintTot, double const &StressCold,
                                         double &PanicleSinkPop, double &DemPanicleFillPop, double &AssimSurplus, double &Ic, double &A_AssimSurplus) {
-    try {
+    /*try*/ {
         if ((NumPhase == 5)) {
             PanicleSinkPop = DryMatStructPaniclePop * CoeffPanSinkPop * (1 - SterilityTot);
             DemPanicleFillPop = (DegresDuJourCor / DegresNumPhase5) * PanicleSinkPop
@@ -1877,7 +1877,7 @@ void RS_EvolDemPanFilPopAndIcPFlow_V2_1(double const &NumPhase, double const &Dr
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolDemPanFilPopAndIcPFlow_V2_1", URisocas);
     }
 }
@@ -1886,7 +1886,7 @@ void RS_EvolDemPanFilPopAndIcPFlow_V2_1(double const &NumPhase, double const &Dr
 void RS_EvolPanicleFilPop_V2_1(double const &NumPhase, double const &Ic, double const &DryMatResInternodePop, double const &DemPanicleFilPop, double const &SupplyTot, double const &RelMobiliInternodeMax, double const &RespMaintTot, double const &Assim,
                                double &ResInternodeMobiliDayPot, double &AssimSurplus, double &PanicleFilDeficit, double &ResInternodeMobiliDay, double &PanicleFilPop, double &GrainYieldPop, double &A_AssimSurplus, double &A_ResInternodeMobiliDay) {
 
-    try {
+    /*try*/ {
         if ((NumPhase == 5)) {
             ResInternodeMobiliDayPot = RelMobiliInternodeMax * DryMatResInternodePop;
             if ((Ic > 1)) {
@@ -1926,7 +1926,7 @@ void RS_EvolPanicleFilPop_V2_1(double const &NumPhase, double const &Ic, double 
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolPanicleFilPop_V2_1", URisocas);
     }
 }
@@ -1934,7 +1934,7 @@ void RS_EvolPanicleFilPop_V2_1(double const &NumPhase, double const &Ic, double 
 bool start = false;
 void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &/*PhaseStemElongation*/, double const &DryMatStructInternodePop, double const &DryMatStructSheathPop, double const &CoeffResCapacityInternode, double const &AssimSurplus, double const &ResInternodeMobiliDay,
                                         double &ResCapacityInternodePop, double &IncreaseResInternodePop, double &DryMatResInternodePop, double &AssimNotUsed, double &AssimNotUsedCum, double &GrowthResInternodePop, double &DryMatResInternodePopOld, double &A_IncreaseResInternodePop) {
-    try {
+    /*try*/ {
         //if ((PhaseStemElongation = 1) or (NumPhase >= 5)) then
         if ((NumPhase >= 2)) {
             /*NEW LB*/
@@ -1967,7 +1967,7 @@ void RS_EvolGrowthReserveInternode_V2_1(double const &NumPhase, double const &/*
             AssimNotUsedCum = AssimNotUsedCum + AssimNotUsed;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthReserveInternode_V2_1", URisocas);
     }
 }
@@ -1979,7 +1979,7 @@ void RS_EvolGrowthReserveInternode(double const &NumPhase, double const &/*Phase
                                    double const &ResInternodeMobiliDay, double &ResCapacityInternodePop,
                                    double &IncreaseResInternodePop, double &DryMatResInternodePop,
                                    double &AssimNotUsed, double &AssimNotUsedCum, double &GrowthResInternodePop) {
-    try {
+    /*try*/ {
         //if ((PhaseStemElongation = 1) or (NumPhase >= 5)) then
         if ((NumPhase >= 2)) {
             ResCapacityInternodePop = (DryMatStructInternodePop + DryMatStructSheathPop) *
@@ -1992,7 +1992,7 @@ void RS_EvolGrowthReserveInternode(double const &NumPhase, double const &/*Phase
             AssimNotUsedCum = AssimNotUsedCum + AssimNotUsed;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthReserveInternode", URisocas);
     }
 }
@@ -2001,7 +2001,7 @@ void RS_EvolGrowthTot_V2_1(double const &NumPhase, double const &GrowthStructLea
                            double const &GrowthStructRootPop, double const &GrowthStructInternodePop, double const &GrowthStructPaniclePop,
                            double const &/*GrowthResInternodePop*/, double const &PanicleFilPop, double const &DryMatResInternodePop, double const &DryMatResInternodePopOld,
                            double &GrowthStructTotPop, double &GrowthDryMatPop, double &A_GrowthStructTot) {
-    try {
+    /*try*/ {
         if ((NumPhase < 5)) {
             GrowthStructTotPop = GrowthStructLeafPop + GrowthStructSheathPop +
                     GrowthStructRootPop + GrowthStructInternodePop +
@@ -2020,14 +2020,14 @@ void RS_EvolGrowthTot_V2_1(double const &NumPhase, double const &GrowthStructLea
         }
         GrowthDryMatPop = GrowthStructTotPop + /*NEW LB*/ (DryMatResInternodePop - DryMatResInternodePopOld) /*/NEW LB*//*DELETED*/ /*GrowthResInternodePop*/ + PanicleFilPop;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolGrowthTot_V2_1", URisocas);
     }
 }
 
 void RS_ExcessAssimilToRoot_V2(double const &NumPhase, double const &ExcessAssimToRoot, double const &DryMatStructRootPop, double const &RootSystVolPop, double const &CoeffRootMassPerVolMax,
                                double &RootMassPerVol, double &GrowthStructRootPop, double &AssimNotUsed) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
             RootMassPerVol = DryMatStructRootPop / RootSystVolPop;
         }
@@ -2040,7 +2040,7 @@ void RS_ExcessAssimilToRoot_V2(double const &NumPhase, double const &ExcessAssim
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_ExcessAssimilToRoot_V2", URisocas);
     }
 }
@@ -2060,7 +2060,7 @@ void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, do
 						double &GrowthPop, double &CumCarbonUsedPop,
 						double &RootLigninPop
 						) {
-    try {
+    /*try*/ {
 
         /*NEW LB*/
         CumGrowthPop = CumGrowthPop + GrowthStructLeafPop + GrowthStructSheathPop + GrowthStructInternodePop +
@@ -2119,7 +2119,7 @@ void RS_EvolDryMatTot_V2_1(double const &NumPhase, double const &ChangePhase, do
             }
         }
 
-    } catch (...)
+    } /*catch (...)*/
     {error_message("RS_EvolDryMatTot_V2_1 " /*+ E.message*/, URisocas);}
 
 }
@@ -2131,7 +2131,7 @@ void RS_EvalLai_V2_1(double const &NumPhase, double const &ChangePhase, double c
                      double &Lai, double &LastLeafLengthPot, double &LastLeafLength) {
     double CorrectedSla;
 
-    try {
+    /*try*/ {
 
         //showMessage(FloatToStr(NumPhase));
         if (((NumPhase == 2) && (ChangePhase == 1))) {
@@ -2152,7 +2152,7 @@ void RS_EvalLai_V2_1(double const &NumPhase, double const &ChangePhase, double c
         }
 
         Lai = DryMatStructLeafPop * CorrectedSla;
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalLai_V2_1", URisocas);
     }
 }
@@ -2160,7 +2160,7 @@ void RS_EvalLai_V2_1(double const &NumPhase, double const &ChangePhase, double c
 
 void RS_EvalMaximumLai(double const &NumPhase, double const &ChangePhase, double const &Lai,
                        double &TempLai, double &MaximumLai) {
-    try {
+    /*try*/ {
         if ((Lai > TempLai)) {
             TempLai = Lai;
         }
@@ -2170,7 +2170,7 @@ void RS_EvalMaximumLai(double const &NumPhase, double const &ChangePhase, double
             MaximumLai = TempLai;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalMaximumLai", URisocas);
     }
 }
@@ -2178,7 +2178,7 @@ void RS_EvalMaximumLai(double const &NumPhase, double const &ChangePhase, double
 
 void RS_LeafRolling_V2_1(double const &NumPhase, double const &RollingBase, double const &RollingSens, double const &FTSW, double const &Eto,
                          double &KRolling) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
             KRolling = RollingBase + (1 - RollingBase) * std::pow(FTSW, max(0.0000001
                                                                             , Eto * RollingSens));
@@ -2188,7 +2188,7 @@ void RS_LeafRolling_V2_1(double const &NumPhase, double const &RollingBase, doub
 
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_LeafRolling_V2_1", URisocas);
     }
 }
@@ -2200,7 +2200,7 @@ void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolli
                                     double &LIRkdf, double &LIRkdfcl, double &LTRkdf, double &LtrKdfcl) {
     double RolledLai;
 
-    try {
+    /*try*/ {
         if ((NumPhase > 1) && (PlantWidth > 0)) {
             RolledLai = Lai * KRolling * /*MODIFIED JUNE 20*//*Sqrt*/pow((1 - FractionPlantHeightSubmer), 0.3);
             LIRkdf = 1 - exp(-Kdf * RolledLai);
@@ -2211,7 +2211,7 @@ void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolli
             LtrKdfcl = 1 - LIRkdfcl;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalClumpingAndLightInter_V2_1", URisocas);
     }
 }
@@ -2224,7 +2224,7 @@ void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double co
                            double const& GrowthStructLeafPop, double const& PAR, double const& PARCritSLA,
                            double & SlaMitch, double & SlaNew, double & sla)
 {
-    try {
+    /*try*/ {
         if(  ( NumPhase > 1 ) )
         {
             SlaMitch = SlaMin + ( SlaMax - SlaMin ) * pow( AttenMitch , ( SDJ - SDJLevee ) );
@@ -2246,13 +2246,13 @@ void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double co
             sla = SlaMax;
         }
 
-    } catch(...) {error_message( "RS_EvalSlaMitch_V2_2" , URisocas );
+    } /*catch (...)*/ {error_message( "RS_EvalSlaMitch_V2_2" , URisocas );
     }
 }
 
 void RS_EvalSlaMitch(double const &SlaMax, double const &SlaMin, double const &AttenMitch, double const &SDJ, double const &SDJLevee, double const &NumPhase, double const &DegresDuJour, double const &TOpt1, double const &TBase, double const &TempSla, double const &DryMatStructLeafPop, double const &GrowthStructLeafPop,
                      double &SlaMitch, double &SlaNew, double &sla) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1)) {
             SlaMitch = SlaMin + (SlaMax - SlaMin) * std::pow(AttenMitch, (SDJ -
                                                                           SDJLevee));
@@ -2266,7 +2266,7 @@ void RS_EvalSlaMitch(double const &SlaMax, double const &SlaMin, double const &A
             sla = SlaMax;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalSlaMitch", URisocas);
     }
 }
@@ -2281,7 +2281,7 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
     double CorrectedIrrigation;
     double CorrectedBundheight;
 
-    try {
+    /*try*/ {
         Lr = 0;
         CorrectedBundheight = BundHeight;
         // implement lifesaving drainage
@@ -2353,7 +2353,7 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalRuiss_FloodDyna_V2", URisocas);
     }
 }
@@ -2368,7 +2368,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
     double CorrectedBundheight;
     double StressPeriod;
 
-    try {
+    /*try*/ {
         CorrectedBundheight = BundHeight;
         /*StressPeriod := 0;     */
 
@@ -2465,7 +2465,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
         }
         IrrigTotDay = CorrectedIrrigation + IrrigAutoDay;
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_AutomaticIrrigation_V2_1", URisocas);
     }
 }
@@ -2475,7 +2475,7 @@ void RS_EvolRempliResRFE_RDE_V2(double const &/*NumPhase*/, double const &/*RuSu
                                 double &FloodwaterDepth, double &StockTotal, double &StockRac, double &Hum, double &StockSurface, double &Dr, double &ValRDE, double &ValRFE, double &ValRSurf, double &/*FloodWaterGain*/, double &StockMacropores) {
     double EauReste; double ValRSurfPrec; double EauTranspi;
 
-    try {
+    /*try*/ {
         Dr = 0;
         EauTranspi = 0;
         if ((StockMacropores + FloodwaterDepth == 0)) {
@@ -2546,7 +2546,7 @@ void RS_EvolRempliResRFE_RDE_V2(double const &/*NumPhase*/, double const &/*RuSu
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolRempliResRFE_RDE_V2", URisocas);
     }
 }
@@ -2554,7 +2554,7 @@ void RS_EvolRempliResRFE_RDE_V2(double const &/*NumPhase*/, double const &/*RuSu
 
 void RS_EvolWaterLoggingUpland_V2(double const &PercolationMax, double const &BundHeight, double const &VolMacropores,
                                   double &Dr, double &Lr, double &StockMacropores) {
-    try {
+    /*try*/ {
         if ((Dr > PercolationMax) && (BundHeight == 0)) {
             StockMacropores = StockMacropores + (Dr - PercolationMax);
             Lr = Lr + max(0., StockMacropores - VolMacropores);
@@ -2562,7 +2562,7 @@ void RS_EvolWaterLoggingUpland_V2(double const &PercolationMax, double const &Bu
             StockMacropores = min(StockMacropores, VolMacropores);
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolWaterLoggingUpland_V2", URisocas);
     }
 }
@@ -2570,7 +2570,7 @@ void RS_EvolWaterLoggingUpland_V2(double const &PercolationMax, double const &Bu
 
 void RS_EvalStressWaterLogging_V2(double const &StockMacropores, double const &VolMacropores, double const &RootFront, double const &EpaisseurSurf, double const &EpaisseurProf, double const &WaterLoggingSens,
                                   double &FractionRootsLogged, double &CoeffStressLogging) {
-    try {
+    /*try*/ {
         if ((StockMacropores > 0) && (RootFront > 0)) {
             FractionRootsLogged = (max(0., RootFront - ((VolMacropores -
                                                          StockMacropores) / VolMacropores) * (EpaisseurSurf + EpaisseurProf))) /
@@ -2579,7 +2579,7 @@ void RS_EvalStressWaterLogging_V2(double const &StockMacropores, double const &V
                                                                 , WaterLoggingSens));
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalStressWaterLogging_V2", URisocas);
     }
 }
@@ -2588,7 +2588,7 @@ void RS_EvalStressWaterLogging_V2(double const &StockMacropores, double const &V
 
 void RS_EvolRempliMacropores_V2(double const &/*NumPhase*/, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ResUtil, double const &StockMacropores, double const &RootFront, double const &CapaRDE, double const &CapaRFE, double const &FloodwaterDepth,
                                 double &StockTotal, double &Hum, double &StockSurface, double &StockRac, double &ValRDE, double &ValRFE, double &ValRSurf) {
-    try {
+    /*try*/ {
         if (((StockMacropores + FloodwaterDepth) > 0)) {
             StockTotal = (EpaisseurSurf + EpaisseurProf) * ResUtil / 1000 +
                     StockMacropores;
@@ -2602,7 +2602,7 @@ void RS_EvolRempliMacropores_V2(double const &/*NumPhase*/, double const &Epaiss
             ValRSurf = EpaisseurSurf * ResUtil / 1000;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolRempliMacropores_V2", URisocas);
     }
 }
@@ -2612,7 +2612,7 @@ void RS_EvolRurRFE_RDE_V2_1(double const &VitesseRacinaire, double const &Hum, d
                             double &RuRac, double &StockRac, double &StockTotal, double &/*FloodWaterGain*/, double &RootFront) {
     double DeltaRur;
 
-    try {
+    /*try*/ {
         if ((NumPhase == 0)) {
             RuRac = 0;
             StockRac = 0;
@@ -2685,7 +2685,7 @@ void RS_EvolRurRFE_RDE_V2_1(double const &VitesseRacinaire, double const &Hum, d
             StockRac = min(StockRac, StockTotal);
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolRurRFE_RDE_V2_1", URisocas);
     }
 }
@@ -2693,23 +2693,23 @@ void RS_EvolRurRFE_RDE_V2_1(double const &VitesseRacinaire, double const &Hum, d
 
 void RS_PlantSubmergence_V2(double const &PlantHeight, double const &FloodwaterDepth,
                             double &FractionPlantHeightSubmer) {
-    try {
+    /*try*/ {
         FractionPlantHeightSubmer = min(max(0., FloodwaterDepth / max(PlantHeight
                                                                       , 0.1)), 1.);
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_PlantSubmergence_V2", URisocas);
     }
 }
 
 void RS_EvalRootFront(double const &NumPhase, double const &RuRac, double const &ResUtil,
                       double &RootFront) {
-    try {
+    /*try*/ {
         if ((NumPhase > 0)) {
             RootFront = ((1 / ResUtil) * RuRac) * 1000;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalRootFront", URisocas);
     }
 }
@@ -2724,7 +2724,7 @@ void RS_EvolPSPMVMD(double const &NumPhase, double const &ChangePhase, double co
   SumPP est dans ce cas une variable quotidienne (et non un cumul) testee dans
   EvolPhenoPhotoperStress*/
 
-    try {
+    /*try*/ {
         if ((NumPhase == 3)) {
             if ((ChangePhase == 1)) {
                 SumPP = 100; //valeur arbitraire d'initialisation >2.5
@@ -2738,7 +2738,7 @@ void RS_EvolPSPMVMD(double const &NumPhase, double const &ChangePhase, double co
             SeuilTempPhaseSuivante = SeuilTempPhasePrec + SDJPSP;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolPSPMVMD", URisocas);
     }
 }
@@ -2746,14 +2746,14 @@ void RS_EvolPSPMVMD(double const &NumPhase, double const &ChangePhase, double co
 
 void EvolSomDegresJour(double const &DegresDuJour, double const &NumPhase,
                        double &SommeDegresJour) {
-    try {
+    /*try*/ {
         if ((NumPhase >= 1)) {
             SommeDegresJour = SommeDegresJour + DegresDuJour;
         } else {
             SommeDegresJour = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvolSommeDegresJour | DegresDuJour: " + FloatToStr(DegresDuJour) +
                       " Phase n°" + FloatToStr(NumPhase) +
                       " SommeDegresJour: " + FloatToStr(SommeDegresJour) +
@@ -2764,14 +2764,14 @@ void EvolSomDegresJour(double const &DegresDuJour, double const &NumPhase,
 
 void RS_EvolSomDegresJourCor(double const &DegresDuJourCor, double const &NumPhase,
                              double &SommeDegresJourCor) {
-    try {
+    /*try*/ {
         if ((NumPhase >= 1)) {   // on ne cumule qu'après la germination
             SommeDegresJourCor = SommeDegresJourCor + DegresDuJourCor;
         } else {
             SommeDegresJourCor = 0;
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvolSomDegresJourCor", URisocas);
     }
 }
@@ -2790,7 +2790,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
 {
     double CorrectedIrrigation;
 
-    try {
+    /*try*/ {
         if(  ( ( NumPhase < 1 ) || ( ( NumPhase == 1 ) && ( ChangePhase == 1 ) ) ) /*NEW G*/|| ( Density == DensityNursery )/*/NEW G*/ )
         {
             CumPar = 0;
@@ -2866,7 +2866,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
         //growthView := cumPar ;
 
 
-    } catch(...) {
+    } /*catch (...)*/ {
         error_message( "RS_EvalRUE_V2_2" , URisocas );
     }
 }
@@ -2881,7 +2881,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
                      double &WueTot, double &ConversionEff, double & RUEgreen) {
     double CorrectedIrrigation;
 
-    try {
+    /*try*/ {
         if (((NumPhase < 1) || ((NumPhase == 1) && (ChangePhase == 1))) /*NEW G*/ || (Density == DensityNursery)/*/NEW G*/) {
             CumPar = 0;
             RUE = 0;
@@ -2948,7 +2948,7 @@ void RS_EvalRUE_V2_1(double const &NumPhase, double const &ChangePhase, double c
         //growthView := cumPar ;
 
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_EvalRUE_V2_1", URisocas);
     }
 }
@@ -2966,7 +2966,7 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
                            double &GrainMoisture, double &FreshMatPanicleTotPop, double &StemVigor, double &LodgingIndex,
                            double &FreshMatAbovegroundPop, double &LodgingResistance, double &LodgingResistance2, double &StemSurfMean,
                            double &StemDiaMean, double &StemDiaBase) {
-    try {
+    /*try*/ {
         if ( NumPhase > 4) {
             GrainMoisture = 0.7 - 0.5 * pow(MatuProgress, 2);
             //GrainMoisure equals 0.70 at flowering and decreases progressively to 0.20 (=0.7-0.5) during Matu1 and Matu2
@@ -2978,7 +2978,7 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
             LodgingIndex = 0.0000001 * PlantHeight * FreshMatAbovegroundPop / StemVigor;
             //calculated in grams and meters units; LodgingIndex is an output variable
             LodgingResistance = CoeffLodging / LodgingIndex;
-            //CoeffLodging is a new varietal parameter that depends on stem chemistry and anatomy, traits we cannot simulate. Its value is empirical and can only be estimated if lodging has been observed in an experiment and compared with simulated LodgingIncidence. LodgingResistance is an output variable and will be used to calculate actual lodging on the basis of wind speed and rain in module EvalLodging_Incidence.
+            //CoeffLodging is a new varietal parameter that depends on stem chemis/*try*/ and anatomy, traits we cannot simulate. Its value is empirical and can only be estimated if lodging has been observed in an experiment and compared with simulated LodgingIncidence. LodgingResistance is an output variable and will be used to calculate actual lodging on the basis of wind speed and rain in module EvalLodging_Incidence.
 
 
 //            // Estimation of stem thickness
@@ -2991,7 +2991,7 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
             //This is an alternative measure of LR that factors in stem base thickness (to be fitting using StemPorosity parameter). The StemPorosity parameter only effects stem thickness and nothing else in the simulation.
 
         }
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalLodgingResistance", URiz);
     }
 }
@@ -2999,7 +2999,7 @@ void EvalLodgingResistance(double const &NumPhase, double const &MatuProgress, d
 void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistance, double const &Vt,
                           double const &Pluie,
                           double &LodgingDay, double &Lodging, double &LodgingPot) {
-    try {
+    /*try*/ {
         if ( NumPhase > 4) {
             LodgingDay = Vt * Pluie / LodgingResistance;
             //It may be necessary to introduce a Vt * Pluie threshold, to be studied
@@ -3007,7 +3007,7 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
             Lodging = min(LodgingPot, 100.);
             //Please don’t forget to initialize Lodging to zero!
         }
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("EvalLodgingIncidence", URiz);
     }
 }
@@ -3017,7 +3017,7 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 
 
 
-static double tabCstr[5]; // utilisé dans SorghumMortality()
+static double tabCstr[6]; // utilisé dans SorghumMortality()
 static int tabCstrIndiceCourant = 0; // utilisé dans SorghumMortality()
 static int NbJourCompte = 0;
 
@@ -3032,7 +3032,7 @@ void SorghumMortality(double const &cstr, double const &SeuilCstrMortality,   do
     int i;
     double MoyenneCstr;
 
-    try {
+    /*try*/ {
         if ((NumPhase >= 2)) {
             NbJourCompte = NbJourCompte + 1;
             // gestion de l'indice...
@@ -3059,7 +3059,7 @@ void SorghumMortality(double const &cstr, double const &SeuilCstrMortality,   do
             }
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("SorghumMortality", URiz);
     }
 }
@@ -3067,7 +3067,7 @@ void SorghumMortality(double const &cstr, double const &SeuilCstrMortality,   do
 
 void RS_KeyResults_V2_1(double const &NumPhase, double const &CulmsPerPlant, double const &CulmsPerHill, double const &cstr, double const &FTSW, double const &Ic, double const &Lai, double const &GrainYieldPop, double const &DryMatAboveGroundPop, double const &DryMatResInternodePop, double const &DryMatTotPop, double const &GrainFillingStatus, double const &SterilityTot, double const &CumIrrig, double const &CumWUse,
                         double &CulmsPerPlantMax, double &CulmsPerHillMax, double &DurPhase1, double &DurPhase2, double &DurPhase3, double &DurPhase4, double &DurPhase5, double &DurPhase6, double &CumCstrPhase2, double &CumCstrPhase3, double &CumCstrPhase4, double &CumCstrPhase5, double &CumCstrPhase6, double &CumFTSWPhase2, double &CumFTSWPhase3, double &CumFTSWPhase4, double &CumFTSWPhase5, double &CumFTSWPhase6, double &CumIcPhase2, double &CumIcPhase3, double &CumIcPhase4, double &CumIcPhase5, double &CumIcPhase6, double &IcPhase2, double &IcPhase3, double &IcPhase4, double &IcPhase5, double &IcPhase6, double &FtswPhase2, double &FtswPhase3, double &FtswPhase4, double &FtswPhase5, double &FtswPhase6, double &CstrPhase2, double &CstrPhase3, double &CstrPhase4, double &CstrPhase5, double &CstrPhase6, double &DurGermFlow, double &DurGermMat, double &LaiFin, double &CulmsPerHillFin, double &CulmsPerPlantFin, double &GrainYieldPopFin, double &DryMatAboveGroundPopFin, double &ReservePopFin, double &DryMatTotPopFin, double &GrainFillingStatusFin, double &SterilityTotFin, double &CumIrrigFin, double &CumWUseFin) {
-    try {
+    /*try*/ {
         if ((NumPhase > 1) && (NumPhase < 7)) {
             CulmsPerPlantMax = max(CulmsPerPlant, CulmsPerPlantMax);
             CulmsPerHillMax = max(CulmsPerHill, CulmsPerHillMax);
@@ -3141,7 +3141,7 @@ void RS_KeyResults_V2_1(double const &NumPhase, double const &CulmsPerPlant, dou
 
         }
 
-    } catch (...) {
+    } /*catch (...)*/ {
         error_message("RS_KeyResults_V2_1", URisocas);
     }
 }
