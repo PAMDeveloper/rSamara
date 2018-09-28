@@ -12,7 +12,8 @@
 
 //rewrite delphi export
 #define Q(x) #x
-#define error_message(A, B) ; //std::cout << A << Q(x);
+//#define error_message(A, B) qDebug() << QString::fromStdString(A) << QString::fromStdString(Q(x));
+#define error_message(A, B)
 static double NilValue = -999;
 
 static std::string FloatToStr(double val) {
