@@ -138,7 +138,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
-        samara::RS_EvalDemandStructSheath(NumPhase, DemStructLeafPop, WtRatioLeafSheath, SlaMin, SlaMax, Sla, StressCold, DemStructSheathPop);
+        samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
                                            DemStructSheathPop, DryMatStructRootPop, RootLignin,
 										   RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,
@@ -429,7 +429,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
                                             SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
-        samara::RS_EvalDemandStructSheath(NumPhase, DemStructLeafPop, WtRatioLeafSheath, SlaMin, SlaMax, Sla, StressCold, DemStructSheathPop);
+		samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
                                            DemStructSheathPop, DryMatStructRootPop, RootLignin, RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,
                                            DemStructRootPop, RootSystSoilSurfPopOld, RootFrontOld, RootSystVolPopOld, DemStructRootPlant);
@@ -730,7 +730,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
-        samara::RS_EvalDemandStructSheath(NumPhase, DemStructLeafPop, WtRatioLeafSheath, SlaMin, SlaMax, Sla, StressCold, DemStructSheathPop);
+		samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
                                            DemStructSheathPop, DryMatStructRootPop, RootLignin, RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,
                                            DemStructRootPop, RootSystSoilSurfPopOld, RootFrontOld, RootSystVolPopOld, DemStructRootPlant);
@@ -789,8 +789,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         if(crop)samara::RS_EvalClumpAndLightInter_V2_1(NumPhase, KRolling, Density, PlantWidth, PlantHeight, Kdf, Lai, FractionPlantHeightSubmer, LIRkdf, LIRkdfcl, LTRkdf, LTRkdfcl);
 
         if(crop)samara::RS_EvalSlaMitch_V2_2(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
-                                             TempSLA, DryMatStructLeafPop, Par, PARCritSLA,
-                                             GrowthStructLeafPop, SlaMitch, SlaNew, Sla);
+			TempSLA, DryMatStructLeafPop, LeafDeathPop, GrowthStructLeafPop, Par, PARCritSLA, SLASwitch, SlaMitch, SlaNew, Sla, SlaMitchAdjusted);
 
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
@@ -1042,7 +1041,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
-        samara::RS_EvalDemandStructSheath(NumPhase, DemStructLeafPop, WtRatioLeafSheath, SlaMin, SlaMax, Sla, StressCold, DemStructSheathPop);
+		samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
                                            DemStructSheathPop, DryMatStructRootPop, RootLignin, RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,
                                            DemStructRootPop, RootSystSoilSurfPopOld, RootFrontOld, RootSystVolPopOld, DemStructRootPlant);
@@ -1099,9 +1098,8 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 
         if(crop)samara::RS_EvalClumpAndLightInter_V2_1(NumPhase, KRolling, Density, PlantWidth, PlantHeight, Kdf, Lai, FractionPlantHeightSubmer, LIRkdf, LIRkdfcl, LTRkdf, LTRkdfcl);
 
-        if(crop)samara::RS_EvalSlaMitch_V2_2(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
-                                             TempSLA, DryMatStructLeafPop, Par, PARCritSLA,
-                                             GrowthStructLeafPop, SlaMitch, SlaNew, Sla);
+		if (crop)samara::RS_EvalSlaMitch_V2_2(SlaMax, SlaMin, AttenMitch, SumDegresDay, SDJLevee, NumPhase, DegresDuJourCor, TOpt1, TBase,
+			TempSLA, DryMatStructLeafPop, LeafDeathPop, GrowthStructLeafPop, Par, PARCritSLA, SLASwitch, SlaMitch, SlaNew, Sla, SlaMitchAdjusted);
 
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
@@ -1371,7 +1369,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
-        samara::RS_EvalDemandStructSheath(NumPhase, DemStructLeafPop, WtRatioLeafSheath, SlaMin, SlaMax, Sla, StressCold, DemStructSheathPop);
+		samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
                                            DemStructSheathPop, DryMatStructRootPop, RootLignin, 
 										   RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,

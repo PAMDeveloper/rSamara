@@ -126,6 +126,7 @@ public:
 	//params
 	double CoeffLodging;
 	double StemPorosity;
+    double SLASwitch;
 	//
 
 	
@@ -251,6 +252,7 @@ public:
 		WtRatioLeafSheath = parameters.getDouble("wtratioleafsheath");
 
 		RootLignin = parameters.getDouble("rootlignin");
+        SLASwitch =  parameters.getDouble("slaswitch");
 	}
 
 };

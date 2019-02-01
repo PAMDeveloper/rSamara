@@ -1480,12 +1480,19 @@ void RS_EvalDemandStructLeaf_V2_1(double const &NumPhase, double const &PlantLea
 }
 
 
-void RS_EvalDemandStructSheath(double const &NumPhase, double const &DemStructLeafPop, double const &WtRatioLeafSheath, double const &SlaMin, double const &SlaMax, double const &sla, double const &StressCold,
-                               double &DemStructSheathPop) {
+void RS_EvalDemandStructSheath(double const &NumPhase, double const &WtRatioLeafSheath, 
+							   double const &SlaMin, double const &SlaMax, double const &SlaMitch, double const &StressCold,
+							   double const& PAR, double const& PARCritSLA, double const& SLASwitch,
+                               double &DemStructSheathPop, double &DemStructLeafPop) {
     /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
-            DemStructSheathPop = (1 + ((SlaMax - sla) / (SlaMax - SlaMin))) * 0.5 *
+            DemStructSheathPop = (1 + ((SlaMax - SlaMitch) / (SlaMax - SlaMin))) * 0.5 *
                     DemStructLeafPop / WtRatioLeafSheath * max(0.00001, StressCold);
+			if ( SLASwitch > 0 ) {
+				DemStructSheathPop = DemStructSheathPop * min(PAR / PARCritSLA, 1.);
+				DemStructLeafPop = DemStructLeafPop / sqrt(min(PAR / PARCritSLA, 1.));
+			}
+			// If PAR is low, sheath growth is reduced and leaf blade growth is enhanced
         }
 
     } /*catch (...)*/ {
@@ -2217,27 +2224,35 @@ void RS_EvalClumpAndLightInter_V2_1(double const &NumPhase, double const &KRolli
 }
 
 
-
 void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double const& AttenMitch, double const& SDJ,
                            double const& SDJLevee, double const& NumPhase, double const& DegresDuJour, double const& TOpt1,
-                           double const& TBase, double const& TempSla, double const& DryMatStructLeafPop,
-                           double const& GrowthStructLeafPop, double const& PAR, double const& PARCritSLA,
-                           double & SlaMitch, double & SlaNew, double & sla)
+                           double const& TBase, double const& TempSla, double const& DryMatStructLeafPop, double const& LeafDeathPop,
+                           double const& GrowthStructLeafPop, double const& PAR, double const& PARCritSLA, double const& SLASwitch,
+                           double & SlaMitch, double & SlaNew, double & sla, double & SlaMitchAdjusted)
 {
     /*try*/ {
         if(  ( NumPhase > 1 ) )
         {
             SlaMitch = SlaMin + ( SlaMax - SlaMin ) * pow( AttenMitch , ( SDJ - SDJLevee ) );
+            
+			/* remove 11/01*/
+			//SlaNew = SlaMin + (SlaMitch - SlaMin) * pow( min( DegresDuJour / (TOpt1 - TBase), 1. ), TempSla);
+            //SlaNew +=  SlaNew * 0.8 * ( 1. - min ( PAR / PARCritSLA, 1. ));
+            //// Increased SL for the day's new leaf mass if Par < 6 , at PAR = 1, increase is 50%
+			//sla = ( ( sla * DryMatStructLeafPop ) + ( SlaNew * GrowthStructLeafPop ) ) / ( DryMatStructLeafPop + GrowthStructLeafPop );
 
-//            SlaNew = SlaMin + ( SlaMitch - SlaMin ) * pow( DegresDuJour / ( TOpt1 - TBase ) , TempSla );
-//            SlaNew = SlaNew + ( SlaNew * 0.8 * ( 1 - min( PAR/PARCritSLA , 1.0 ) ) );
+			SlaMitchAdjusted = SlaMin + (SlaMitch - SlaMin) * pow(min(1., DegresDuJour / (TOpt1 - TBase)), TempSla) + (SlaMitch - SlaMin) * (1 - min(PAR / PARCritSLA, 1.));
 
-            SlaNew = SlaMin + (SlaMitch - SlaMin) * pow( min( DegresDuJour / (TOpt1 - TBase), 1. ), TempSla);
-            SlaNew +=  SlaNew * 0.8 * ( 1. - min ( PAR / PARCritSLA, 1. ));
-            // Increased SL for the day's new leaf mass if Par < 6 , at PAR = 1, increase is 50%
 
-            sla = ( ( sla * DryMatStructLeafPop ) + ( SlaNew * GrowthStructLeafPop ) ) /
-                    ( DryMatStructLeafPop + GrowthStructLeafPop );
+			//The SLA of new leaf structural biomass is adjusted according to temperature (no effect if TempSla=0, increasing SLA at temperatures below TOpt1 if TempSla>0) and PAR (increasing SLA if PAR<ParCritSla).
+			sla = max(SlaMin, ((DryMatStructLeafPop - GrowthStructLeafPop + LeafDeathPop) * sla + GrowthStructLeafPop*SlaMitchAdjusted - LeafDeathPop*SlaMax) / DryMatStructLeafPop);
+
+			//The T- and PAR-sensitive SlaMitchAdjusted is attributed to new leaves, SlaMax is attributed to dying leaves and previous day’s Sla is attributed to pre-existing leaves. 
+			if (SLASwitch == 0) {
+				sla = SlaMitch;
+			}
+			//Crop parameter SlaSwitch chooses between fixed SLA pattern and T- and PAR-sensitive SLA.
+
         }
         else
         {
@@ -2250,14 +2265,16 @@ void RS_EvalSlaMitch_V2_2( double const& SlaMax, double const& SlaMin, double co
     }
 }
 
-void RS_EvalSlaMitch(double const &SlaMax, double const &SlaMin, double const &AttenMitch, double const &SDJ, double const &SDJLevee, double const &NumPhase, double const &DegresDuJour, double const &TOpt1, double const &TBase, double const &TempSla, double const &DryMatStructLeafPop, double const &GrowthStructLeafPop,
+void RS_EvalSlaMitch(double const &SlaMax, double const &SlaMin, double const &AttenMitch, double const &SDJ,
+                     double const &SDJLevee, double const &NumPhase, double const &DegresDuJour, double const &TOpt1,
+                     double const &TBase, double const &TempSla, double const &DryMatStructLeafPop,
+                     double const &GrowthStructLeafPop,
                      double &SlaMitch, double &SlaNew, double &sla) {
     /*try*/ {
         if ((NumPhase > 1)) {
-            SlaMitch = SlaMin + (SlaMax - SlaMin) * std::pow(AttenMitch, (SDJ -
-                                                                          SDJLevee));
-            SlaNew = SlaMin + (SlaMitch - SlaMin) * std::pow(DegresDuJour / (TOpt1 -
-                                                                             TBase), TempSla);
+            SlaMitch = SlaMin + (SlaMax - SlaMin) * std::pow(AttenMitch, (SDJ - SDJLevee));
+            SlaNew = SlaMin + (SlaMitch - SlaMin) * std::pow(DegresDuJour / (TOpt1 - TBase), TempSla);
+
             sla = ((sla * DryMatStructLeafPop) + (SlaNew * GrowthStructLeafPop)) /
                     (DryMatStructLeafPop + GrowthStructLeafPop);
         } else {
