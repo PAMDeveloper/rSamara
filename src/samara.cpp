@@ -267,9 +267,9 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
             cumRain = 0;
         }
 
+        //        if(simulationFinished) break;
         currentResults.push_back(result);
 		daily_reset_variables();
-        //        if(simulationFinished) break;
     }
 
 
@@ -472,7 +472,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         if(crop) samara::RS_EvolDryMatTot_V2_1(NumPhase, ChangePhase, PlantsPerHill, TxResGrain, PoidsSecGrain, Density, GrowthStructLeafPop, GrowthStructSheathPop,
                                                GrowthStructRootPop, GrowthStructInternodePop, GrowthStructPaniclePop, GrowthStructTotPop, GrowthResInternodePop, GrainYieldPop,
                                                ResCapacityInternodePop, CulmsPerPlant, CoeffPanSinkPop, SterilityTot, DeadLeafdrywtPop, DryMatResInternodePopOld, PanicleFilPop,
-                                               AssimNotUsedCum, MobiliLeafDeath, RootLignin, 
+                                               AssimNotUsedCum, MobiliLeafDeath, RootLignin,
 											DryMatStructLeafPop, DryMatStructSheathPop, DryMatStructRootPop, DryMatStructInternodePop,
                                                DryMatStructPaniclePop, DryMatStemPop, DryMatStructTotPop, DryMatResInternodePop, DryMatVegeTotPop, DryMatPanicleTotPop,
                                                DryMatAboveGroundPop, DryMatTotPop, HarvestIndex, InternodeResStatus, PanicleNumPop, PanicleNumPlant, GrainYieldPanicle,
@@ -557,11 +557,12 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
             cumRain = 0;
         }
 
+        if(simulationFinished)
+            break;
+
         currentResults.push_back(result);
 		daily_reset_variables();
 
-        if(simulationFinished)
-            break;
     }
 
 
@@ -774,7 +775,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         if(crop) samara::RS_EvolDryMatTot_V2_1(NumPhase, ChangePhase, PlantsPerHill, TxResGrain, PoidsSecGrain, Density, GrowthStructLeafPop, GrowthStructSheathPop,
                                                GrowthStructRootPop, GrowthStructInternodePop, GrowthStructPaniclePop, GrowthStructTotPop, GrowthResInternodePop, GrainYieldPop,
                                                ResCapacityInternodePop, CulmsPerPlant, CoeffPanSinkPop, SterilityTot, DeadLeafdrywtPop, DryMatResInternodePopOld, PanicleFilPop,
-                                               AssimNotUsedCum, MobiliLeafDeath, RootLignin, 
+                                               AssimNotUsedCum, MobiliLeafDeath, RootLignin,
 										DryMatStructLeafPop, DryMatStructSheathPop, DryMatStructRootPop, DryMatStructInternodePop,
                                                DryMatStructPaniclePop, DryMatStemPop, DryMatStructTotPop, DryMatResInternodePop, DryMatVegeTotPop, DryMatPanicleTotPop,
                                                DryMatAboveGroundPop, DryMatTotPop, HarvestIndex, InternodeResStatus, PanicleNumPop, PanicleNumPlant, GrainYieldPanicle,
@@ -862,11 +863,12 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
             cumRain = 0;
         }
 
+        if(simulationFinished)
+            break;
+
         currentResults.push_back(result);
 		daily_reset_variables();
 
-        if(simulationFinished)
-            break;
     }
 
 
@@ -894,12 +896,19 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
 }
 
 pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodging(SamaraParameters * parameters, SamaraLogType log) {
+
     LOG = log;
     //Simu parameters
     init_all_variables_2_3();
     double DateDebutSimul = parameters->getDouble("startingdate");
     double DateFinSimul = parameters->getDouble("endingdate");
     double DateSemis = parameters->getDouble("sowing");
+
+//    std::cout << fixed << DateDebutSimul << " to " << DateFinSimul << ":" << DateSemis << std::endl;
+//    std::cout << JulianCalculator::toStringDate(DateDebutSimul, JulianCalculator::DMY, '/') << " to "
+//              << JulianCalculator::toStringDate(DateFinSimul, JulianCalculator::DMY, '/') << ":"
+//              << JulianCalculator::toStringDate(DateSemis, JulianCalculator::DMY, '/') << std::endl;
+
     double DateEnCours = DateDebutSimul;
     NbJAS = DateEnCours - DateSemis;
     double NbDaysSinceGermination = NilValue;
@@ -1172,7 +1181,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 
         /** OUTPUT VECTORS **/
 		vector <double> result = get_variable_values();
-        
+
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
                 kill_crop();
@@ -1182,11 +1191,12 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
             cumRain = 0;
         }
 
+        if(simulationFinished)
+            break;
+
         currentResults.push_back(result);
 		daily_reset_variables();
 
-        if(simulationFinished)
-            break;
     }
 
 
@@ -1371,7 +1381,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                              DemLeafAreaPlant, DemStructLeafPlant, DemStructLeafPop, A_DemStructLeaf);
 		samara::RS_EvalDemandStructSheath(NumPhase, WtRatioLeafSheath, SlaMin, SlaMax, SlaMitch, StressCold, Par, PARCritSLA, SLASwitch, DemStructSheathPop, DemStructLeafPop);
         samara::RS_EvalDemandStructRoot_V2(NumPhase, Density, CoeffRootMassPerVolMax, RootPartitMax, GrowthStructTotPop, RootFront, SupplyTot, DemStructLeafPop,
-                                           DemStructSheathPop, DryMatStructRootPop, RootLignin, 
+                                           DemStructSheathPop, DryMatStructRootPop, RootLignin,
 										   RootSystSoilSurfPop, RootSystVolPop, GainRootSystVolPop, GainRootSystSoilSurfPop,
                                            DemStructRootPop, RootSystSoilSurfPopOld, RootFrontOld, RootSystVolPopOld, DemStructRootPlant);
         samara::RS_EvalDemandStructIN_V2_1(PhaseStemElongation, ApexHeightGain, CulmsPerHill, CoeffInternodeMass, Density, Ic, ResCapacityInternodePop, DryMatResInternodePop,
@@ -1507,7 +1517,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 
         /** OUTPUT VECTORS **/
 		vector <double> result = get_variable_values();
-        
+
         if ( NumPhase == 7 ) {
             if(ChangePhase == 1) {
                 kill_crop();
@@ -1517,18 +1527,18 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
             cumRain = 0;
         }
 
-        currentResults.push_back(result);
-		
-		daily_reset_variables();
-
         if(simulationFinished)
             break;
+
+        currentResults.push_back(result);
+		daily_reset_variables();
+
     }
 
 
     /** OUTPUT VECTORS **/
     vector <string> names = get_variable_names();
-    
+
 
     vector < vector <double> > results;
     vector <double> stepValues;
@@ -1552,7 +1562,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 
 void Samara::init_parameters_2_1(SamaraParameters * params) {
 	init_parameters(params);
-    StockIniProf = 0;	
+    StockIniProf = 0;
 }
 
 void Samara::init_parameters_2_1_micha(SamaraParameters * params) {

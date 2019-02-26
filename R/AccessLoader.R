@@ -3,11 +3,27 @@
 #accessFilePath = 'D:/BdD_Sorghum_10geno.accdb'
 
 #Install and load packages
-list.of.packages <- c("RODBC", "gdata")
+list.of.packages <- c("RODBC", "gdata", "stringr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
 
+
+formatDate <- function(date)
+{
+  date_splt <- c("","","")
+  if(str_detect(date,"/") == TRUE) {
+    date_splt <- str_split(date,"/")[[1]]
+  } else if(str_detect(date,"-") == TRUE) {
+    date_splt <- str_split(date,"-")[[1]]
+  }
+
+  if(str_length(date_splt[3]) == 4) { #year
+    date_splt <- rev(date_splt)
+  }
+
+  return (paste(date_splt, collapse = "-"))
+}
 
 #DB connection and load params & obs
 initSim <- function(accessFilePath, simcode)

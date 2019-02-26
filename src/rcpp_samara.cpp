@@ -2,6 +2,9 @@
 #include <Rinternals.h>
 #include "rsamara_types.hpp"
 
+#include <iostream>
+#include <fstream>
+
 using namespace Rcpp;
 using namespace std;
 
@@ -38,7 +41,7 @@ void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list
     CharacterVector names = list.attr("names");
     NumericVector values = list[0];
     for (int i = 0; i < names.size(); ++i) {
-        double val = list[i];
+        double val = *REAL(list[i]);
         string key = Rcpp::as<string>(names[i]);
         //std::cout << key << std::endl << ":" << val << std::endl;
         pair <double, string> token( val, category );
@@ -146,6 +149,158 @@ List DFFromClimaticVector(vector < Climate > meteoValues)
     return df;
 }
 
+
+/********************************************************************/
+
+SamaraParameters * current_params = nullptr;
+std::vector<SamaraParameters*> params_vector;
+
+SamaraParameters * params_sim(List params, List meteo, List str_params) {
+  SamaraParameters * sparams = new SamaraParameters();
+
+  CharacterVector names = params.attr("names");
+  for (int i = 0; i < params.size(); ++i) {
+    CharacterVector column = params[i];
+    string key = Rcpp::as<string>(names[i]);
+    if(column[0] != "") {
+      double val = ::atof(column[0]);
+      pair <double, string> token( val, "unestimated" );
+      sparams->doubles.insert( pair<string, pair <double, string> >(key, token ));
+    }
+  }
+
+  CharacterVector str_names = str_params.attr("names");
+  for (int i = 0; i < str_params.size(); ++i) {
+    CharacterVector column = str_params[i];
+    string key = Rcpp::as<string>(str_names[i]);
+    if(column[0] != "") {
+      string val = Rcpp::as<string>(column[0]);
+      pair <string, string> token( val, "unestimated" );
+      sparams->strings.insert( pair<string, pair <string, string> >(key, token ));
+    }
+  }
+
+  fillClimaticVectorWithList(sparams->climatics, meteo);
+
+  return sparams;
+}
+
+// [[Rcpp::export]]
+void init_sim(List params, List meteo, List str_params) {
+  if(current_params != nullptr)
+    delete current_params;
+
+  current_params = params_sim(params, meteo, str_params);
+}
+
+// [[Rcpp::export]]
+void init_sim_idx(int idx, List params, List meteo, List str_params) {
+  while(params_vector.size() < idx)
+    params_vector.push_back(nullptr);
+
+  if(params_vector[idx-1] != nullptr)
+    delete params_vector[idx-1];
+
+  params_vector[idx-1] = params_sim(params, meteo, str_params);
+}
+
+void update_params(SamaraParameters * params, NumericVector values, CharacterVector names) {
+  for (int i = 0; i < names.size(); ++i) {
+    double val = values[i];
+    string key = Rcpp::as<string>(names[i]);
+    pair <double, string> token( val, "estimation" );
+    if(params->doubles.find(key) != params->doubles.end()) {
+      params->doubles[key] = token;
+    } else {
+      params->doubles.insert( pair<string, pair <double, string> >(key, token) );
+    }
+  }
+}
+
+// [[Rcpp::export]]
+void update_sim(NumericVector values, CharacterVector names) {
+  update_params(current_params, values, names);
+}
+
+// [[Rcpp::export]]
+void update_sim_idx(int idx, NumericVector values, CharacterVector names) {
+  update_params(params_vector[idx-1], values, names);
+}
+
+List run_params(SamaraParameters * params) {
+  Samara samara;
+  auto results = samara.run_samara_2_3_lodging(params);
+  List result = resultToList(results);
+  return result;
+}
+
+// [[Rcpp::export]]
+List run_sim() {
+  return run_params(current_params);
+}
+
+// [[Rcpp::export]]
+List run_sim_idx(int idx) {
+  return run_params(params_vector[idx-1]);
+}
+
+// [[Rcpp::export]]
+List reduce_sim(List results, List vobs) {
+  std::map <std::string, std::vector<double> > vObsMap;
+  std::map <std::string, std::vector<double> > resultMap;
+  vObsMap = mapFromDF(vobs);
+  resultMap = mapFromDF(results);
+
+  ResultParser parser;
+  auto ret = parser.spl_ReduceResults(resultMap,vObsMap,"nbjas");
+  return mapOfVectorToDF(ret);
+}
+
+void save_params(SamaraParameters * params, string path) {
+  ofstream file;
+  file.open (path + ".csv");
+  file << current_params->strings.size() << "\n";
+  // std::cout << current_params->strings.size() << "\n";
+  for (auto const& token : current_params->strings) {
+    file << token.first << "\t" << token.second.first << "\n";
+    // std::cout << token.first << "\t" << token.second.first << "\n";
+  }
+
+  file << current_params->doubles.size() << "\n";
+  // std::cout << current_params->doubles.size() << "\n";
+  for (auto const& token : current_params->doubles) {
+    file << fixed << token.first << "\t" << token.second.first << "\n";
+    // std::cout << fixed << token.first << "\t" << token.second.first << "\n";
+  }
+
+  file.flush();
+  file.close();
+}
+
+// [[Rcpp::export]]
+void save_sim(string path) {
+  save_params(current_params, path);
+}
+
+// [[Rcpp::export]]
+void save_sim_idx(int idx, string path) {
+  save_params(params_vector[idx-1], path);
+}
+
+/********************************************************************/
+
+
+// [[Rcpp::export]]
+List rcpp_reduceResults(List results, List vobs) {
+  std::map <std::string, std::vector<double> > vObsMap;
+  std::map <std::string, std::vector<double> > resultMap;
+  vObsMap = mapFromDF(vobs);
+  resultMap = mapFromDF(results);
+  ResultParser parser;
+  auto ret = parser.reduceResults(resultMap,vObsMap,map<string, double>(),"nbjas");
+  return mapOfVectorToDF(ret);
+}
+
 // [[Rcpp::export]]
 double toJulianDayCalcC(Rcpp::String date, Rcpp::String format, Rcpp::String sep) {
   return JulianCalculator::toJulianDay(date, format, sep);
@@ -154,6 +309,12 @@ double toJulianDayCalcC(Rcpp::String date, Rcpp::String format, Rcpp::String sep
 // [[Rcpp::export]]
 double toJulianDayCalc(Rcpp::String date) {
   return JulianCalculator::toJulianDay(date, JulianCalculator::YMD, '-');
+}
+
+// [[Rcpp::export]]
+string toAccessFormat(Rcpp::String date, Rcpp::String format, Rcpp::String sep) {
+  double jDay = JulianCalculator::toJulianDay(date, format, sep);
+  return JulianCalculator::toStringDate(jDay, JulianCalculator::YMD, '/');
 }
 
 // [[Rcpp::export]]
@@ -298,18 +459,6 @@ List rcpp_reduceVobs(List vObs, List results) {
   resultMap = mapFromDF(results);
   ResultParser parser;
   std::map<std::string, std::vector<double>>  ret = parser.filterVObs(vObsMap,resultMap, false);
-  return mapOfVectorToDF(ret);
-}
-
-
-// [[Rcpp::export]]
-List rcpp_reduceResults(List results, List vobs) {
-  std::map <std::string, std::vector<double> > vObsMap;
-  std::map <std::string, std::vector<double> > resultMap;
-  vObsMap = mapFromDF(vobs);
-  resultMap = mapFromDF(results);
-  ResultParser parser;
-  auto ret = parser.reduceResults(resultMap,vObsMap);
   return mapOfVectorToDF(ret);
 }
 
