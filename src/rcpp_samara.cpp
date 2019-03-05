@@ -257,24 +257,32 @@ List reduce_sim(List results, List vobs) {
 }
 
 void save_params(SamaraParameters * params, string path) {
-  ofstream file;
-  file.open (path + ".csv");
-  file << current_params->strings.size() << "\n";
-  // std::cout << current_params->strings.size() << "\n";
-  for (auto const& token : current_params->strings) {
-    file << token.first << "\t" << token.second.first << "\n";
-    // std::cout << token.first << "\t" << token.second.first << "\n";
+  ofstream file(path + ".csv");
+  if (file.is_open())
+  {
+    file << params->strings.size() << "\n";
+    // std::cout << current_params->strings.size() << "\n";
+    for (auto const& token : params->strings) {
+      file << token.first << "\t" << token.second.first << "\n";
+      // std::cout << token.first << "\t" << token.second.first << "\n";
+    }
+
+    file << params->doubles.size() << "\n";
+    // std::cout << current_params->doubles.size() << "\n";
+    for (auto const& token : params->doubles) {
+      file << fixed << token.first << "\t" << token.second.first << "\n";
+      // std::cout << fixed << token.first << "\t" << token.second.first << "\n";
+    }
+
+    // file.flush();
+    file.close();
+  } else {
+    std::cout << "Unable to open file " << path << std::endl;
   }
 
-  file << current_params->doubles.size() << "\n";
-  // std::cout << current_params->doubles.size() << "\n";
-  for (auto const& token : current_params->doubles) {
-    file << fixed << token.first << "\t" << token.second.first << "\n";
-    // std::cout << fixed << token.first << "\t" << token.second.first << "\n";
+  if ( ! file ) {
+    std::cout << "Problem with file " << path << std::endl;
   }
-
-  file.flush();
-  file.close();
 }
 
 // [[Rcpp::export]]
@@ -286,6 +294,70 @@ void save_sim(string path) {
 void save_sim_idx(int idx, string path) {
   save_params(params_vector[idx-1], path);
 }
+
+
+void print_sim_str_params(SamaraParameters * params) {
+  for(auto const & t: params->strings) {
+    std::cout << fixed << t.first << ": " << t.second.first << std::endl;
+  }
+}
+
+void print_sim_dbl_params(SamaraParameters * params) {
+  for(auto const & t: params->doubles) {
+    std::cout << fixed << t.first << ": " << t.second.first << std::endl;
+  }
+}
+
+void print_sim_params(SamaraParameters * params) {
+  print_sim_str_params(params);
+  print_sim_dbl_params(params);
+}
+
+// [[Rcpp::export]]
+void print_sim_str() {
+  print_sim_str_params(current_params);
+}
+// [[Rcpp::export]]
+void print_sim_dbl() {
+  print_sim_dbl_params(current_params);
+}
+// [[Rcpp::export]]
+void print_sim() {
+  print_sim_params(current_params);
+}
+
+// [[Rcpp::export]]
+void print_sim_str_idx(int idx) {
+  print_sim_str_params(params_vector[idx-1]);
+}
+// [[Rcpp::export]]
+void print_sim_dbl_idx(int idx) {
+  print_sim_dbl_params(params_vector[idx-1]);
+}
+// [[Rcpp::export]]
+void print_sim_idx(int idx) {
+  print_sim_params(params_vector[idx-1]);
+}
+
+
+// [[Rcpp::export]]
+DataFrame params_str_df() {
+  return DFFromStringMap(current_params->strings, "");
+}
+// [[Rcpp::export]]
+DataFrame params_str_df_idx(int idx) {
+  return DFFromStringMap(params_vector[idx-1]->strings, "");
+}
+
+// [[Rcpp::export]]
+DataFrame params_dbl_df() {
+  return DFFromDoubleMap(current_params->doubles, "");
+}
+// [[Rcpp::export]]
+DataFrame params_dbl_df_idx(int idx) {
+  return DFFromDoubleMap(params_vector[idx-1]->doubles, "");
+}
+
 
 /********************************************************************/
 

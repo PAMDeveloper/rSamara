@@ -60,7 +60,7 @@ public:
 
     double getDouble(string s) {
         if(doubles.find(s) == doubles.end()) {
-            std::cout << "Missing" << s;
+            std::cout << "Missing variable: " << s << std::endl;
             return -999;
         }
         if( doubles[s].first != doubles[s].first ) {

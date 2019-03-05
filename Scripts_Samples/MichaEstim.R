@@ -40,6 +40,8 @@ startingDates <- subset(config_df, config_df[,1]=="startingdate")
 startingDates <- startingDates[1,4:ncol(startingDates)]
 endingDates <- subset(config_df, config_df[,1]=="endingdate")
 endingDates <- endingDates[1,4:ncol(endingDates)]
+sowingDates <- subset(config_df, config_df[,1]=="sowing")
+sowingDates <- sowingDates[1,4:ncol(sowingDates)]
 
 str_parameters_count <- as.numeric(config_df[1,1])
 str_parameters_df <- config_df[2:(str_parameters_count + 1), 4:ncol(config_df)]
@@ -89,13 +91,28 @@ meteos <- list()
 observations <- list()
 parameters <- list()
 str_parameters <- list()
+env_simu <- new.env()
+env_simu$simu_init <- list()
 for(run_idx in 1:ncol(meteoSites)) {
+  observations[[run_idx]] <- getObs(run_idx)
+
   startingDates[1,run_idx] <- formatDate(startingDates[1,run_idx])
   endingDates[1,run_idx] <- formatDate(endingDates[1,run_idx])
+  sowingDates[1,run_idx] <- formatDate(sowingDates[1,run_idx])
+
   meteos[[run_idx]] <- loadMeteo(as.character(meteoSites[1,run_idx]), as.character(startingDates[1,run_idx]), as.character(endingDates[1,run_idx]))
-  observations[[run_idx]] <- getObs(run_idx)
+
+  parameters_df["startingdate", run_idx] <- rsamara::toJulianDayCalcC(startingDates[1,run_idx], "YMD", '-')
+  parameters_df["endingdate", run_idx] <- rsamara::toJulianDayCalcC(endingDates[1,run_idx], "YMD", '-')
+  parameters_df["sowing", run_idx] <- rsamara::toJulianDayCalcC(sowingDates[1,run_idx], "YMD", '-')
   parameters[[run_idx]] <- t(parameters_df[run_idx])
+
+  str_parameters_df["startingdate", run_idx] <- startingDates[1,run_idx]
+  str_parameters_df["endingdate", run_idx] <- endingDates[1,run_idx]
+  str_parameters_df["sowing", run_idx] <- sowingDates[1,run_idx]
   str_parameters[[run_idx]] <- t(str_parameters_df[run_idx])
+
+  env_simu$simu_init[[run_idx]] <- FALSE
 }
 
 odbcCloseAll()
@@ -105,18 +122,23 @@ odbcCloseAll()
 #######   ESTIMATION  #######
 #############################
 
-simu_init <<- FALSE
-
-get_fitness_function <- function(obs, params, meteo, str_params) {
+get_fitness_function <- function(idx) {
 
   fitness_function <- function(p){
-    if(simu_init == FALSE) {
-      simu_init <<- TRUE
-      rsamara::init_sim(params, meteo, str_params)
-      print("initSim")
+
+    if(env_simu$simu_init[[idx]] == FALSE) {
+      print("init simu")
+      obs = observations[[idx]]
+      params = as.data.frame(parameters[[idx]], stringsAsFactors=FALSE)
+      str_params = as.data.frame(str_parameters[[idx]], stringsAsFactors=FALSE)
+      meteo = meteos[[idx]]
+      env_simu$simu_init[[idx]] <- TRUE
+      rsamara::init_sim_idx(idx, params, meteo, str_params)
+      print(paste(str_params$startingdate, str_params$endingdate, str_params$sowing, sep = " "))
     }
-    rsamara::update_sim(p, ParamOfInterest)
-    results <- rsamara::run_sim()
+
+    rsamara::update_sim_idx(idx, p, ParamOfInterest)
+    results <- rsamara::run_sim_idx(idx)
 
     lai <- results$Lai[results$NbJAS == 65]
     if(lai < 3.5)
@@ -148,23 +170,22 @@ cl <- makeCluster(detectCores())
 clusterEvalQ(cl, library(rsamara))
 
 for(idx in 1:length(parameters)) {
-  obs = observations[[idx]]
-  params = as.data.frame(parameters[[idx]], stringsAsFactors=FALSE)
-  str_params = as.data.frame(str_parameters[[idx]], stringsAsFactors=FALSE)
-  params$startingdate <- rsamara::toJulianDayCalcC(formatDate(str_params$startingdate), "YMD", '-')
-  params$endingdate <- rsamara::toJulianDayCalcC(formatDate(str_params$endingdate), "YMD", '-')
-  params$sowing <- rsamara::toJulianDayCalcC(formatDate(str_params$sowing), "YMD", '-')
-  meteo = meteos[[idx]]
-
   set.seed(1337)
-  fitness_function <- get_fitness_function(obs, params, meteo, str_params);
+  fitness_function <- get_fitness_function(idx);
 
+  clusterExport(cl
+                , varlist = c("ParamOfInterest", "env_simu", "idx", "observations", "parameters", "meteos", "str_parameters")
+                )
 
-  clusterExport(cl, varlist = c("ParamOfInterest", "obs", "simu_init", "params", "meteo", "str_params"))
+  clusterExport(cl
+                , varlist = c("simu_init")
+                , envir = env_simu
+  )
+
   DEParams = DEoptim.control( VTR = 0.001
-                              , itermax = 10000
+                              , itermax = 5
                               , strategy = 2
-                              , trace = 2500
+                              , trace = 2
                               , NP = 100
                               , cluster=cl
                               )
@@ -175,8 +196,8 @@ for(idx in 1:length(parameters)) {
   print(result$optim$bestmem)
   print(result$optim$bestval)
 
-  rsamara::init_sim(params, meteo, str_params)
-  rsamara::update_sim(result$optim$bestmem, ParamOfInterest)
+  # rsamara::init_sim(params, meteo, str_params)
+  rsamara::update_sim_idx(idx, result$optim$bestmem, ParamOfInterest)
   rsamara::save_sim(paste("Parameters_",toString(idx)))
 #
   # rsamara::update_sim(result$optim$bestmem, ParamOfInterest)
