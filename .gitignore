@@ -13,3 +13,4 @@ src/rsamara.dll
 /src/RcppExports.cpp
 /R/RcppExports.R
 Pareto/
+Parameters_*

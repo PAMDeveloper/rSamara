@@ -1,35 +1,48 @@
 #Script estimating parameters for Samara model
 #Authors : Gregory Beurier -- (PAM, AGAP, BIOS, CIRAD)
 
-
+source('R/SamaraHelpers.R')
 ######################
 ######  CONFIG  ######
 ######################
 
-
+## User config
 DB_PATH <- "D:/Bd_Samara.accdb"
 MAIN_DIR <- "D:/Samples/SAMARA_SAMPLES/MichaEstim_R"
+PARAMETERS_FILENAME <- "Estim.csv"
+RUNS_FILENAME <- "Runs.csv"
+VARIABLE_FILENAME <- "Vars.csv"
+# OBS_FILENAME <- "Obs.csv"
+SAVE_DIR <- "Results"
 FITNESS_METHODS <- c("RMSE", "RMAE") #RMSE - RMAE - MAE - all summed
 
-RUNS_FILENAME <- "Runs.csv"
-ESTIM_FILENAME <- "Estim.csv"
-OBS_FILENAME <- "Obs.csv"
-SAVE_DIR <- "Results"
+## Init and verify global variables
+DB_PATH <- getFilePath(DB_PATH)
+PARAM_PATH <- getFilePath(PARAMETER_FILENAME, MAIN_DIR, "Parameters.csv")
+RUN_PATH <- getFilePath(RUN_FILENAME, MAIN_DIR, "Runs.csv")
+VARIABLE_PATH <- getFilePath(VARIABLE_FILENAME, MAIN_DIR, "Variables.csv")
+SAVE_PATH <- getDirPath(SAVE_DIR, MAIN_DIR, "Results")
 
-PARAM_PATH <- file.path(MAIN_DIR, ESTIM_FILENAME)
-RUNS_PATH <- ifelse(RUNS_FILENAME == "", "", file.path(MAIN_DIR, RUNS_FILENAME))
-OBS_PATH = ifelse(OBS_FILENAME == "", "", file.path(MAIN_DIR, OBS_FILENAME))
-SAVE_PATH <- file.path(MAIN_DIR, SAVE_DIR)
-dir.create(SAVE_PATH, showWarnings = FALSE)
+if(PARAM_PATH == "") {
+  print("Unable to find parameters file")
+  quit(save = "no")
+}
+
+if(VARIABLE_PATH == "") {
+  print("Unable to find runs file")
+  quit(save = "no")
+}
+
+
 
 ########################
 ######  PACKAGES  ######
 ########################
-
-list.of.packages <- c("rsamara", "RODBC", "parallel", "DEoptim", "stringr")
+list.of.packages <- c("rsamara", "RODBC", "parallel", "DEoptim")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
+
 
 source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
 
@@ -37,8 +50,6 @@ source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
 ############################
 #######   LOAD DATA  #######
 ############################
-connectDB(DB_PATH)
-
 ### Construct parameters dataframe
 config_df <- read.csv(file = PARAM_PATH, header = FALSE, sep = ";", stringsAsFactors=FALSE)
 POI_array <- config_df[!is.na(config_df[,2]),]
@@ -67,6 +78,8 @@ row.names(parameters_df) <- config_df[(str_parameters_count + 3):nrow(config_df)
 ### Construct observations dataframe
 obs_df <- read.csv(file = OBS_PATH, header = TRUE, sep = ";", stringsAsFactors=FALSE)
 obs_df <- obs_df[(obs_df[,1] != ""),]
+
+
 
 getObs <- function(run_idx){
   obs_subset_df <- obs_df[,c(1, run_idx + 1)]
@@ -101,6 +114,8 @@ getObs <- function(run_idx){
 }
 
 ### Prepare data
+connectDB(DB_PATH)
+
 meteos <- list()
 observations <- list()
 parameters <- list()
@@ -140,13 +155,12 @@ get_fitness_function <- function(idx) {
 
   fitness_function <- function(p){
 
-    # if(env_simu$simu_init[[idx]] == FALSE) {
-    if(rsamara::sim_exist_idx(idx) == 0) {
+    if(env_simu$simu_init[[idx]] == FALSE) {
       print("init simu")
+      obs = observations[[idx]]
       params = as.data.frame(parameters[[idx]], stringsAsFactors=FALSE)
       str_params = as.data.frame(str_parameters[[idx]], stringsAsFactors=FALSE)
       meteo = meteos[[idx]]
-      obs = observations[[idx]]
       env_simu$simu_init[[idx]] <- TRUE
       rsamara::init_sim_idx(idx, params, meteo, str_params)
       print(paste(str_params$startingdate, str_params$endingdate, str_params$sowing, sep = " "))
@@ -155,14 +169,9 @@ get_fitness_function <- function(idx) {
     rsamara::update_sim_idx(idx, p, ParamOfInterest)
     results <- rsamara::run_sim_idx(idx)
 
-
-    factor <- 1
-    lai <- results$Lai[results$NbJAS == 70]
-    if(lai < 4)
-      factor <- 99999
-    # DeadLeafDrywtPop<- results$DeadLeafdrywtPop[length(results$NbJAS)]
-    # if(DeadLeafDrywtPop < 800)
-    #   factor <- 9999
+    lai <- results$Lai[results$NbJAS == 65]
+    if(lai < 3.5)
+      return (99999)
 
     res <- rsamara::reduce_sim(results, obs)
 
@@ -174,10 +183,9 @@ get_fitness_function <- function(idx) {
     # rmae_diff <- ((obs[-nrow(obs),] - res[-nrow(obs),])/obs[-nrow(obs),])^2
     rmse_diff <- ( (robs - rres) / robs )^2
     # rmae = sum(sqrt((colSums(rmae_diff, na.rm=T))/(colSums(!is.na(rmae_diff)))),na.rm=T)
-    rmse = sum( (colSums(rmse_diff, na.rm=T)), na.rm=T)
-    # rmse = sum( (colSums(rmse_diff, na.rm=T))/(colSums(!is.na(rmse_diff))), na.rm=T)
+    rmse = (sum(sqrt((colSums(rmse_diff, na.rm=T))/(colSums(!is.na(rmse_diff)))),na.rm=T))
     # return (rmae + rmse)
-    return (rmse * factor)
+    return (rmse)
   }
 
   return (fitness_function);
@@ -187,32 +195,29 @@ get_fitness_function <- function(idx) {
 ######################
 #######   RUN  #######
 ######################
-cl <- makeCluster(detectCores()-1)
+cl <- makeCluster(detectCores())
 clusterEvalQ(cl, library(rsamara))
-clusterExport(cl
-              , varlist = c("simu_init")
-              , envir = env_simu
-)
 
-# for(idx in 1:length(parameters))
-idx <- 9
-{
+for(idx in 1:length(parameters)) {
+  set.seed(1337)
+  fitness_function <- get_fitness_function(idx);
+
   clusterExport(cl
                 , varlist = c("ParamOfInterest", "env_simu", "idx", "observations", "parameters", "meteos", "str_parameters")
   )
 
-  set.seed(1337)
-  fitness_function <- get_fitness_function(idx);
-
-
+  clusterExport(cl
+                , varlist = c("simu_init")
+                , envir = env_simu
+  )
 
   DEParams = DEoptim.control( VTR = 0.001
-                              , itermax = 1500
+                              , itermax = 5
                               , strategy = 2
-                              , trace = 250
-                              , NP = 150
+                              , trace = 2
+                              , NP = 100
                               , cluster=cl
-                              )
+  )
 
 
   result <- DEoptim(fitness_function, lower=Bounds[,1], upper=Bounds[,2], control = DEParams)
@@ -220,21 +225,10 @@ idx <- 9
   print(result$optim$bestmem)
   print(result$optim$bestval)
 
-  #reinit for saving coz cluster do not allow sim retrieving in local thread context
-  if(rsamara::sim_exist_idx(idx) == 0) {
-    print("init simu")
-    params = as.data.frame(parameters[[idx]], stringsAsFactors=FALSE)
-    str_params = as.data.frame(str_parameters[[idx]], stringsAsFactors=FALSE)
-    meteo = meteos[[idx]]
-    obs = observations[[idx]]
-    rsamara::init_sim_idx(idx, params, meteo, str_params)
-    print(paste(str_params$startingdate, str_params$endingdate, str_params$sowing, sep = " "))
-  }
-
   # rsamara::init_sim(params, meteo, str_params)
   rsamara::update_sim_idx(idx, result$optim$bestmem, ParamOfInterest)
-  rsamara::save_sim_idx(idx, paste("Parameters_",toString(idx)))
-#
+  rsamara::save_sim(paste("Parameters_",toString(idx)))
+  #
   # rsamara::update_sim(result$optim$bestmem, ParamOfInterest)
   # fresults <- rsamara::run_sim()
   # fres <- rsamara::reduce_sim(fresults, obs)

@@ -17,9 +17,9 @@ RUNS_PATH <- file.path(MAIN_DIR, RUNS_FILENAME)
 SAVE_PATH <- file.path(MAIN_DIR, SAVE_DIR)
 dir.create(SAVE_PATH, showWarnings = FALSE)
 
-#######################
+########################
 ######  PACKAGES  ######
-#######################
+########################
 
 list.of.packages <- c("rsamara", "RODBC", "parallel", "nsga2R", "nsga3", "stringr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]

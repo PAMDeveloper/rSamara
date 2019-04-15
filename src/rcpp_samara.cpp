@@ -359,6 +359,15 @@ DataFrame params_dbl_df_idx(int idx) {
 }
 
 
+// [[Rcpp::export]]
+int sim_exist() {
+  return current_params != nullptr ? 1 : 0;
+}
+// [[Rcpp::export]]
+int sim_exist_idx(int idx) {
+  return (params_vector.size() > idx && params_vector[idx-1] != nullptr) ? 1 : 0;
+}
+
 /********************************************************************/
 
 
