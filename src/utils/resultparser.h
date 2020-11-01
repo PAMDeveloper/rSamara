@@ -178,7 +178,7 @@ public:
                                      std::find(results[colMatch].begin(), results[colMatch].end(), m)
                                     );
             for (auto& r : res) {
-                if( isnan(vObs[r.first][vObsIdx]) )
+                if( std::isnan(vObs[r.first][vObsIdx]) )
                     r.second.push_back(nan(""));
                 else
                     r.second.push_back(results[r.first][idx]);
