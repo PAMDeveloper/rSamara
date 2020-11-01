@@ -1,2 +1,1 @@
-PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'`-I"." $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
-PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
+PKG_CXXFLAGS += `Rscript -e 'Rcpp:::CxxFlags()'` -I"." $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11 -Ofast
