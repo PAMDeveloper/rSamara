@@ -133,8 +133,9 @@ public:
     double KTempMaint;
 
 
-	void init_parameters(SamaraParameters * params) {
-		SamaraParameters parameters = *params;
+    void init_parameters_2_1_subset(SamaraParameters * params) {
+        SamaraParameters parameters = *params;
+
         ASScstr = parameters.getDouble("asscstr");
         Altitude = parameters.getDouble("wsalt");
         AttenMitch = parameters.getDouble("attenmitch");
@@ -144,7 +145,6 @@ public:
         CO2Slopetr = parameters.getDouble("co2slopetr");
         Ca = parameters.getDouble("ca");
         CoeffAssimSla = parameters.getDouble("coeffassimsla");
-        CoeffFixedTillerDeath = parameters.getDouble("coefffixedtillerdeath");
         CoeffInternodeMass = parameters.getDouble("coeffinternodemass");
         CoeffLeafDeath = parameters.getDouble("coeffleafdeath");
         CoeffLeafWLRatio = parameters.getDouble("coeffleafwlratio");
@@ -154,8 +154,6 @@ public:
         CoeffResCapacityInternode = parameters.getDouble("coeffrescapacityinternode");
         CoeffReserveSink = parameters.getDouble("coeffreservesink");
         CoeffRootMassPerVolMax = parameters.getDouble("coeffrootmasspervolmax");
-        CoeffTerminalLeafDeath = parameters.getDouble("coeffterminalleafdeath;");
-        CoeffTillerDeath = parameters.getDouble("coefftillerdeath");
         CoeffTransplantingShock = parameters.getDouble("coefftransplantingshock");
         CoefficientQ10 = parameters.getDouble("coefficientq10");
         DEVcstr = parameters.getDouble("devcstr");
@@ -217,14 +215,13 @@ public:
         RollingSens = parameters.getDouble("rollingsens");
         RootCstr = parameters.getDouble("rootcstr");
         RootFrontMax = parameters.getDouble("rootfrontmax");
-        RootLignin = parameters.getDouble("rootlignin");
+
         RootPartitMax = parameters.getDouble("rootpartitmax");
         SDJBVP = parameters.getDouble("sdjbvp");
         SDJLevee = parameters.getDouble("sdjlevee");
         SDJMatu1 = parameters.getDouble("sdjmatu1");
         SDJMatu2 = parameters.getDouble("sdjmatu2");
         SDJRPR = parameters.getDouble("sdjrpr");
-        SLASwitch =  parameters.getDouble("slaswitch");
         SeuilPP = parameters.getDouble("seuilpp");
         SeuilRuiss = parameters.getDouble("seuilruiss");
         SlaMax = parameters.getDouble("slamax");
@@ -255,9 +252,21 @@ public:
         WaterLoggingSens = parameters.getDouble("waterloggingsens");
         WtRatioLeafSheath = parameters.getDouble("wtratioleafsheath");
 
+
+
         CoeffInternodeNum = 2;
         IcTillering = 0.5;
         KTempMaint = 25;
+    }
+
+	void init_parameters(SamaraParameters * params) {
+        init_parameters_2_1_subset(params);
+		SamaraParameters parameters = *params;
+        SLASwitch =  parameters.getDouble("slaswitch");
+        RootLignin = parameters.getDouble("rootlignin");
+        CoeffTerminalLeafDeath = parameters.getDouble("coeffterminalleafdeath;");
+        CoeffTillerDeath = parameters.getDouble("coefftillerdeath");
+        CoeffFixedTillerDeath = parameters.getDouble("coefffixedtillerdeath");
 	}
 
 };

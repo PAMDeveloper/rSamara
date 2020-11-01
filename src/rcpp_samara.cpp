@@ -186,11 +186,56 @@ SamaraParameters * params_sim(List params, List meteo, List str_params) {
 }
 
 // [[Rcpp::export]]
+void clean() {
+  if(current_params != nullptr)
+    delete current_params;
+  params_vector.clear();
+  // if(params_vector.size() > 0) {
+  //   for(int i; i< param_vectors.size();i++){
+  //     if(param_vectors[i] != nullptr)
+  //       delete param_vectors[i];
+  //   }
+  // }
+}
+
+// [[Rcpp::export]]
 void init_sim(List params, List meteo, List str_params) {
   if(current_params != nullptr)
     delete current_params;
 
   current_params = params_sim(params, meteo, str_params);
+}
+
+SamaraParameters * params_sim_simple(List params, List meteo) {
+  SamaraParameters * sparams = new SamaraParameters();
+
+  CharacterVector names = params.attr("names");
+  for (int i = 0; i < params.size(); ++i) {
+    CharacterVector column = params[i];
+    string key = Rcpp::as<string>(names[i]);
+    if(column[0] != "") {
+      double val = ::atof(column[0]);
+      pair <double, string> token( val, "unestimated" );
+      sparams->doubles.insert( pair<string, pair <double, string> >(key, token ));
+    }
+  }
+
+  fillClimaticVectorWithList(sparams->climatics, meteo);
+
+  return sparams;
+}
+
+// [[Rcpp::export]]
+void init_sim_idx_simple(int idx, List params, List meteo) {
+  std::cout << "init simple sim "<< idx << std::endl;
+  while(params_vector.size() < idx)
+    params_vector.push_back(nullptr);
+
+  if(params_vector[idx-1] != nullptr) {
+    delete params_vector[idx-1];
+  }
+
+  params_vector[idx-1] = params_sim_simple(params, meteo);
 }
 
 // [[Rcpp::export]]
@@ -229,7 +274,7 @@ void update_sim_idx(int idx, NumericVector values, CharacterVector names) {
 
 List run_params(SamaraParameters * params) {
   Samara samara;
-  auto results = samara.run_samara_2_3_lodging(params);
+  auto results = samara.run_samara_2_1(params);
   List result = resultToList(results);
   return result;
 }
@@ -365,7 +410,7 @@ int sim_exist() {
 }
 // [[Rcpp::export]]
 int sim_exist_idx(int idx) {
-  return (params_vector.size() > idx && params_vector[idx-1] != nullptr) ? 1 : 0;
+  return (params_vector.size() >= idx && params_vector[idx-1] != nullptr) ? 1 : 0;
 }
 
 /********************************************************************/

@@ -16,7 +16,7 @@ source('D:/PAMStudio/dev/git/rSamara/R/AccessLoader.R')
 DB_PATH <- "D:/Bd_Samara.accdb"
 connectDB(DB_PATH)
 
-ncores <- 30
+# ncores <- 30
 
 #Boucle de simulations depuis un fichier Xls
 simulist = read.xls("D:/PAMStudio/dev/git/rSamara/simulation.xlsx")

@@ -1571,7 +1571,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 }
 
 void Samara::init_parameters_2_1(SamaraParameters * params) {
-	init_parameters(params);
+    init_parameters_2_1_subset(params);
     StockIniProf = 0;
 }
 
