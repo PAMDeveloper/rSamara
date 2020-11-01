@@ -1,7 +1,7 @@
 #ifndef RESULTPARSER_H
 #define RESULTPARSER_H
 
-#include <math.h>
+#include <cmath>
 
 class ResultParser
 {
