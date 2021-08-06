@@ -7,8 +7,11 @@
 #include <string>
 
 
+
+
 pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
+
     //Simu parameters
     init_all_variables_2_1();
     double DateDebutSimul = parameters->getDouble("startingdate");
@@ -45,8 +48,19 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
     cumRain = 0;
     bool simulationFinished = false;
+
+    // std::cout << "INIT DONE" << std::endl << std::flush;
+
+    // int test_step = 0;
     //Main loop
+    // std::cout << fixed << DateEnCours << "/" << DateFinSimul <<  std::endl << std::flush;
+    // std::cout << fixed << "SLAMIN" << SlaMin << std::endl << std::flush;
     for (DateEnCours; DateEnCours < DateFinSimul; DateEnCours++) {
+      // test_step++;
+      // if(test_step > 100) {
+        // break;
+      // }
+      // std::cout << DateEnCours << "/" << DateFinSimul <<  std::endl << std::flush;
         set_meteo_vars(parameters, (int)(DateEnCours-DateDebutSimul),
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
                        Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc, Irrigation);
@@ -271,7 +285,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
         //        if(simulationFinished) break;
         currentResults.push_back(result);
-		daily_reset_variables();
+		    daily_reset_variables();
     }
 
 
@@ -292,8 +306,11 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         }
         results.push_back(values);
     }
+    // std::cout << "simu DONE" << names[0] << results.size() << results[results.size()-1].size() << " " << results[0].size() << std::endl << std::flush;
 
-    return pair <vector <string>, vector < vector <double> > > (names, results);
+    auto p = pair <vector <string>, vector < vector <double> > > (names, results);
+    // std::cout << "pair DONE" << names[0] << std::endl << std::flush;
+    return p;
 }
 
 pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log) {

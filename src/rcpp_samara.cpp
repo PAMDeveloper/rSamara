@@ -43,7 +43,6 @@ void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list
     for (int i = 0; i < names.size(); ++i) {
         double val = *REAL(list[i]);
         string key = Rcpp::as<string>(names[i]);
-        //std::cout << key << std::endl << ":" << val << std::endl;
         pair <double, string> token( val, category );
         map.insert( pair<string, pair <double, string> >(
                         key, token )
@@ -227,7 +226,7 @@ SamaraParameters * params_sim_simple(List params, List meteo) {
 
 // [[Rcpp::export]]
 void init_sim_idx_simple(int idx, List params, List meteo) {
-  std::cout << "init simple sim "<< idx << std::endl;
+
   while(params_vector.size() < idx)
     params_vector.push_back(nullptr);
 
@@ -306,17 +305,13 @@ void save_params(SamaraParameters * params, string path) {
   if (file.is_open())
   {
     file << params->strings.size() << "\n";
-    // std::cout << current_params->strings.size() << "\n";
     for (auto const& token : params->strings) {
       file << token.first << "\t" << token.second.first << "\n";
-      // std::cout << token.first << "\t" << token.second.first << "\n";
     }
 
     file << params->doubles.size() << "\n";
-    // std::cout << current_params->doubles.size() << "\n";
     for (auto const& token : params->doubles) {
       file << fixed << token.first << "\t" << token.second.first << "\n";
-      // std::cout << fixed << token.first << "\t" << token.second.first << "\n";
     }
 
     // file.flush();
@@ -450,7 +445,13 @@ List run2DF(List params, List meteo)
   fillMapWithDoubleList(parameters->doubles, params, "");
   fillClimaticVectorWithList(parameters->climatics, meteo);
   Samara samara;
-  pair <vector <string>, vector < vector <double> > > results = samara.run_samara_2_1(parameters);
+  // for(auto it = parameters->doubles.cbegin(); it != parameters->doubles.cend(); ++it)
+  // {
+    // std::cout<< fixed << it->first << " " << it->second.first << " " << it->second.second << "\n" << std::flush;
+  // }
+
+
+  auto results = samara.run_samara_2_1(parameters);
   List result = resultToList(results);
   delete parameters;
   return result;
@@ -587,119 +588,6 @@ List rcpp_reduceVobs(List vObs, List results) {
   std::map<std::string, std::vector<double>>  ret = parser.filterVObs(vObsMap,resultMap, false);
   return mapOfVectorToDF(ret);
 }
-
-
-
-
-
-// List DFFromDoubleRecord(string table, string key, string value) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_record(table, key, value);
-//     List result = DFFromDoubleMap(parameters->doubles, table);
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-//
-//
-// List DFFromStringRecord(string table, string key, string value) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_record(table, key, value);
-//     List result = DFFromStringMap(parameters->strings, table);
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-
-// // [[Rcpp::export]]
-// List DBSimulationParamsDF(Rcpp::String idsimulation) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_complete_simulation(idsimulation);
-//     List result = DFFromDoubleMap(parameters->doubles, "");
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-
-// // [[Rcpp::export]]
-
-
-// // [[Rcpp::export]]
-// List DBSimulationMeteoDF(Rcpp::String idsimulation) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_complete_simulation(idsimulation);
-//     List result = DFFromClimaticVector(parameters->climatics);
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-//
-// // [[Rcpp::export]]
-// List DBSimulationIdDF(Rcpp::String idsimulation) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_complete_simulation(idsimulation);
-//     List result = DFFromStringMap(parameters->strings, "");
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-//
-// // [[Rcpp::export]]
-// List DBSimpleSimulationParamsDF(Rcpp::String idsimulation) {
-//     return DFFromDoubleRecord("simulation","simcode",idsimulation);
-// }
-//
-// // [[Rcpp::export]]
-// List DBVarietyDF(Rcpp::String idvariete) {
-//     return DFFromDoubleRecord("variety","variety",idvariete);
-// }
-//
-// // [[Rcpp::export]]
-// List DBStationDF(Rcpp::String codestation) {
-//     return DFFromDoubleRecord("ws","wscode",codestation);
-// }
-//
-// // [[Rcpp::export]]
-// List DBPlotDF(Rcpp::String idparcelle) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_plot(idparcelle);
-//     List result = DFFromDoubleMap(parameters->doubles, "parcelle");
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-//
-// // [[Rcpp::export]]
-// List DBItineraryDF(Rcpp::String iditinerairetechnique) {
-//     return DFFromDoubleRecord("itinerairetechnique","iditinerairetechnique",iditinerairetechnique);
-// }
-//
-// // [[Rcpp::export]]
-// List DBMeteoDF(Rcpp::String codestation, Rcpp::String beginDate, Rcpp::String endDate) {
-//     SamaraParameters * parameters = new SamaraParameters();
-//     PSQLLoader * loader = new PSQLLoader(parameters);
-//     loader->load_meteo(codestation, beginDate, endDate);
-//     List result = DFFromClimaticVector(parameters->climatics);
-//     delete parameters;
-//     delete loader;
-//     return result;
-// }
-//
-// // [[Rcpp::export]]
-// List DBObsDF(Rcpp::String idsimulation) {
-//   SamaraParameters * parameters = new SamaraParameters();
-//   PSQLLoader * loader = new PSQLLoader(parameters);
-//   List result = mapOfVectorToDF(loader->load_obs(idsimulation));
-//   delete parameters;
-//   delete loader;
-//   return result;
-// }
 
 
 
