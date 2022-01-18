@@ -335,7 +335,7 @@ public:
 
 
 	//Sorghum Mortality por
-	double tabCstr[6] = {0,0,0,0,0,0};
+	std::array<int,6> tabCstr = {0,0,0,0,0,0};
 	int tabCstrIndiceCourant = 0;
 	int NbJourCompte = 0;
 
