@@ -250,7 +250,8 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
+        
 
         samara::RS_KeyResults_V2_1(NumPhase, CulmsPerPlant, CulmsPerHill, Cstr, FTSW, Ic, Lai, GrainYieldPop, DryMatAboveGroundPop, DryMatResInternodePop, DryMatTotPop,
                                    GrainFillingStatus, SterilityTot, CumIrrig, CumWUse, CulmsPerPlantMax, CulmsPerHillMax, DurPhase1, DurPhase2, DurPhase3, DurPhase4,
@@ -545,7 +546,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::RS_KeyResults_V2_1(NumPhase, CulmsPerPlant, CulmsPerHill, Cstr, FTSW, Ic, Lai, GrainYieldPop, DryMatAboveGroundPop, DryMatResInternodePop, DryMatTotPop,
                                    GrainFillingStatus, SterilityTot, CumIrrig, CumWUse, CulmsPerPlantMax, CulmsPerHillMax, DurPhase1, DurPhase2, DurPhase3, DurPhase4,
@@ -851,7 +852,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         //Lodging modules
 
@@ -1171,7 +1172,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,
@@ -1508,7 +1509,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,

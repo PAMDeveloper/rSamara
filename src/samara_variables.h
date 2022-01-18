@@ -334,6 +334,11 @@ public:
 	double SlaMitchAdjusted = 0;
 
 
+	//Sorghum Mortality por
+	double tabCstr[6] = {0,0,0,0,0,0};
+	int tabCstrIndiceCourant = 0;
+	int NbJourCompte = 0;
+
 	vector<string> get_variable_names() {
 		if (LOG == ECOTROP) {
 			vector <string> n{ "Jour","NbJas","NumPhase","DegresDuJour","DegresDuJourCor",
@@ -455,6 +460,11 @@ public:
 		FTSW = 0;
 		DryMatAboveGroundTotPop = 0;
 		RootLigninPop = 0;
+
+		//Sorghum Mortality por
+		tabCstr = {0,0,0,0,0,0};
+		tabCstrIndiceCourant = 0;
+		NbJourCompte = 0;
 	}
 
 	void init_all_variables() {
@@ -742,6 +752,10 @@ public:
 		WueEt = 0;
 		WueTot = 0;
 		SlaMitchAdjusted = 0;
+		//Sorghum Mortality por
+		tabCstr = {0,0,0,0,0,0};
+		tabCstrIndiceCourant = 0;
+		NbJourCompte = 0;
 	}
 
 	void init_culture_variables() {
@@ -838,6 +852,10 @@ public:
 			RootSystVolPop = 0;
 			RootSystVolPopOld = 0;
 			SDJCorPhase4 = 0;
+			//Sorghum Mortality por
+			tabCstr = {0,0,0,0,0,0};
+			tabCstrIndiceCourant = 0;
+			NbJourCompte = 0;
 		}
 		catch (...) {
 			error_message("RS_InitiationCulture", URisocas);
@@ -876,6 +894,10 @@ public:
 		TrEff = 0;
 		TrPot = 0;
 		WueEt = 0;
+		//Sorghum Mortality por
+		tabCstr = {0,0,0,0,0,0};
+		tabCstrIndiceCourant = 0;
+		NbJourCompte = 0;
 	}
 
 	void daily_reset_variables() {

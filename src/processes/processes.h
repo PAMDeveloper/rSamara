@@ -3039,11 +3039,6 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 
 
 
-
-static double tabCstr[6]; // utilisé dans SorghumMortality()
-static int tabCstrIndiceCourant = 0; // utilisé dans SorghumMortality()
-static int NbJourCompte = 0;
-
 //##############################################################################
 /// Ce module permet de suivre l'évolution des 5 derniers jours de Cstr afin de
 /// moyenner la valeur des stress. Si la moyenne des Cstr est inférieure à
@@ -3051,7 +3046,8 @@ static int NbJourCompte = 0;
 /// Demande MD du 28/09/06
 //##############################################################################
 
-void SorghumMortality(double const &cstr, double const &SeuilCstrMortality,   double &NumPhase) {
+void SorghumMortality(double const &cstr, double const &SeuilCstrMortality, double &NumPhase,
+                     double[] &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
     int i;
     double MoyenneCstr;
 
