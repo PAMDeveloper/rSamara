@@ -1,0 +1,673 @@
+##############################################################################
+##############################################################################
+###############Coupling climate models with SAMARA############################
+##########################Set up to run on a grid#############################
+##############################################################################
+##############################################################################
+#######################Original Script from Diarietou #########################
+#########################Adapted by Myriam ADAM ##############################
+###########################April2019-2020#####################################
+##############################################################################
+##############################################################################
+
+################# 1ere partie on simule des données météo ################# 
+################# avec le générateur marksim################################################
+
+#Redirection vers le dossier courant
+set.seed(1234)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+# Il faut d'abord installer les package en utilisant la fonction install.packages
+#install.packages("lhs", dependencies=TRUE, repos='http://cran.rstudio.org/')
+
+# Telechargement Packages
+
+library(gdata)
+library(raster)
+library(rsamara)
+library(chron)
+library(lubridate)
+library(ggplot2)
+
+
+GenereMeteo <- function(lat,lon){
+  
+  coordonnees <- cbind(lon,lat)
+  grid.tmin = getData('worldclim', var='tmin', res=0.5, lat=lat, lon=lon)
+  grid.tmax = getData('worldclim', var='tmax', res=0.5, lat=lat, lon=lon)
+  grid.prec = getData('worldclim', var='prec', res=0.5, lat=lat, lon=lon)
+  
+  tmin=extract(grid.tmin,coordonnees) 
+  tmax=extract(grid.tmax,coordonnees)
+  prec=extract(grid.prec,coordonnees)
+  
+  prec[1,prec[1,]>999] <- 999
+  
+  #   ne faire la suite QUE si les donnÃ©es existent 
+  if (!is.na(tmin[1])){
+    
+    # 2/ Ã©crire ces donnÃ©es climatiques dans un format que Marksim sait relire
+    
+    mdata <- matrix (rep(0,7*12),nrow=12,ncol=7)
+    mdata[,1] <- seq(1:12)
+    mdata[,2] <- rep(-99,12)
+    mdata[,3] <- tmax/10 # dans WorldClim les tÂ° sont en 1/10 de degrÃ©s
+    mdata[,4] <- tmin/10
+    mdata[,5] <- prec
+    mdata[,6] <- rep(-99,12)
+    mdata[,7] <- rep(-99,12)
+    
+    mdata2 <- cbind(mdata[,1],format(mdata[,-1],nsmall=1))
+    
+    file.remove("./CLI/Anywhe.cli")
+    out <- file("./CLI/Anywhe.cli",open="a")
+    writeLines  ("*CLIMATE : ANYWHERE", out)
+    writeLines  ("@ INSI      LAT     LONG  ELEV   TAV   AMP  SRAY  TMXY  TMNY  RAIY", out)
+    writeLines(paste("  0000 ",sprintf("%07.2f", lat),"",sprintf("%07.3f", lon),"  -99   -99   -99   -99   -99   -99   -99"),out)
+    writeLines  ("@START  DURN  ANGA  ANGB REFHT WNDHT SOURCE", out)
+    writeLines("     0     0  0.25  0.50  0.00  0.00 Calculated_from_daily_data",out)
+    writeLines("@ GSST GSDU",out)
+    writeLines("    0   365",out)
+    writeLines("",out) 
+    writeLines("*MONTHLY AVERAGES",out)
+    writeLines("@MONTH  SAMN  XAMN  NAMN  RTOT  RNUM  SHMN",out)
+    write.fwf  (mdata2,out,rownames=FALSE, colnames=FALSE,width=c(6,rep(5,6)),justify="right")
+    
+    
+    close(out)
+    
+    # lancer Marksim avec les paramÃ¨tres qui vont bien
+    # voir la doc http://ccafs-climate.org/downloads/docs/MarkSim_Standalone_Documentation_v2.pdf
+    
+    # a modifier en fonction de l'emplacement du dossier marksim sur votre ordi
+    
+    shell('MarkSim_Standalone_v2.exe D:\\Marksim\\data D:\\Marksim\\cli 00000000000000000 rcp26 2015 99 731485')
+    
+    
+    # RÃ©cupÃ©rer les rÃ©sultats
+    #--------------------------
+    
+    tab <- data.frame()
+    nlines <<- c()
+    
+    dirname <- "./CLI/ANYWHE_00000000000000000_rcp26_2015"
+    files <- dir(dirname,pattern="ANYW[0-9][0-9][0-9]")
+    #files <- list.files(dirname,pattern="\\.WTG$")
+    for(f in files) {
+      line=read.table(paste(dirname,"/",f,sep=""),head=T,skip=3)
+      nlines <<-c(nlines,nrow(line))
+      tab <- rbind(tab,line)
+    }
+    
+    
+    tab$day_in_year=tab$X.DATE %% 1000
+    tab$year=(tab$X.DATE-tab$day_in_year)/1000
+    
+    colnames(tab) <- c("date","radiation","tmax","tmin","rainfall","day_in_year","year")
+    vectNA <- rep(-999,nrow(tab))
+    
+    tabNA <- data.frame(tmoy=vectNA,rhmax=vectNA,rhmin=vectNA,rhmoy=vectNA,windtot=vectNA,sunshine=vectNA,eto=vectNA)
+    tab_meteo_init <- cbind(tab,tabNA)
+    
+    tab_meteo <- tab_meteo_init[,c("date","tmax","tmin","tmoy","rhmax","rhmin","rhmoy","windtot","sunshine","radiation","eto","rainfall")]
+    
+    #wscode	weatherdate	tmin	tmax	tmoy	rhmin	rhmax	rhmoy	rainfall	windtot	radiation	sunshine	eto
+    
+    # Calcul de l'et0
+    
+    et0vect <- function(tmin,tmax,srad){
+      td <- 0.6*tmax + 0.4*tmin
+      albedo <- 0.2150077
+      slang <- srad*23.923
+      eeq <- slang*(2.04*10^(-4)-1.83*10^(-4)*albedo)*(td+29.0)
+      eo <- eeq*1.1
+      index_tmax_sup35 <- tmax>35
+      index_tmax_inf5 <- tmax<5
+      eo[index_tmax_sup35] <- eeq[index_tmax_sup35]*((tmax[index_tmax_sup35]-35.0)*0.05+1.1)
+      eo[index_tmax_inf5] <- eeq[index_tmax_inf5]*0.01*exp(0.18*(tmax[index_tmax_inf5]+20.0))
+      return(eo)
+    }
+    
+    et0_estim_vect <- et0vect(tab_meteo$tmin,tab_meteo$tmax,tab_meteo$radiation)
+    
+    tab_meteo$eto <- et0_estim_vect
+    
+    tab_meteo$weatherdate <- format(seq.Date(from=as.Date("01/01/2001",format="%d/%m/%Y"),to=as.Date("31/12/2099",format="%d/%m/%Y"),by='days'),"%d/%m/%Y")
+    tab_meteo$wscode <- rep(1,nrow(tab_meteo))
+    
+    meteo_samara <- tab_meteo[,c("wscode", "weatherdate",	"tmin",	"tmax",	"tmoy",	"rhmin",	"rhmax",	"rhmoy",	"rainfall",	"windtot",	"radiation",	"sunshine",	"eto")]
+  }
+  else{meteo_samara <- NULL}
+  return(meteo_samara)
+}
+
+
+
+############################ 2ieme partie ############################################
+################## set of function for Lancement de samara #####################
+SimulSamara99 <- function(lat,lon){
+  cat (paste("coordonnees",lat,lon))
+    # lat est la latitude du lieu
+  # lon est la longitude du lieu
+ 
+# 1) On génère les YearLevels ans de météo du lieu de "2001 à 20xx"
+    meteoGlobal <<- GenereMeteo(lat,lon)
+  if (!is.null(meteoGlobal)){
+    meteoGlobal_years <<-format(as.Date(meteoGlobal$weatherdate, format="%d/%m/%Y"),"%Y")
+    
+# 2) set up the internal variable
+    RdtSimul99 <<- c()
+    semis <<- c()
+    finsaison<<-c()
+    cumul_moyen<<- c()
+    stockinisurf<<- c()
+    stockiniprof<<-c()
+    stockiniprof<<-c()
+    epaisseursurf<<-c()
+    epaisseurprof<<-c()
+    codegridge<<-c()
+    humpf<<-c()
+    humsat<<-c()
+    humfc<<-c()
+    output = NULL
+    
+# for every year
+  ##3.we look for the sowing date  using  criteria from Balme et al.    
+    for(y in YearLevels){
+      # print(paste("annee",y))
+      # print(paste("vecteur v",v))
+      IndexYear <- meteoGlobal_years==y
+      meteo_y <<- meteoGlobal[IndexYear,]
+      Date_Simul <- as.character(as.Date(meteo_y$weatherdate,format="%d/%m/%Y"))
+      
+      pluie <- meteo_y$rainfall
+      names(pluie) <- as.character(meteo_y$weatherdate)
+      pluie = pluie[150:365] #####date 150 pour semis au 1 juin
+      # 3.1. définition du démarrage : critète "agronomique" de Balme et Lebel (2005) :
+      # date de début de saison des pluies = au moins 20 mm dans les 3 jours qui précèdent, sans épisode sec excédant 7 jours dans les 30 jours qui suivent
+      # 3.2mise en oeuvre
+      # rechercher les épisodes secs de plus de 7 jours dans un avenir de 30 jours
+      # pour cela decaler les données vers l'avenir de 1 à 8 jours dans 8 colonnes, et tester si la somme de ces 8 colonnes vaut 0
+      pluie_a_venir <- matrix(data=NA,nrow=length(pluie),ncol=8)
+      for (i in 1:8){
+        pluie_a_venir[,i] <- c(pluie[-c(1:i)],rep(NA,i))
+        
+      }
+      # présence d'un épisode sec de 8 jours (ou peut-être plus) commençant demain
+      epi8<-(rowSums(pluie_a_venir)==0)
+      # on ne veut pas d'épisode sec de 7 jours commençant demain ou dans les 23 jours à venir
+      # on applique le même algorithme : on décale le vecteur "présence d'un épisode sec commençant demain" de 0 à 22
+      epi8_a_venir <- matrix(data=NA,nrow=length(epi8),ncol=23)
+      epi8_a_venir[,1] <- epi8
+      for (i in 1:22){
+        epi8_a_venir[,i+1] <- c(epi8[-c(1:i)],rep(NA,i))
+      }
+      avenir_favorable<-(rowSums(epi8_a_venir)==0)
+      
+      # cumul des pluies sur les 3 jours précédents
+      # au jour j, ce sont les pluies cumulées jusqu'au jour j-1, moins les pluies cumulées jusqu'au jour j-4
+      cumplupass3<-rep(NA,length(pluie))
+      cumplupass3[4] <- cumsum(pluie)[3]
+      cumplupass3[5:length(pluie)] <- cumsum(pluie)[4:(length(pluie)-1)]-cumsum(pluie)[1:(length(pluie)-4)]
+      # testons s'il a plu au moins 30mm dans les 3 jours qui précèdent
+      #passe_favorable <- (cumplupass3>=30)
+      passe1 =rep("NA",149) ####to trick the pass favorable to start the cumul from day 120
+      passe2 = (cumplupass3>=30)
+      passe_favorable = c(passe1,passe2)
+      
+      
+      datesemis=Date_Simul[match(TRUE,passe_favorable)]
+      #date_de_semis=datesemis
+       if(cumul<800)
+       {date_de_semis <- datesemis}
+        else
+       {date_de_semis=as.Date( datesemis)
+        date_de_semis=date_de_semis+15}
+
+      print(c(datesemis,date_de_semis))
+      #jsemis=yday(date_de_semis)
+      
+      
+      if (is.na(date_de_semis))
+      {jsemis = 365}
+      else
+      {jsemis=yday(date_de_semis)}
+
+      semis=c(semis,jsemis)
+      
+ 
+      
+#4.we set up the soil parameters and sowing date 
+      cumul_moyen=c(cumul_moyen,cumul)
+      stockinisurf=c(stockinisurf,param[1,"stockinisurf"])
+      stockiniprof=c(stockiniprof,param[1,"stockiniprof"])
+      epaisseursurf=c(epaisseursurf,param[1,"epaisseursurf"])
+      epaisseurprof=c(epaisseurprof,param[1,"epaisseurprof"])
+      humpf=c(humpf,param[1,"humpf"])
+      humsat=c(humsat,param[1,"humsat"])
+      humfc=c(humfc,param[1,"humfc"])
+    codegridge=c(codegridge,NUMGRIDCODE)
+     # codegridge =c(codegridge,"default")
+    cat(date_de_semis)
+      StartingDate <- rsamara::toJulianDayCalc(paste(y,"-01-01",sep=""))
+      EndingDate <- rsamara::toJulianDayCalc(paste(y,"-12-31",sep=""))
+      SowingDate <- rsamara::toJulianDayCalc(as.character(date_de_semis))#####
+    
+      param[1,"startingdate"] <- StartingDate
+      param[1,"endingdate"] <- EndingDate
+      param[1,"sowing"] <- SowingDate
+      
+  #5.we run the model ( plant param are set outside)
+ # on simule, pour chaque annÃ©e de 2001 a 20xx le rendement final ("GrainYieldPop") que l'on stocke dans le vecteur RdtSimul99
+      results_Samara_y <<- rsamara::run2DF(param,meteo_y)
+      
+      
+### 6. set a biotic stress to correct grain yield
+      #####recherche date de fin de saison pluvieuse ( 20 jours sans pluie après le 1er sept, Balme et al 2005)
+      pluie <- meteo_y$rainfall
+      pluie_fin = pluie[244:365] #####date 244 pour fin de saison après 1 sept
+      pluie_finsaison <- matrix(data=NA,nrow=length(pluie_fin),ncol=20)
+      for (i in 1:20){
+        pluie_finsaison[,i] <- c(pluie_fin[-c(1:i)],rep(NA,i))
+        
+      }
+      epi20<-(rowSums(pluie_finsaison)<20) #### to consider the small rains  ("trace") at the end of the year 
+      date_finsaison=Date_Simul[match(TRUE,epi20) + 244] 
+      
+      if (is.na(date_finsaison))
+      {
+        jfinsaison = 365
+      }
+      else
+      {
+        date_fin_saison=as.Date( date_finsaison)
+      jfinsaison=yday(date_fin_saison)
+      }
+
+      finsaison=c(finsaison,jfinsaison)
+      
+      #####inclusion d'un coef pour diminuer le rendement
+      ######si le premier jour de la phase de maturation ( approx 50% floraison)
+      #####arrive plus de 20 jours avant la fin de la saison des pluies (roudier et al. 2011)
+
+      treshold_flow_endseason = jfinsaison - (max(results_Samara_y$SimAnthesis50) +jsemis)
+       if ( treshold_flow_endseason > 60)
+       { coef_biot = 0 }
+       else if ( treshold_flow_endseason <=60 &treshold_flow_endseason > 50)
+         { coef_biot = 0.3 }
+        else if (treshold_flow_endseason <=50 & treshold_flow_endseason > 40)
+        { coef_biot = 0.5 }
+          else if (treshold_flow_endseason <= 40 & treshold_flow_endseason > 30)
+           { coef_biot = 0.7 }
+        else if (treshold_flow_endseason <= 30 & treshold_flow_endseason > 20)
+          {coef_biot = 0.9 }
+         else
+         { coef_biot =1 }
+        Grain_yield_adj_biot = max(results_Samara_y$GrainYieldPop)*coef_biot 
+
+ #7 set up the output to keep
+      output = rbind(output, 
+                     data.frame(y,lon, lat,
+      					                
+                                        max(as.numeric(as.character(results_Samara_y$CstrPhase2),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$CstrPhase3),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$CstrPhase4),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$CstrPhase5),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$CstrPhase6),na.rm=TRUE)),
+                                        
+                                        max(as.numeric(as.character(results_Samara_y$DurPhase1+results_Samara_y$DurPhase2+ 
+                                                                      results_Samara_y$DurPhase3 +results_Samara_y$DurPhase4 +
+                                                                      results_Samara_y$DurPhase5 + results_Samara_y$DurPhase6),na.rm=TRUE)),
+                                                                      
+      					                
+      					                max(as.numeric(as.character(results_Samara_y$PlantHeight),na.rm=TRUE)),
+      					                max(as.numeric(as.character(results_Samara_y$PlantLeafNumTot),na.rm=TRUE)),
+      					                max(as.numeric(as.character(results_Samara_y$LastLeafLength),na.rm=TRUE)),
+      					                
+      					                max(as.numeric(as.character(results_Samara_y$DryMatStructLeafPop+results_Samara_y$DryMatStemPop),na.rm=TRUE)),
+      					                max(as.numeric(as.character(results_Samara_y$DryMatAboveGroundTotPop),na.rm=TRUE)),
+      					                
+      					                max(as.numeric(as.character(results_Samara_y$ DryMatStructRootPop),na.rm=TRUE)), 
+      					                max(as.numeric(as.character(results_Samara_y$RootShootRatio),na.rm=TRUE)),
+      					                max(as.numeric(as.character(results_Samara_y$RootFront),na.rm=TRUE)), 
+      					                
+      					                 max(as.numeric(as.character(results_Samara_y$DeadLeafdrywtPop),na.rm=TRUE)), 
+      					                 max(as.numeric(as.character(results_Samara_y$Lai),na.rm=TRUE)),
+      					                   
+      					              coef_biot,Grain_yield_adj_biot,
+      					                max(as.numeric(as.character(results_Samara_y$GrainYieldPop,na.rm=TRUE))),
+      					                max(as.numeric(as.character(results_Samara_y$SpikeNumPanicle),na.rm=TRUE)), 
+      					              max(as.numeric(as.character(results_Samara_y$ GrainYieldPanicle),na.rm=TRUE)),
+      					             
+      					                   max(as.numeric(as.character(results_Samara_y$SterilityDrought),na.rm=TRUE)), 
+                                        
+                                        max(as.numeric(as.character(results_Samara_y$RUE),na.rm=TRUE)), 
+                                        max(as.numeric(as.character(results_Samara_y$WueTot),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$ETR),na.rm=TRUE)), 
+                                        max(as.numeric(as.character(results_Samara_y$CumTr),na.rm=TRUE)),
+                                        max(as.numeric(as.character(results_Samara_y$CumEt),na.rm=TRUE))))
+    }
+        
+    output=data.frame (output)
+    return(cbind(output,semis,finsaison, cumul_moyen, codegridge))
+  }
+  else {return(NA)}
+}
+
+
+# 8. On calcule the average of all variables over the xx yearlLevels
+#####La fonction funnoise permet de calculer 
+####le rendement moyenne, sd, quantile  over the 50 years of simulations
+funnoise <- function(lat,lon)
+  
+{     
+  
+  f.new <- SimulSamara99(lat,lon)
+  
+  nb_na = sum(is.na(f.new[,9]))
+  f.new = na.omit(f.new)
+  
+  CstrPhase2=mean(f.new[,4])
+  CstrPhase3=mean(f.new[,5])
+  CstrPhase4=mean(f.new[,6])
+  CstrPhase5=mean(f.new[,7])
+  CstrPhase6=mean(f.new[,8])
+  
+  Cycle = mean(f.new[,9])
+  
+  
+  PlantHeight =mean(f.new[,10])
+  LeafNumber =mean(f.new[,11])
+  LeafLenght =mean(f.new[,12])
+  
+  Biomass =mean(f.new[,13])
+  AGBiomass =mean(f.new[,14])
+  
+  RootBiomass =mean(f.new[,15])
+  RootShoot = mean(f.new[,16])
+  RootDepth = mean(f.new[,17])
+  
+  DeadLeaf =mean(f.new[,18])
+  LAImax =mean(f.new[,19])
+  
+  Coef_biot_mean=mean(f.new[,20])
+  Rdt_biot_mean=mean(f.new[,21])
+  Rdt_biot_median= median(f.new[,21])
+  Rdt_biot_sd =sd(f.new[,21])
+  Rdt_biot_25 = quantile(f.new[,21], c(0.25))
+  Rdt_biot_75 = quantile(f.new[,21], probs = c(0.75))
+  
+  yield_mean =mean(f.new[,22])
+  yield_median =median(f.new[,22])
+  yield_sd =sd(f.new[,22])
+  yield_25 = quantile(f.new[,22], c(0.25))
+  yield_75 = quantile(f.new[,22], probs = c(0.75))
+  
+  GrainperPan = mean(f.new[,23])
+  GrainMassPan= mean(f.new[,24])
+  StelirityDrought = mean(f.new[,25])
+  
+  RUE=mean(f.new[,26])
+  WUE=mean(f.new[,27])
+  ETR=mean(f.new[,28])
+  CumTr=mean(f.new[,29])
+  CumEt=mean(f.new[,30])
+  
+
+  
+  jour_semis=mean(f.new[,31])
+  jour_semis_sd=sd(f.new[,31])
+  
+  date_finsaison = mean(f.new[,32])
+  date_finsaison_sd = sd(f.new[,32])
+  
+  cumul_pluie = mean(f.new[,33])
+  soil= mean(f.new[,34])
+  
+  return(c( cumul_pluie, soil,
+           Cycle, jour_semis,jour_semis_sd,date_finsaison,date_finsaison_sd,
+           CstrPhase2,CstrPhase3,CstrPhase4,CstrPhase5,CstrPhase6,
+           PlantHeight,LeafNumber ,LeafLenght,
+           Biomass ,AGBiomass,
+           RootBiomass,RootShoot,RootDepth,
+           DeadLeaf ,LAImax,
+          Coef_biot_mean,Rdt_biot_mean,Rdt_biot_median, Rdt_biot_sd,Rdt_biot_25,Rdt_biot_75,
+           yield_mean,yield_median,yield_sd,yield_25,yield_75,
+           GrainperPan,GrainMassPan, StelirityDrought,
+           RUE,WUE,ETR,CumTr,CumEt))
+  
+}	
+
+
+#9.1.run funnoise on the map
+carte=function(x)
+{
+  output_percoord<<-c()
+  for(i in 1:nrow(x)){
+    lon=x[i,2]
+    lat=x[i,1]
+    
+    param <<- paramInit
+    #bon<<-subset(soil_lat_long,Y==lat & X==lon)
+    cumul<<-cumul_pluvio$cumul_pluvio[i]
+    NUMGRIDCODE<<-soil_lat_long$GRIDCODE[i]
+    param[1,"stockinisurf"]<<-caracteristique_soil$stockinisurf[NUMGRIDCODE+1]
+    param[1,"stockiniprof"]<<-caracteristique_soil$stockiniprof[NUMGRIDCODE+1]
+    param[1,"epaisseursurf"]<<-caracteristique_soil$epaisseursurf[NUMGRIDCODE+1]
+    param[1,"epaisseurprof"]<<-caracteristique_soil$epaisseurprof[NUMGRIDCODE+1]
+    # paramInit[1,"humcr"]=caracteristique$humcr[NUMGRICODE+1]
+    param[1,"humpf"]<<-caracteristique_soil$humpf[NUMGRIDCODE+1]
+    param[1,"humsat"]<<-caracteristique_soil$humsat[NUMGRIDCODE+1]
+    param[1,"humfc"]<<-caracteristique_soil$humfc[NUMGRIDCODE+1]
+     param[1,"wslong"]<<-lon
+     param[1,"wslat"]<<-lat
+
+    
+    output=funnoise(lat,lon)
+    output_percoord = rbind( output_percoord,output)
+    
+    
+  }
+  return(output_percoord)
+}
+
+
+
+#####9.2. run samara on the map and save the yearly outputs
+####not only mean and SD per coordinate
+carte_year=function(x)
+{
+  #mat=c(1:nrow(x))
+   yearly_output<<-c()
+  for(i in 1:nrow(x)){
+    lon=x[i,2]
+    lat=x[i,1]
+    
+    param <<- paramInit
+  
+    cumul<<-cumul_pluvio$cumul_pluvio[i]
+    NUMGRIDCODE<<-soil_lat_long$GRIDCODE[i]
+    param[1,"stockinisurf"]<<-caracteristique_soil$stockinisurf[NUMGRIDCODE+1]
+    param[1,"stockiniprof"]<<-caracteristique_soil$stockiniprof[NUMGRIDCODE+1]
+    param[1,"epaisseursurf"]<<-caracteristique_soil$epaisseursurf[NUMGRIDCODE+1]
+    param[1,"epaisseurprof"]<<-caracteristique_soil$epaisseurprof[NUMGRIDCODE+1]
+    param[1,"humpf"]<<-caracteristique_soil$humpf[NUMGRIDCODE+1]
+    param[1,"humsat"]<<-caracteristique_soil$humsat[NUMGRIDCODE+1]
+    param[1,"humfc"]<<-caracteristique_soil$humfc[NUMGRIDCODE+1]
+    param[1,"wslong"]<<-lon
+    param[1,"wslat"]<<-lat
+    
+    output_yearly=SimulSamara99(lat,lon)
+    yearly_output = rbind( yearly_output,output_yearly)
+}
+  
+  return(yearly_output)
+}
+
+
+############################ 3ieme partie  #####################################
+############################Lancement de samara ########################################
+
+#####setting up the input data for the model
+###AO lat/long
+#on choisit la grille sur laquelle on veut effectuer les simulations
+# la on choisit les zones compris entre 9 et 17 ° de latitude et 17 et 3 ° de longitude 
+load(file = "climdata.Rdata")
+donclimat1<<-subset(climdata, tmin!="NA")
+donclimat2=subset(donclimat1, month==12)
+donclimat3=subset(donclimat2,lat>=9 & lat<=17)
+grille=subset(donclimat3,lon>=-17 & lon<=3)
+x=cbind(grille[,2],grille[,1])
+#x =x[1:2,]
+#on choisit le nb d'années sur lesquelles simuler
+YearLevels <<- 2001:2050
+####soil parameters
+caracteristique_soil<<-read.table("D:/Marksim/parameters_soil_plante/HC27_soil_info_samara_BF.csv",dec=".",sep=",",quote="\"",header=T)
+soil_lat_long<<-read.table("D:/Marksim/parameters_soil_plante/soil_lat_long_AO.txt",sep='\t',header=TRUE)
+###average cumul rainfaill
+cumul_pluvio<<-read.table("D:/Marksim/parameters_soil_plante/cumul_pluvio_AO_2000_2050.txt",sep='\t',header=TRUE)
+head(cumul_pluvio)
+
+####for the 10 varieties 
+list_variete=  data.frame("variete" =  c("Fadda", "621B", "Soumba", "IS15401",
+                                         "CSM63E", "Local", "Grinkan",
+                                         "Nieleni", "Pablo", "SK5912"))
+
+list_variete=  data.frame("variete" =  c("Nieleni", "Pablo"))
+
+####run with saving the  output per lat long
+###( averaging the x simul year)
+coord_list = list()
+for (var in unique(list_variete$variete))
+{
+  paramInit <<- read.table(paste0( "D:/Marksim/parameters_soil_plante/Parameters_",var, "_calib_Malick_june2019.txt"),
+                           sep='\t',header=TRUE)#jour julien
+  ma_carte=carte(x)
+  lat=x[,1]
+  lon=x[,2]
+  cumul_pluie=ma_carte[,1]
+  sol=ma_carte[,2]
+  
+  CstrPhase2=ma_carte[,8]
+  CstrPhase3=ma_carte[,9]
+  CstrPhase4=ma_carte[,10]
+  CstrPhase5=ma_carte[,11]
+  CstrPhase6=ma_carte[,12]
+  
+  Coef_biot_mean=ma_carte[,23]
+  Rdt_biot_mean=ma_carte[,24]
+  Rdt_biot_median=ma_carte[,25]
+  Rdt_biot_sd=ma_carte[,26]
+  Rdt_biot_25=ma_carte[,27]
+  Rdt_biot_75=ma_carte[,28]
+  
+  yield_mean=ma_carte[,29]
+  yield_median=ma_carte[,30]
+  yield_sd=ma_carte[,31]
+  yield_25=ma_carte[,32]
+  yield_75=ma_carte[,33]
+  
+  Cycle=ma_carte[,3]
+  jour_semis=ma_carte[,4]
+  jour_semis_sd=ma_carte[,5]
+  date_finsaison=ma_carte[,6]
+  date_finsaison_sd=ma_carte[,7]
+  
+  PlantHeight=ma_carte[,13]
+  LeafNumber=ma_carte[,14]
+  LeafLenght=ma_carte[,15]
+  
+  
+  Biomass=ma_carte[,16]
+  AGBiomass=ma_carte[,17]
+  
+  RootBiomass=ma_carte[,18]
+  RootShoot=ma_carte[,19]
+  RootDepth=ma_carte[,20]
+  
+  DeadLeaf=ma_carte[,21]
+  LAImax=ma_carte[,22]
+
+  GrainperPan=ma_carte[,34]
+  GrainMassPan=ma_carte[,35]
+  StelirityDrought=ma_carte[,36]
+  
+  RUE=ma_carte[,37]
+  WUE=ma_carte[,38]
+  ETR=ma_carte[,39]
+  CumTr=ma_carte[,40]
+  CumEt=ma_carte[,41]
+  variete = var
+  
+  sortie=cbind(lat,lon,
+               cumul_pluie, sol,
+               Cycle, jour_semis,jour_semis_sd,date_finsaison,date_finsaison_sd,
+               CstrPhase2,CstrPhase3,CstrPhase4,CstrPhase5,CstrPhase6,
+               PlantHeight,LeafNumber ,LeafLenght,
+               Biomass ,AGBiomass,
+               RootBiomass,RootShoot,RootDepth,
+               DeadLeaf ,LAImax,
+               Coef_biot_mean,Rdt_biot_mean,Rdt_biot_median, Rdt_biot_sd,Rdt_biot_25,Rdt_biot_75,
+               yield_mean,yield_median,yield_sd,yield_25,yield_75,
+               GrainperPan,GrainMassPan, StelirityDrought,
+               RUE,WUE,ETR,CumTr,CumEt,
+               variete)
+  
+    coord_list[[var]] =  sortie
+}
+
+# bind all the tables in one dataframe
+library(plyr)
+output_percoord_allvarieties = ldply( coord_list, rbind)
+write.table(output_percoord_allvarieties,"D:/Marksim/output_april2020/output_percoord_3varieties_23juin2020.txt",sep="\t",row.names=FALSE,col.names=TRUE,append =FALSE)
+
+####run with saving the yearly output
+
+###to run only onf sites of interest
+lat <- c(11.3,14.8,10.95,13.75,13.75,12.7)
+lon <- c(-4.59,-16.59,-4.59,-15.59,-14.09,-8.09)
+x <- data.frame(lat,lon)
+
+
+map_yearly_list = list()
+for (var in unique(list_variete$variete))
+{
+  paramInit <<- read.table(paste0( "D:/Marksim/parameters_soil_plante/Parameters_",var, "_calib_Malick_june2019.txt"),
+                           sep='\t',header=TRUE)#jour julien
+  ma_carte_yearly=carte_year(x)
+  map_yearly_list[[var]] =  ma_carte_yearly
+}
+
+# bind all the tables in one dataframe
+library(plyr)
+output_percoord_allyear_allvarieties  = ldply(map_yearly_list, rbind)
+
+output_percoord_allyear_allvarieties_bama = subset(output_percoord_allyear_allvarieties, lat == 11.3 & lon== -4.59)
+output_percoord_allyear_allvarieties_bama$station = "BAMA"
+output_percoord_allyear_allvarieties_bambey = subset(output_percoord_allyear_allvarieties, lat == 14.8 & lon== -16.59)
+output_percoord_allyear_allvarieties_bambey$station = "BBY"
+output_percoord_allyear_allvarieties_farakoba = subset(output_percoord_allyear_allvarieties, lat == 10.95 & lon== -4.59)
+output_percoord_allyear_allvarieties_farakoba$station = "FRK"
+output_percoord_allyear_allvarieties_nioro = subset(output_percoord_allyear_allvarieties, lat == 13.75 & lon== -15.59)
+output_percoord_allyear_allvarieties_nioro$station = "NIO"
+output_percoord_allyear_allvarieties_sinthiou = subset(output_percoord_allyear_allvarieties, lat == 13.75 & lon== -14.09)
+output_percoord_allyear_allvarieties_sinthiou$station = 'SINT'
+output_percoord_allyear_allvarieties_samanko = subset(output_percoord_allyear_allvarieties, lat == 12.7 & lon== -8.09)
+output_percoord_allyear_allvarieties_samanko$station = "SMK"
+
+
+
+output_percoord_allyear_allvarieties_all= 
+  rbind(output_percoord_allyear_allvarieties_bama,
+        output_percoord_allyear_allvarieties_bambey,
+        output_percoord_allyear_allvarieties_farakoba,
+        output_percoord_allyear_allvarieties_nioro,
+        output_percoord_allyear_allvarieties_sinthiou,
+        output_percoord_allyear_allvarieties_samanko)
+
+output_percoord_allyear_allvarieties_all$variete<- as.character(output_percoord_allyear_allvarieties_all$variete)
+
+write.table(output_percoord_allyear_allvarieties_all,"D:/Marksim/Analyse_august2020/output_sites50year_10varieties.txt",sep="\t",row.names=FALSE,col.names=TRUE,append =FALSE)
+
+
+
