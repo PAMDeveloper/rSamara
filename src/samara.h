@@ -62,7 +62,7 @@ public:
 
     void kill_crop();
 
- 
-    
+
+
 };
 #endif // SAMARA_H

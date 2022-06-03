@@ -5,3 +5,6 @@ else
 PKG_CXXFLAGS += -Ofast `Rscript -e 'Rcpp:::CxxFlags()'`-I"." -I"../../../ext_libs/include" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
 PKG_LIBS += `Rscript -e 'Rcpp:::LdFlags()'` -L"../../../ext_libs/mingw-4.9.3/x86/shared" -L"../../../libs/mingw-4.9.3/x86/static" $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
 endif
+
+
+

@@ -3,7 +3,7 @@
 #accessFilePath = 'D:/BdD_Sorghum_10geno.accdb'
 
 #Install and load packages
-list.of.packages <- c("RODBC", "gdata", "stringr")
+list.of.packages <- c("RODBC", "gdata", "stringr", "Rcpp")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 lapply(list.of.packages, require, character.only=TRUE)
@@ -161,6 +161,44 @@ loadSimObs <- function(simcode)
   res
 }
 
+loadPartialSim <- function(itkcode, fieldcode, wscode, startDate, endDate)
+{
+  itkdf = loadItk(itkcode)
+  wsdf = loadws(wscode)
+  fielddf = loadfield(fieldcode)
+
+  # merge results
+  #res = merge(sim, itkdf, by="itkcode")
+  res = merge(itkdf, wsdf)
+  res = merge(res, fielddf)
+  # res = merge(res, vardf)
+
+  # print(res)
+  # clean df and set julian dates
+  # print(res$sowing)
+  res$sowing <- julianDayLoad(format(res$sowing, format="%Y/%m/%d"))
+  res$endingdate <- julianDayLoad(endDate)
+  res$startingdate <- julianDayLoad(startDate)
+  res$itkcode <-NULL
+  res$simcode <-NULL
+  res$variety <- NULL
+  res$soilcode <-NULL
+  res$cropcode <-NULL
+  res$fieldcode <-NULL
+  res$name <-NULL
+  res$namesoil <-NULL
+  res$wscode <-NULL
+  res$nblayer <-0
+  res$p0 <-0
+  # res$ru <-NULL
+  res$depthsoil <-0
+
+  res$kpar <- 0.5
+  resDf <-as.data.frame(res)
+
+  resDf
+}
+
 loadSimDetails <- function(itkcode, variety, fieldcode, wscode, startDate, endDate)
 {
   vardf = loadVariety(variety)
@@ -174,6 +212,7 @@ loadSimDetails <- function(itkcode, variety, fieldcode, wscode, startDate, endDa
   res = merge(res, fielddf)
   res = merge(res, vardf)
 
+  # print(res)
   # clean df and set julian dates
   # print(res$sowing)
   res$sowing <- julianDayLoad(format(res$sowing, format="%Y/%m/%d"))

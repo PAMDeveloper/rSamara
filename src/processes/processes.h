@@ -1272,7 +1272,7 @@ void RS_EvolPlantLeafNumTot(double const &NumPhase, double const &CulmsPerHill, 
 }
 
 void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const& SDJPhase4, double const& SeuilTempRPR, double const& CoeffTillerDeath,
-                                            double const& Density, double const& Ic, double const& PlantsPerHill,
+                                            double const& Density, double const& Ic, double const& PlantsPerHill, double const& CoeffFixedTillerDeath,
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
     /*try*/ {
@@ -1289,7 +1289,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
                                  min(
                                      (1 - min(Ic,1.)) * CoeffTillerDeath * LowerOrderTillersPop,
                                      0.06 * CulmsPop)
-                                 );
+                                 ) + (CoeffFixedTillerDeath * CulmsPop);
             // Introduced rate limitation of tiller abortion (not more than 6%/day)in V2.2; additional provision added that TillerDeathPop cannot be negative
 
             CulmsPop = max(Density * PlantsPerHill, CulmsPop - TillerDeathPop);
@@ -1354,10 +1354,16 @@ void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhas
 
 
 void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, double const &CoeffLeafDeath, double const &sla,
+                                 double const &CoeffTerminalLeafDeath, double const &DegresDuJourCor, double const &SDJMatu1, double const &SDJMatu2,
                                  double &LeafDeathPop, double &DryMatStructLeafPop, double &MobiliLeafDeath, double &DeadLeafDrywtPop, double &LaiDead) {
     /*try*/ {
         if ((NumPhase > 1)) {
             LeafDeathPop = (1 - (min(Ic, 1.))) * DryMatStructLeafPop * CoeffLeafDeath;
+            if(NumPhase > 5) {
+//                LeafDeathPop = LeafDeathPop + (CoeffTerminalLeafDeath * (DryMatStructLeafPop - LeafDeathPop)* DegresDuJourCor / (SDJMatu1 + SDJMatu2));
+                LeafDeathPop = min(DryMatStructLeafPop, (LeafDeathPop + (CoeffTerminalLeafDeath * DryMatStructLeafPop)));
+            }
+
             DryMatStructLeafPop = DryMatStructLeafPop - LeafDeathPop;
             MobiliLeafDeath = 0.25 /*NEW*/ * LeafDeathPop;
             DeadLeafDrywtPop = DeadLeafDrywtPop + (0.75 /*NEW*/ * LeafDeathPop);
@@ -3018,7 +3024,7 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
                           double &LodgingDay, double &Lodging, double &LodgingPot) {
     /*try*/ {
         if ( NumPhase > 4) {
-            LodgingDay = Vt * Pluie / LodgingResistance;
+            LodgingDay = ((Vt * Vt) * (1+Pluie/100)) / LodgingResistance;
             //It may be necessary to introduce a Vt * Pluie threshold, to be studied
             LodgingPot = max(Lodging, LodgingDay);
             Lodging = min(LodgingPot, 100.);
@@ -3033,11 +3039,6 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 
 
 
-
-static double tabCstr[6]; // utilisé dans SorghumMortality()
-static int tabCstrIndiceCourant = 0; // utilisé dans SorghumMortality()
-static int NbJourCompte = 0;
-
 //##############################################################################
 /// Ce module permet de suivre l'évolution des 5 derniers jours de Cstr afin de
 /// moyenner la valeur des stress. Si la moyenne des Cstr est inférieure à
@@ -3045,7 +3046,8 @@ static int NbJourCompte = 0;
 /// Demande MD du 28/09/06
 //##############################################################################
 
-void SorghumMortality(double const &cstr, double const &SeuilCstrMortality,   double &NumPhase) {
+void SorghumMortality(double const &cstr, double const &SeuilCstrMortality, double &NumPhase,
+                     std::array<int,6> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
     int i;
     double MoyenneCstr;
 

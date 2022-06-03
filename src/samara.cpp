@@ -7,8 +7,11 @@
 #include <string>
 
 
+
+
 pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(SamaraParameters * parameters, SamaraLogType log) {
     LOG = log;
+
     //Simu parameters
     init_all_variables_2_1();
     double DateDebutSimul = parameters->getDouble("startingdate");
@@ -45,8 +48,19 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
     cumRain = 0;
     bool simulationFinished = false;
+
+    // std::cout << "INIT DONE" << std::endl << std::flush;
+
+    // int test_step = 0;
     //Main loop
+    // std::cout << fixed << DateEnCours << "/" << DateFinSimul <<  std::endl << std::flush;
+    // std::cout << fixed << "SLAMIN" << SlaMin << std::endl << std::flush;
     for (DateEnCours; DateEnCours < DateFinSimul; DateEnCours++) {
+      // test_step++;
+      // if(test_step > 100) {
+        // break;
+      // }
+      // std::cout << DateEnCours << "/" << DateFinSimul <<  std::endl << std::flush;
         set_meteo_vars(parameters, (int)(DateEnCours-DateDebutSimul),
                        TMax, TMin, TMoy, HMax, HMin, HMoy, Vt,
                        Ins, Rg, ETP, Pluie, TMoyCalc, HMoyCalc, Irrigation);
@@ -133,7 +147,9 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         samara::RS_EvolPlantLeafNumTot(NumPhase, CulmsPerHill, HaunGain, PlantLeafNumNew, PlantLeafNumTot);
         samara::RS_EvolMobiliTillerDeath_V2_1(NumPhase, SDJCorPhase4, SDJRPR, CoeffTillerDeath, Density, Ic, PlantsPerHill, TillerDeathPop, CulmsPop, CulmsPerPlant,
                                               CulmsPerHill, DryMatStructPaniclePop);
-        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla, LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
+        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla,
+                                            CoeffTerminalLeafDeath, DegresDuJourCor, SDJMatu1, SDJMatu2,
+                                            LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
         samara::RS_EvalSupplyTot_V2_1(NumPhase, PhaseStemElongation, Assim, MobiliLeafDeath, RespMaintTot, RespMaintDebt, AssimNotUsed, AssimNotUsedCum, AssimSurplus,
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
@@ -234,7 +250,8 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
+        
 
         samara::RS_KeyResults_V2_1(NumPhase, CulmsPerPlant, CulmsPerHill, Cstr, FTSW, Ic, Lai, GrainYieldPop, DryMatAboveGroundPop, DryMatResInternodePop, DryMatTotPop,
                                    GrainFillingStatus, SterilityTot, CumIrrig, CumWUse, CulmsPerPlantMax, CulmsPerHillMax, DurPhase1, DurPhase2, DurPhase3, DurPhase4,
@@ -269,7 +286,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
         //        if(simulationFinished) break;
         currentResults.push_back(result);
-		daily_reset_variables();
+		    daily_reset_variables();
     }
 
 
@@ -290,8 +307,11 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         }
         results.push_back(values);
     }
+    // std::cout << "simu DONE" << names[0] << results.size() << results[results.size()-1].size() << " " << results[0].size() << std::endl << std::flush;
 
-    return pair <vector <string>, vector < vector <double> > > (names, results);
+    auto p = pair <vector <string>, vector < vector <double> > > (names, results);
+    // std::cout << "pair DONE" << names[0] << std::endl << std::flush;
+    return p;
 }
 
 pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha(SamaraParameters * parameters, SamaraLogType log) {
@@ -424,7 +444,9 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         samara::RS_EvolPlantLeafNumTot(NumPhase, CulmsPerHill, HaunGain, PlantLeafNumNew, PlantLeafNumTot);
         samara::RS_EvolMobiliTillerDeath_V2_1(NumPhase, SDJCorPhase4, SDJRPR, CoeffTillerDeath, Density, Ic, PlantsPerHill, TillerDeathPop, CulmsPop, CulmsPerPlant,
                                               CulmsPerHill, DryMatStructPaniclePop);
-        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla, LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
+        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla,
+                                            CoeffTerminalLeafDeath, DegresDuJourCor, SDJMatu1, SDJMatu2,
+                                            LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
         samara::RS_EvalSupplyTot_V2_1_micha(NumPhase, PhaseStemElongation, Assim, MobiliLeafDeath, RespMaintTot, RespMaintDebt, AssimNotUsed, AssimNotUsedCum, AssimSurplus,
                                             SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
@@ -524,7 +546,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::RS_KeyResults_V2_1(NumPhase, CulmsPerPlant, CulmsPerHill, Cstr, FTSW, Ic, Lai, GrainYieldPop, DryMatAboveGroundPop, DryMatResInternodePop, DryMatTotPop,
                                    GrainFillingStatus, SterilityTot, CumIrrig, CumWUse, CulmsPerPlantMax, CulmsPerHillMax, DurPhase1, DurPhase2, DurPhase3, DurPhase4,
@@ -726,7 +748,9 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         samara::RS_EvolPlantLeafNumTot(NumPhase, CulmsPerHill, HaunGain, PlantLeafNumNew, PlantLeafNumTot);
         samara::RS_EvolMobiliTillerDeath_V2_2(NumPhase, SDJCorPhase4, SDJRPR, CoeffTillerDeath, Density, Ic, PlantsPerHill, TillerDeathPop, CulmsPop, CulmsPerPlant,
                                               CulmsPerHill, DryMatStructPaniclePop);
-        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla, LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
+        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla,
+                                            CoeffTerminalLeafDeath, DegresDuJourCor, SDJMatu1, SDJMatu2,
+                                            LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
         samara::RS_EvalSupplyTot_V2_1(NumPhase, PhaseStemElongation, Assim, MobiliLeafDeath, RespMaintTot, RespMaintDebt, AssimNotUsed, AssimNotUsedCum, AssimSurplus,
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
@@ -828,7 +852,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         //Lodging modules
 
@@ -1043,9 +1067,11 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                            CulmsPerHill, CulmsPerPlant, CulmsPop);
         samara::RS_EvolPlantLeafNumTot(NumPhase, CulmsPerHill, HaunGain, PlantLeafNumNew, PlantLeafNumTot);
         samara::RS_EvolMobiliTillerDeath_V2_2_lodging(  NumPhase, SDJCorPhase4, SDJRPR, CoeffTillerDeath, Density, Ic,
-                                                        PlantsPerHill, TillerDeathPop, CulmsPop, CulmsPerPlant,
+                                                        PlantsPerHill, CoeffFixedTillerDeath, TillerDeathPop, CulmsPop, CulmsPerPlant,
                                                         CulmsPerHill, DryMatStructPaniclePop);
-        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla, LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
+        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla,
+                                            CoeffTerminalLeafDeath, DegresDuJourCor, SDJMatu1, SDJMatu2,
+                                            LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
         samara::RS_EvalSupplyTot_V2_1(NumPhase, PhaseStemElongation, Assim, MobiliLeafDeath, RespMaintTot, RespMaintDebt, AssimNotUsed, AssimNotUsedCum, AssimSurplus,
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
@@ -1146,7 +1172,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,
@@ -1372,9 +1398,11 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                            CulmsPerHill, CulmsPerPlant, CulmsPop);
         samara::RS_EvolPlantLeafNumTot(NumPhase, CulmsPerHill, HaunGain, PlantLeafNumNew, PlantLeafNumTot);
         samara::RS_EvolMobiliTillerDeath_V2_2_lodging(  NumPhase, SDJCorPhase4, SDJRPR, CoeffTillerDeath, Density, Ic,
-                                                        PlantsPerHill, TillerDeathPop, CulmsPop, CulmsPerPlant,
+                                                        PlantsPerHill, CoeffFixedTillerDeath, TillerDeathPop, CulmsPop, CulmsPerPlant,
                                                         CulmsPerHill, DryMatStructPaniclePop);
-        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla, LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
+        samara::RS_EvolMobiliLeafDeath_V2_1(NumPhase, Ic, CoeffLeafDeath, Sla,
+                                            CoeffTerminalLeafDeath, DegresDuJourCor, SDJMatu1, SDJMatu2,
+                                            LeafDeathPop, DryMatStructLeafPop, MobiliLeafDeath, DeadLeafdrywtPop, LaiDead);
         samara::RS_EvalSupplyTot_V2_1(NumPhase, PhaseStemElongation, Assim, MobiliLeafDeath, RespMaintTot, RespMaintDebt, AssimNotUsed, AssimNotUsedCum, AssimSurplus,
                                       SupplyTot, CumSupplyTot);
         samara::RS_EvalDemandStructLeaf_V2_1(NumPhase, PlantLeafNumNew, SlaNew, SlaMax, RelPotLeafLength, Density, LeafLengthMax, CoeffLeafWLRatio, Cstr, StressCold,
@@ -1481,7 +1509,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
                                 TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
-        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase);
+        samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
         samara::EvalLodgingResistance( NumPhase,  MatuProgress,  DryMatStructLeafPop,
                                        DryMatStemPop,  DeadLeafdrywtPop,  DryMatPanicleTotPop,
@@ -1561,7 +1589,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
 }
 
 void Samara::init_parameters_2_1(SamaraParameters * params) {
-	init_parameters(params);
+    init_parameters_2_1_subset(params);
     StockIniProf = 0;
 }
 
