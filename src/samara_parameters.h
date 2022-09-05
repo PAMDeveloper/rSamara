@@ -264,7 +264,7 @@ public:
 		SamaraParameters parameters = *params;
         SLASwitch =  parameters.getDouble("slaswitch");
         RootLignin = parameters.getDouble("rootlignin");
-        CoeffTerminalLeafDeath = parameters.getDouble("coeffterminalleafdeath;");
+        CoeffTerminalLeafDeath = parameters.getDouble("coeffterminalleafdeath");
         CoeffTillerDeath = parameters.getDouble("coefftillerdeath");
         CoeffFixedTillerDeath = parameters.getDouble("coefffixedtillerdeath");
 	}

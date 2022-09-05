@@ -1359,14 +1359,14 @@ void RS_EvolMobiliLeafDeath_V2_1(double const &NumPhase, double const &Ic, doubl
     /*try*/ {
         if ((NumPhase > 1)) {
             LeafDeathPop = (1 - (min(Ic, 1.))) * DryMatStructLeafPop * CoeffLeafDeath;
-            if(NumPhase > 5) {
+            if(NumPhase >= 5) {
 //                LeafDeathPop = LeafDeathPop + (CoeffTerminalLeafDeath * (DryMatStructLeafPop - LeafDeathPop)* DegresDuJourCor / (SDJMatu1 + SDJMatu2));
                 LeafDeathPop = min(DryMatStructLeafPop, (LeafDeathPop + (CoeffTerminalLeafDeath * DryMatStructLeafPop)));
             }
 
             DryMatStructLeafPop = DryMatStructLeafPop - LeafDeathPop;
             MobiliLeafDeath = 0.25 /*NEW*/ * LeafDeathPop;
-            DeadLeafDrywtPop = DeadLeafDrywtPop + (0.75 /*NEW*/ * LeafDeathPop);
+            DeadLeafDrywtPop = DeadLeafDrywtPop + (0.75 * LeafDeathPop);
             LaiDead = DeadLeafDrywtPop * sla;
         }
 
