@@ -1,6 +1,8 @@
 #ifndef PROCESSES_H
 #define PROCESSES_H
 //#include <QDebug>
+#include <samara_defines.h>
+#include <array>
 namespace samara {
 
 int MonCompteur;
@@ -49,7 +51,7 @@ void RS_Transplanting_V2_2( double const& NumPhase, double const& DensityNursery
                 ChangeNurseryStatus = 0;
             }
         }
-        if(  ( NurseryStatus == 1 ) )
+        if(  NurseryStatus == 1  )
         {
             Density = DensityField;
         }
@@ -57,7 +59,7 @@ void RS_Transplanting_V2_2( double const& NumPhase, double const& DensityNursery
         {
             Density = DensityNursery / PlantsPerHill;
         }
-        if(  ( ChangeNurseryStatus == 1 ) )
+        if( ChangeNurseryStatus == 1 )
         {
             DryMatStructLeafPop = DryMatStructLeafPop * DensityChange;
             DryMatStructSheathPop = DryMatStructSheathPop * DensityChange;
@@ -100,12 +102,12 @@ void RS_Transplanting_V2(double const &NumPhase, double const &DensityNursery, d
                 ChangeNurseryStatus = 0;
             }
         }
-        if ((NurseryStatus == 1)) {
+        if (NurseryStatus == 1) {
             Density = DensityField;
         } else {
             Density = DensityNursery / PlantsPerHill;
         }
-        if ((ChangeNurseryStatus == 1)) {
+        if (ChangeNurseryStatus == 1) {
             DryMatStructLeafPop = DryMatStructLeafPop * DensityChange;
             DryMatStructSheathPop = DryMatStructSheathPop * DensityChange;
             DryMatStructRootPop = DryMatStructRootPop * DensityChange;
@@ -401,10 +403,7 @@ void RS_EvalDAF_V2(double const &NumPhase, double &DAF) {
     /*try*/ {
         if ((NumPhase > 4)) {
             DAF = DAF + 1;
-        } else {
-            DAF = DAF;
         }
-
     } /*catch (...)*/ {
         error_message("RS_EvalDAF_V2", URisocas);
     }
@@ -418,8 +417,6 @@ void RS_EvalDAF_V2_lodging(double const &NumPhase, double const &DegresDuJour,
             DAF = DAF + 1;
             MatuSDJ = MatuSDJ + DegresDuJour; //Please don’t forget to initialize MatuSDJ to zero!
             MatuProgress = MatuSDJ / (SDJMatu1 + SDJMatu2);
-        } else {
-            DAF = DAF;
         }
 
     } /*catch (...)*/ {
@@ -446,13 +443,13 @@ void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, doubl
             } else {
                 PhaseStemElongation = 0;
             }
-            if ((PhaseStemElongation == 0)) {
+            if (PhaseStemElongation == 0) {
                 HaunGain = DegresDuJourCor / Phyllo;
                 if ((HaunIndex < 3)) {
                     HaunGain = HaunGain * 2;
                 }
             } else {
-                if ((PhaseStemElongation == 1)) {
+                if (PhaseStemElongation == 1) {
                     HaunGain = RelPhylloPhaseStemElong * (DegresDuJourCor / Phyllo);
                 }
             }
@@ -800,7 +797,7 @@ void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double
             StockRac = min(StockRac, StockTotal);
             StockSurface = max(EpaisseurSurf * ResUtil / 1000 - WaterDeficit, 0.);
             ValRFE = max(StockSurface - ValRDE - WaterDeficit, 0.);
-            ValRDE = ValRDE;
+
             ValRSurf = ValRFE + ValRDE;
         } else {
             if (((StockMacropores + FloodwaterDepth) > (Tr + Evap)) && (NumPhase > 0)) {
@@ -814,7 +811,7 @@ void RS_EvolConsRes_Flood_V2(double const &NumPhase, double const &RuRac, double
                 StockSurface = max(EpaisseurSurf * ResUtil / 1000 + StockMacropores *
                                    (EpaisseurSurf / (EpaisseurSurf + EpaisseurProf)), 0.);
                 ValRFE = max(StockSurface - ValRDE, 0.);
-                ValRDE = ValRDE;
+
             }
         }
 
@@ -906,10 +903,6 @@ void RS_EvalSterility(double const &NumPhase, double const &ChangePhase, double 
                                                                    KCritSterHeat1) - TMaxMoy / (KCritSterHeat2 - KCritSterHeat1))));
             SterilityDrought = max(0., (min(1., KCritSterFtsw1 / (KCritSterFtsw1 -
                                                                   KCritSterFtsw2) - FtswMoy / (KCritSterFtsw1 - KCritSterFtsw2))));
-        } else {
-            SterilityCold = SterilityCold;
-            SterilityHeat = SterilityHeat;
-            SterilityDrought = SterilityDrought;
         }
         SterilityTot = min(0.999, 1 - ((1 - SterilityCold) * (1 - SterilityHeat) *
                                        (1 - SterilityDrought)));
@@ -1075,8 +1068,6 @@ void RS_TransplantingShock_V2(double const &CounterNursery, double const &CoeffT
     /*try*/ {
         if (((CounterNursery > 0) && (CounterNursery < 8))) {
             Assim = Assim * CoeffTransplantingShock;
-        } else {
-            Assim = Assim;
         }
 
     } /*catch (...)*/ {
@@ -1209,12 +1200,7 @@ void RS_EvolPlantTilNumTot_V2_2( double const& NumPhase, double const& ChangePha
                     CulmsPerHill = CulmsPerPlant * PlantsPerHill;
                     CulmsPop = CulmsPerHill * Density;
                 }
-                else
-                {
-                    CulmsPerPlant = CulmsPerPlant;
-                    CulmsPop = CulmsPop;
-                    CulmsPerHill = CulmsPerHill;
-                }
+
             }
         }
 
@@ -1241,10 +1227,6 @@ void RS_EvolPlantTilNumTot_V2(double const &NumPhase, double const &ChangePhase,
                     CulmsPerPlant = CulmsPerPlant + TilNewPlant;
                     CulmsPerHill = CulmsPerPlant * PlantsPerHill;
                     CulmsPop = CulmsPerHill * Density;
-                } else {
-                    CulmsPerPlant = CulmsPerPlant;
-                    CulmsPop = CulmsPop;
-                    CulmsPerHill = CulmsPerHill;
                 }
             }
         }
@@ -1261,9 +1243,6 @@ void RS_EvolPlantLeafNumTot(double const &NumPhase, double const &CulmsPerHill, 
         if (((NumPhase > 1) && (NumPhase < 5))) {
             PlantLeafNumNew = HaunGain * CulmsPerHill;
             PlantLeafNumTot = PlantLeafNumTot + PlantLeafNumNew;
-        } else {
-            PlantLeafNumNew = PlantLeafNumNew;
-            PlantLeafNumTot = PlantLeafNumTot;
         }
 
     } /*catch (...)*/ {
@@ -1276,8 +1255,7 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
     /*try*/ {
-        if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= 0.7 * SeuilTempRPR ) )
-               && ( CulmsPerPlant >= 1 ) ) )
+        if(  ( ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= 0.7 * SeuilTempRPR ) ) ) && ( CulmsPerPlant >= 1 ) ) )
         {
             //TillerDeathPop := (1 - (Min(Ic, 1))) * CulmsPop * CoeffTillerDeath;
             //TillerDeathPop := Min((1 - (Min(Ic, 1))),0.06) * CulmsPop * CoeffTillerDeath;
@@ -1310,7 +1288,7 @@ void RS_EvolMobiliTillerDeath_V2_2( double const& NumPhase, double const& SDJPha
                                     double & TillerDeathPop, double & CulmsPop, double & CulmsPerPlant, double & CulmsPerHill, double & DryMatStructPaniclePop)
 {
     /*try*/ {
-        if(  ( ( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR ) )
+        if(  ( (( NumPhase == 3 ) || ( ( NumPhase == 4 ) && ( SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR ) ) )
                && ( CulmsPerPlant >= 1 ) ) )
         {
             //TillerDeathPop := (1 - (Min(Ic, 1))) * CulmsPop * CoeffTillerDeath;
@@ -1334,7 +1312,7 @@ void RS_EvolMobiliTillerDeath_V2_2( double const& NumPhase, double const& SDJPha
 void RS_EvolMobiliTillerDeath_V2_1(double const &NumPhase, double const &SDJPhase4, double const &SeuilTempRPR, double const &CoeffTillerDeath, double const &Density, double const &Ic, double const &PlantsPerHill,
                                    double &TillerDeathPop, double &CulmsPop, double &CulmsPerPlant, double &CulmsPerHill, double &DryMatStructPaniclePop) {
     /*try*/ {
-        if (((NumPhase == 3) || ((NumPhase == 4) && (SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR))
+        if ((((NumPhase == 3) || ((NumPhase == 4) && (SDJPhase4 <= /*NEW*/ 0.7 * SeuilTempRPR)))
              && (CulmsPerPlant >= 1))) {
             TillerDeathPop = (1 - (min(Ic, 1.))) * CulmsPop * CoeffTillerDeath;
             CulmsPop = CulmsPop - TillerDeathPop;
@@ -3048,39 +3026,39 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 
 void SorghumMortality(double const &cstr, double const &SeuilCstrMortality, double &NumPhase,
                      std::array<int,6> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
-    int i;
-    double MoyenneCstr;
+//    int i;
+//    double MoyenneCstr;
 
-    /*try*/ {
-        if ((NumPhase >= 2)) {
-            NbJourCompte = NbJourCompte + 1;
-            // gestion de l'indice...
-            if ((tabCstrIndiceCourant == 5)) {
-                tabCstrIndiceCourant = 1;
-                tabCstr[ tabCstrIndiceCourant ] = cstr;
-            } else {
-                tabCstrIndiceCourant = tabCstrIndiceCourant + 1;
-                tabCstr[ tabCstrIndiceCourant ] = cstr;
-            }
-            // gestion de la mortalité
-            if ((NbJourCompte >= 5)) {
-                // on peut moyenner...
-                MoyenneCstr = 0;
-                {
-                    long i_end = 6 ;
-                    for (i = 1 ; i < i_end ; ++i) {
-                        MoyenneCstr = MoyenneCstr + tabCstr[ i ];
-                    }
-                }
-                if (((MoyenneCstr / 5) <= SeuilCstrMortality)) {
-                    NumPhase = 7;
-                }
-            }
-        }
+//    /*try*/ {
+//        if ((NumPhase >= 2)) {
+//            NbJourCompte = NbJourCompte + 1;
+//            // gestion de l'indice...
+//            if (tabCstrIndiceCourant == 5) {
+//                tabCstrIndiceCourant = 1;
+//                tabCstr[ tabCstrIndiceCourant ] = cstr;
+//            } else {
+//                tabCstrIndiceCourant = tabCstrIndiceCourant + 1;
+//                tabCstr[ tabCstrIndiceCourant ] = cstr;
+//            }
+//            // gestion de la mortalité
+//            if ((NbJourCompte >= 5)) {
+//                // on peut moyenner...
+//                MoyenneCstr = 0;
+//                {
+//                    long i_end = 6 ;
+//                    for (i = 1 ; i < i_end ; ++i) {
+//                        MoyenneCstr = MoyenneCstr + tabCstr[ i ];
+//                    }
+//                }
+//                if (((MoyenneCstr / 5) <= SeuilCstrMortality)) {
+//                    NumPhase = 7;
+//                }
+//            }
+//        }
 
-    } /*catch (...)*/ {
-        error_message("SorghumMortality", URiz);
-    }
+//    } /*catch (...)*/ {
+//        error_message("SorghumMortality", URiz);
+//    }
 }
 
 
