@@ -1,6 +1,7 @@
 #pragma once
 //#include <QDebug>
 using namespace std;
+#include <array>
 
 class Samara_Variables {
 
@@ -453,7 +454,7 @@ public:
 		AssimNotUsed = 0;
 		AssimNotUsedCum = 0;
 		TillerDeathPop = 0;
-		DeadLeafdrywtPop = 0;
+        DeadLeafdrywtPop = 0;
 		ResCapacityInternodePop = 0;
 		InternodeResStatus = 0;
 		Cstr = 0;
