@@ -336,7 +336,7 @@ public:
 
 
 	//Sorghum Mortality por
-    std::array<int,6> tabCstr = {0,0,0,0,0,0};
+    std::array<int,5> tabCstr = {0,0,0,0,0};
 //    double tabCstr[6] = {0,0,0,0,0,0};
 	int tabCstrIndiceCourant = 0;
 	int NbJourCompte = 0;
@@ -464,7 +464,7 @@ public:
 		RootLigninPop = 0;
 
 		//Sorghum Mortality por
-		tabCstr = {0,0,0,0,0,0};
+        tabCstr = {0,0,0,0,0};
 		tabCstrIndiceCourant = 0;
 		NbJourCompte = 0;
 	}
@@ -755,7 +755,7 @@ public:
 		WueTot = 0;
 		SlaMitchAdjusted = 0;
 		//Sorghum Mortality por
-		tabCstr = {0,0,0,0,0,0};
+        tabCstr = {0,0,0,0,0};
 		tabCstrIndiceCourant = 0;
 		NbJourCompte = 0;
 	}
@@ -855,7 +855,7 @@ public:
 			RootSystVolPopOld = 0;
 			SDJCorPhase4 = 0;
 			//Sorghum Mortality por
-			tabCstr = {0,0,0,0,0,0};
+            tabCstr = {0,0,0,0,0};
 			tabCstrIndiceCourant = 0;
 			NbJourCompte = 0;
 		}
@@ -897,7 +897,7 @@ public:
 		TrPot = 0;
 		WueEt = 0;
 		//Sorghum Mortality por
-		tabCstr = {0,0,0,0,0,0};
+        tabCstr = {0,0,0,0,0};
 		tabCstrIndiceCourant = 0;
 		NbJourCompte = 0;
 	}

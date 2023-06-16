@@ -3025,40 +3025,40 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 //##############################################################################
 
 void SorghumMortality(double const &cstr, double const &SeuilCstrMortality, double &NumPhase,
-                     std::array<int,6> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
-//    int i;
-//    double MoyenneCstr;
+                     std::array<int,5> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
+    int i;
+    double MoyenneCstr;
 
-//    /*try*/ {
-//        if ((NumPhase >= 2)) {
-//            NbJourCompte = NbJourCompte + 1;
-//            // gestion de l'indice...
-//            if (tabCstrIndiceCourant == 5) {
-//                tabCstrIndiceCourant = 1;
-//                tabCstr[ tabCstrIndiceCourant ] = cstr;
-//            } else {
-//                tabCstrIndiceCourant = tabCstrIndiceCourant + 1;
-//                tabCstr[ tabCstrIndiceCourant ] = cstr;
-//            }
-//            // gestion de la mortalité
-//            if ((NbJourCompte >= 5)) {
-//                // on peut moyenner...
-//                MoyenneCstr = 0;
-//                {
-//                    long i_end = 6 ;
-//                    for (i = 1 ; i < i_end ; ++i) {
-//                        MoyenneCstr = MoyenneCstr + tabCstr[ i ];
-//                    }
-//                }
-//                if (((MoyenneCstr / 5) <= SeuilCstrMortality)) {
-//                    NumPhase = 7;
-//                }
-//            }
-//        }
+    /*try*/ {
+        if ((NumPhase >= 2)) {
+            NbJourCompte = NbJourCompte + 1;
+            // gestion de l'indice...
+            if (tabCstrIndiceCourant == 4) {
+                tabCstrIndiceCourant = 0;
+                tabCstr[ tabCstrIndiceCourant ] = cstr;
+            } else {
+                tabCstrIndiceCourant = tabCstrIndiceCourant + 1;
+                tabCstr[ tabCstrIndiceCourant ] = cstr;
+            }
+            // gestion de la mortalité
+            if ((NbJourCompte >= 5)) {
+                // on peut moyenner...
+                MoyenneCstr = 0;
+                {
+                    long i_end = 5 ;
+                    for (i = 1 ; i < i_end ; ++i) {
+                        MoyenneCstr = MoyenneCstr + tabCstr[ i ];
+                    }
+                }
+                if ((MoyenneCstr / 5) <= SeuilCstrMortality) {
+                    NumPhase = 7;
+                }
+            }
+        }
 
-//    } /*catch (...)*/ {
-//        error_message("SorghumMortality", URiz);
-//    }
+    } /*catch (...)*/ {
+        error_message("SorghumMortality", URiz);
+    }
 }
 
 
