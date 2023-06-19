@@ -2800,7 +2800,8 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
             CumEt = 0.00001;
             CumWUse = 0;
             CumWReceived = 0;
-            CumIrrig = 0;
+            if (CumIrrig == 0)
+                CumIrrig += IrrigAutoDay;
             CumDr = 0;
             CumLr = 0;
         }
