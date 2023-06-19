@@ -2417,7 +2417,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
       100)));  // The sense of the last part of this equation is not clear*/
             /*NEW JUNE 18*/
             IrrigAutoDay = max(0., (IrrigAutoTargetCor - FloodwaterDepth)) +
-                    + (VolMacropores - StockMacropores) + RuRac * (1 - (min(FTSW, 1.)));
+                    (VolMacropores - StockMacropores) + RuRac * (1 - (min(FTSW, 1.)));
 
             // Pre-irrigation at transplanting, in mm
             /*NEW Y*/
