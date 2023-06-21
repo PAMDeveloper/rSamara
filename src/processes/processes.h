@@ -3025,7 +3025,7 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 //##############################################################################
 
 void SorghumMortality(double const &cstr, double const &SeuilCstrMortality, double &NumPhase,
-                     std::array<int,5> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
+                     std::array<double,5> &tabCstr, int &tabCstrIndiceCourant, int &NbJourCompte) {
     int i;
     double MoyenneCstr;
 
