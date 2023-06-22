@@ -2808,6 +2808,26 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
         else
 
         {
+            /*NEW Y*/
+            if(  ( Transplanting == 0 ) || ( NurseryStatus == 1 ) )
+            {
+                CumPar = CumPar + PARIntercepte;
+                CumTr = CumTr + Tr;
+                CumEt = CumEt + Tr + Evap;
+                CumWUse = CumWUse + Tr + Evap + Dr + Lr;
+            }
+            /*/NEW Y*/
+
+
+            if(  ( Irrigation == NilValue ) )
+            {
+                CorrectedIrrigation = 0;
+            }
+            else
+
+            {
+                CorrectedIrrigation = Irrigation;
+            }
 
             /*NEW Y*/
             if(  ( Transplanting == 0 ) || ( NurseryStatus == 1 ) )
@@ -2823,15 +2843,6 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
                 CumLr = CumLr + Lr;
             }
 
-            if(  ( Irrigation == NilValue ) )
-            {
-                CorrectedIrrigation = 0;
-            }
-            else
-
-            {
-                CorrectedIrrigation = Irrigation;
-            }
 
             /*/NEW Y*/
 
