@@ -1,4 +1,4 @@
-Package: rsamara
+Package: samara
 Type: Package
 Title: Samara simulator package for R
 Version: 2.3
