@@ -336,7 +336,7 @@ public:
 
 
 	//Sorghum Mortality por
-    std::array<int,5> tabCstr = {0,0,0,0,0};
+    std::array<double,5> tabCstr = {0,0,0,0,0};
 //    double tabCstr[6] = {0,0,0,0,0,0};
 	int tabCstrIndiceCourant = 0;
 	int NbJourCompte = 0;
@@ -907,12 +907,12 @@ public:
 	}
 
 	void daily_reset_variables() {
+        if (FirstDayIrrig == -1 && IrrigAutoDay > 0) {
+            FirstDayIrrig = IrrigAutoDay;
+        }
 		FractionRootsLogged = 0;
 		IrrigTotDay = 0;
 		IrrigAutoDay = 0;
-        if (FirstDayIrrig == -1) {
-            FirstDayIrrig = IrrigAutoDay;
-        }
 	}
 
 };
