@@ -43,7 +43,7 @@ public:
 	double StemDiaMean = 0;
 	double StemDiaBase = 0;
 	double LodgingPot = 0;
-	
+
 	//variables
 	double ApexHeight = 0;
 	double ApexHeightGain = 0;
@@ -336,7 +336,7 @@ public:
 
 
 	//Sorghum Mortality por
-    std::array<double,5> tabCstr = {0,0,0,0,0};
+    std::array<double,5> tabCstr = {{0.,0.,0.,0.,0.}};
 //    double tabCstr[6] = {0,0,0,0,0,0};
 	int tabCstrIndiceCourant = 0;
 	int NbJourCompte = 0;
