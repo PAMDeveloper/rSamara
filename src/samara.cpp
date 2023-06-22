@@ -850,7 +850,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
@@ -1170,7 +1170,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
@@ -1507,7 +1507,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 

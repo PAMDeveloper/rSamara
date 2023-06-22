@@ -2787,7 +2787,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
                       double const& NbJas, double const& Transplanting, double const& NurseryStatus, double const& Density, double const& DensityNursery,
                       double const& DryMatAboveGroundTotPop, double const& DryMatAboveGroundPop, double & RUE, double & CumPar, double & CumTr, double & CumEt, double & CumWUse,
                       double & CumWReceived, double & CumIrrig, double & CumDr, double & CumLr, double & TrEffInst, double & TrEff, double & WueEt,
-                      double & WueTot, double & ConversionEff, double & RUEgreen)
+                      double & WueTot, double & ConversionEff, double & RUEgreen, double & FirstDayIrrig)
 {
     double CorrectedIrrigation;
 
@@ -2800,8 +2800,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
             CumEt = 0.00001;
             CumWUse = 0;
             CumWReceived = 0;
-            if (CumIrrig == 0)
-                CumIrrig += IrrigAutoDay;
+            CumIrrig = 0;
             CumDr = 0;
             CumLr = 0;
         }
@@ -2835,6 +2834,11 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
             {
                 CumWReceived = CumWReceived + Pluie + CorrectedIrrigation + IrrigAutoDay;
                 CumIrrig = CumIrrig + CorrectedIrrigation + IrrigAutoDay;
+                if (FirstDayIrrig > 0) {
+                    CumWReceived += FirstDayIrrig;
+                    CumIrrig += FirstDayIrrig;
+                    FirstDayIrrig = 0;
+                }
                 CumDr = CumDr + Dr;
                 CumLr = CumLr + Lr;
             }
