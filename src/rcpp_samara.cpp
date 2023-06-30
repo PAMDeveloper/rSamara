@@ -223,6 +223,7 @@ SamaraParameters * params_sim_simple(List params, List meteo) {
   return sparams;
 }
 
+
 // [[Rcpp::export]]
 void init_sim_idx_simple(int idx, List params, List meteo) {
 
@@ -277,6 +278,31 @@ List run_params(SamaraParameters * params) {
   return result;
 }
 
+List run_params_version(SamaraParameters * params, int version) {
+  Samara samara;
+  if (version == 1) {
+    auto results = samara.run_samara_2_1(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 2) {
+    auto results = samara.run_samara_2_1_micha(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 3) {
+    auto results = samara.run_samara_2_3(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 4) {
+    auto results = samara.run_samara_2_3_lodging(params);
+    List result = resultToList(results);
+    return result;
+  } else {
+    auto results = samara.run_samara_2_3(params);
+    List result = resultToList(results);
+    return result;
+  }
+}
+
 // [[Rcpp::export]]
 List run_sim() {
   return run_params(current_params);
@@ -286,6 +312,12 @@ List run_sim() {
 List run_sim_idx(int idx) {
   return run_params(params_vector[idx-1]);
 }
+
+// [[Rcpp::export]]
+List run_sim_idx_version(int idx, int version) {
+  return run_params_version(params_vector[idx-1], version);
+}
+
 
 // [[Rcpp::export]]
 List reduce_sim(List results, List vobs) {
