@@ -341,7 +341,7 @@ public:
 	int tabCstrIndiceCourant = 0;
 	int NbJourCompte = 0;
 
-    double FirstDayIrrig = -1;
+//    double FirstDayIrrig = -1;
 
 	vector<string> get_variable_names() {
 		if (LOG == ECOTROP) {
@@ -761,7 +761,7 @@ public:
         tabCstr = {0,0,0,0,0};
 		tabCstrIndiceCourant = 0;
 		NbJourCompte = 0;
-        FirstDayIrrig = -1;
+//        FirstDayIrrig = -1;
 	}
 
 	void init_culture_variables() {
@@ -907,9 +907,9 @@ public:
 	}
 
 	void daily_reset_variables() {
-        if (FirstDayIrrig == -1 && IrrigAutoDay > 0) {
-            FirstDayIrrig = IrrigAutoDay;
-        }
+//        if (FirstDayIrrig == -1 && IrrigAutoDay > 0) {
+//            FirstDayIrrig = IrrigAutoDay;
+//        }
 		FractionRootsLogged = 0;
 		IrrigTotDay = 0;
 		IrrigAutoDay = 0;

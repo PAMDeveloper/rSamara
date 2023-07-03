@@ -538,12 +538,18 @@ void RS_EvolHauteur_SDJ_cstr_V2_1(double const &PhaseStemElongation, double cons
 
 
 void RS_EvolKcpKceBilhy(double const &LtrKdfcl, double const &KcMax, double const &Mulch,
+                        double const &Transplanting, double const &NurseryStatus,
                         double &Kcp, double &Kce, double &KcTot) {
     /*try*/ {
         Kcp = min((1 - LtrKdfcl) * KcMax, KcMax);
         Kcp = min(Kcp, KcMax);
         Kce = LtrKdfcl * 1 * (Mulch / 100);
         KcTot = Kcp + Kce;
+
+        if (Transplanting == 1 && NurseryStatus == 0) {
+            Kcp = 0;
+            Kce = 1;
+        }
 
     } /*catch (...)*/ {
         error_message("RS_BilhyEvolKcpLai", URisocas);
@@ -687,6 +693,7 @@ void RS_EvalFTSW_V2(double const &RuRac, double const &StockTotal, double const 
 
 
 void RS_EvalCstrPFactorFAO_V2(double const &PFactor, double const &FTSW, double const &Eto, double const &KcTot, double const &StockMacropores, double const &CoeffStressLogging,
+                              double const &Transplanting, double const &NurseryStatus,
                               double &cstr) {
     double pFact;
 
@@ -700,6 +707,8 @@ void RS_EvalCstrPFactorFAO_V2(double const &PFactor, double const &FTSW, double 
             cstr = cstr * CoeffStressLogging;
         }
 
+        if (Transplanting == 1 && NurseryStatus == 0)
+            cstr = 1;
     } /*catch (...)*/ {
         error_message("RS_EvalCstrPFactorFAO_V2", URisocas);
     }
@@ -2362,7 +2371,10 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
 
 void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto,
                                  double const &IrrigAutoTarget, double const &BundHeight,
-                                 double const &PlantHeight, double const &Irrigation, double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &/*VolRelMacropores*/, double const &Rain, double const &FTSWIrrig, double const &IrrigAutoStop, double const &IrrigAutoResume, double const &ChangeNurseryStatus, double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &ResUtil, double const &RootFront, double const &EpaisseurSurf, double const &EpaisseurProf, double const &ProfRacIni,
+                                 double const &PlantHeight, double const &Irrigation, double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &/*VolRelMacropores*/,
+                                 double const &Rain, double const &FTSWIrrig, double const &IrrigAutoStop, double const &IrrigAutoResume, double const &ChangeNurseryStatus,
+                                 double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &ResUtil, double const &RootFront, double const &EpaisseurSurf,
+                                 double const &EpaisseurProf, double const &ProfRacIni, double const &Transplanting, double const &DurationNursery, double const &NurseryStatus,
                                  double &FloodwaterDepth, double &IrrigAutoDay, double &IrrigTotDay, double &StockMacropores, double &EauDispo, double &RuRac, double &StockRac, double &FTSW, double &Lr) {
     double IrrigAutoTargetCor;
     double CorrectedIrrigation;
@@ -2399,31 +2411,47 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
 
 
 
-        if ((NumPhase < 7) && (DAF <= PlotDrainageDAF) && (IrrigAuto == 1) &&
-            (NumPhase > 0) && (CorrectedBundheight > 0) /*NEW Y*/ && (FTSW <= FTSWIrrig) && (StressPeriod == 0)/*/NEW Y*/) {
+        if ((NumPhase < 7) && (DAF <= PlotDrainageDAF) && (IrrigAuto == 1) && (NumPhase > 0) && (CorrectedBundheight > 0) && (FTSW <= FTSWIrrig) && (StressPeriod == 0)) {
 
             // FtswIrrig is a management parameter making irrigation conditional on Ftsw
+            IrrigAutoTargetCor = min((IrrigAutoTarget * BundHeight), (0.5 * PlantHeight));
 
-            IrrigAutoTargetCor = min((IrrigAutoTarget * BundHeight), (0.5 *
-                                                                      PlantHeight));
+
+
+            //ADDED 30/06/2023
+            if ( (Transplanting == 0 && NbJas > 1) || (Transplanting == 1 && NbJas > (DurationNursery + 1) ) ) {
+                IrrigAutoDay = max(0., IrrigAutoTarget - FloodwaterDepth + (VolMacropores - StockMacropores));
+            } else {
+                IrrigAutoDay = 0;
+            }
+
+            if (NbJas == 1 && Transplanting == 0) {
+                IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
+                IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
+            }
+
+            if (Transplanting == 0 && NurseryStatus == 0)
+                IrrigAutoDay = 0;
+
+            if (ChangeNurseryStatus == 1) {
+                IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
+                IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
+            }
+            //
+
+
             // Provide initial water flush for infiltration
             if ((NumPhase == 1)) {
                 IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
             }
-            // dimension irrigation on day i to replenish the floodwater, macropores and RuRac
-            /*DELETED JUNE 18*/
-            /*IrrigAutoDay := max(0., (IrrigAutoTargetCor - FloodwaterDepth +
-      Min((VolMacropores - StockMacropores) / 2, VolRelMacropores * 200 /
-      100)));  // The sense of the last part of this equation is not clear*/
-            /*NEW JUNE 18*/
-            IrrigAutoDay = max(0., (IrrigAutoTargetCor - FloodwaterDepth)) +
-                           (VolMacropores - StockMacropores) + RuRac * (1 - (min(FTSW, 1.)));
 
-            // Pre-irrigation at transplanting, in mm
-            /*NEW Y*/
-            if (ChangeNurseryStatus == 1)
-                IrrigAutoDay = VolMacropores + RuSurf + PercolationMax;
-            /*/NEW Y*/
+            // dimension irrigation on day i to replenish the floodwater, macropores and RuRac
+            IrrigAutoDay = max(0., (IrrigAutoTargetCor - FloodwaterDepth)) + (VolMacropores - StockMacropores) + RuRac * (1 - (min(FTSW, 1.)));
+
+//            // Pre-irrigation at transplanting, in mm
+//            if (ChangeNurseryStatus == 1)
+//                IrrigAutoDay = VolMacropores + RuSurf + PercolationMax;
+
 
             if ((StockMacropores + FloodwaterDepth) == 0) {
                 EauDispo = Rain + CorrectedIrrigation + IrrigAutoDay;
@@ -2787,7 +2815,7 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
                      double const& NbJas, double const& Transplanting, double const& NurseryStatus, double const& Density, double const& DensityNursery,
                      double const& DryMatAboveGroundTotPop, double const& DryMatAboveGroundPop, double & RUE, double & CumPar, double & CumTr, double & CumEt, double & CumWUse,
                      double & CumWReceived, double & CumIrrig, double & CumDr, double & CumLr, double & TrEffInst, double & TrEff, double & WueEt,
-                     double & WueTot, double & ConversionEff, double & RUEgreen, double & FirstDayIrrig)
+                     double & WueTot, double & ConversionEff, double & RUEgreen)
 {
     double CorrectedIrrigation;
 
@@ -2834,11 +2862,11 @@ void RS_EvalRUE_V2_2( double const& NumPhase, double const& ChangePhase, double 
             {
                 CumWReceived = CumWReceived + Pluie + CorrectedIrrigation + IrrigAutoDay;
                 CumIrrig = CumIrrig + CorrectedIrrigation + IrrigAutoDay;
-                if (FirstDayIrrig > 0) {
-                    CumWReceived += FirstDayIrrig;
-                    CumIrrig += FirstDayIrrig;
-                    FirstDayIrrig = 0;
-                }
+//                if (FirstDayIrrig > 0) {
+//                    CumWReceived += FirstDayIrrig;
+//                    CumIrrig += FirstDayIrrig;
+//                    FirstDayIrrig = 0;
+//                }
                 CumDr = CumDr + Dr;
                 CumLr = CumLr + Lr;
             }

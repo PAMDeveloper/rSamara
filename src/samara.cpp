@@ -105,7 +105,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         /** DD **/
         samara::RS_EvolHauteur_SDJ_cstr_V2_1(PhaseStemElongation, CoeffInternodeNum, HaunGain, Cstr, InternodeLengthMax, RelPotLeafLength, LeafLengthMax,
                                              CulmsPerHill, IcMean, Kdf, Ic, WtRatioLeafSheath, StressCold, CstrMean, ApexHeightGain, ApexHeight, PlantHeight, PlantWidth);
-        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Kcp, Kce, KcTot);
+        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Transplanting, NurseryStatus, Kcp, Kce, KcTot);
         if(DateEnCours != DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         samara::RS_EvolEvapSurfRFE_RDE_V2_1(NumPhase, Kce, EvapPot, CapaREvap, CapaRDE, CapaRFE,
                                             RuRac, RuSurf, BundHeight, EpaisseurSurf, EpaisseurProf,
@@ -114,7 +114,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
-        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
+        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
         if (crop) samara::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara::EvalTranspi(TrPot, Cstr, Tr);
         samara::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
@@ -219,7 +219,8 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
 
         if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
                                                     VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
+                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
+                                                    FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
                                                     StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
@@ -402,7 +403,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         /** DD **/
         samara::RS_EvolHauteur_SDJ_cstr_V2_1(PhaseStemElongation, CoeffInternodeNum, HaunGain, Cstr, InternodeLengthMax, RelPotLeafLength, LeafLengthMax,
                                              CulmsPerHill, IcMean, Kdf, Ic, WtRatioLeafSheath, StressCold, CstrMean, ApexHeightGain, ApexHeight, PlantHeight, PlantWidth);
-        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Kcp, Kce, KcTot);
+        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Transplanting, NurseryStatus, Kcp, Kce, KcTot);
         if(DateEnCours != DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         samara::RS_EvolEvapSurfRFE_RDE_V2_1(NumPhase, Kce, EvapPot, CapaREvap, CapaRDE, CapaRFE,
                                             RuRac, RuSurf, BundHeight, EpaisseurSurf, EpaisseurProf,
@@ -411,7 +412,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
-        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
+        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
         if (crop) samara::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara::EvalTranspi(TrPot, Cstr, Tr);
         samara::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
@@ -514,9 +515,10 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
         if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                    VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                    StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
+                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
+                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
+                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -706,7 +708,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         /** DD **/
         samara::RS_EvolHauteur_SDJ_cstr_V2_1(PhaseStemElongation, CoeffInternodeNum, HaunGain, Cstr, InternodeLengthMax, RelPotLeafLength, LeafLengthMax,
                                              CulmsPerHill, IcMean, Kdf, Ic, WtRatioLeafSheath, StressCold, CstrMean, ApexHeightGain, ApexHeight, PlantHeight, PlantWidth);
-        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Kcp, Kce, KcTot);
+        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Transplanting, NurseryStatus, Kcp, Kce, KcTot);
         if(DateEnCours != DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         samara::RS_EvolEvapSurfRFE_RDE_V2_1(NumPhase, Kce, EvapPot, CapaREvap, CapaRDE, CapaRFE,
                                             RuRac, RuSurf, BundHeight, EpaisseurSurf, EpaisseurProf,
@@ -715,7 +717,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
-        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
+        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
         if (crop) samara::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara::EvalTranspi(TrPot, Cstr, Tr);
         if(!NumPhase == 0 && !(NumPhase == 1 && ChangePhase == 1)) samara::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
@@ -820,9 +822,10 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
         if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                    VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                    StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
+                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
+                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
+                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -850,7 +853,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
@@ -1026,7 +1029,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         /** DD **/
         samara::RS_EvolHauteur_SDJ_cstr_V2_1_lodging(PhaseStemElongation, CoeffInternodeNum, HaunGain, Cstr, InternodeLengthMax, RelPotLeafLength, LeafLengthMax,
                                                      CulmsPerHill, IcMean, Kdf, Ic, WtRatioLeafSheath, StressCold, CstrMean, ApexHeightGain, ApexHeight, PlantHeight, PlantWidth);
-        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Kcp, Kce, KcTot);
+        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Transplanting, NurseryStatus, Kcp, Kce, KcTot);
         if(DateEnCours != DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         samara::RS_EvolEvapSurfRFE_RDE_V2_1(NumPhase, Kce, EvapPot, CapaREvap, CapaRDE, CapaRFE,
                                             RuRac, RuSurf, BundHeight, EpaisseurSurf, EpaisseurProf,
@@ -1035,7 +1038,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
-        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
+        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
         if (crop) samara::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara::EvalTranspi(TrPot, Cstr, Tr);
         if(!NumPhase == 0 && !(NumPhase == 1 && ChangePhase == 1)) samara::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
@@ -1140,9 +1143,10 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
         if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                    VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                    StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
+                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
+                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
+                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -1170,7 +1174,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
@@ -1357,7 +1361,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         /** DD **/
         samara::RS_EvolHauteur_SDJ_cstr_V2_1_lodging(PhaseStemElongation, CoeffInternodeNum, HaunGain, Cstr, InternodeLengthMax, RelPotLeafLength, LeafLengthMax,
                                                      CulmsPerHill, IcMean, Kdf, Ic, WtRatioLeafSheath, StressCold, CstrMean, ApexHeightGain, ApexHeight, PlantHeight, PlantWidth);
-        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Kcp, Kce, KcTot);
+        samara::RS_EvolKcpKceBilhy(LTRkdfcl, KcMax, Mulch, Transplanting, NurseryStatus, Kcp, Kce, KcTot);
         if(DateEnCours != DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         samara::RS_EvolEvapSurfRFE_RDE_V2_1(NumPhase, Kce, EvapPot, CapaREvap, CapaRDE, CapaRFE,
                                             RuRac, RuSurf, BundHeight, EpaisseurSurf, EpaisseurProf,
@@ -1366,7 +1370,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
-        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Cstr);
+        if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
         if (crop) samara::DemandePlante_V2_1(Kcp, ETo, Ca, CO2Slopetr, TrPot, CoeffCO2Tr);
         if (crop) samara::EvalTranspi(TrPot, Cstr, Tr);
         if(!NumPhase == 0 && !(NumPhase == 1 && ChangePhase == 1)) samara::EvalETRETM(Evap, Tr, TrPot, ETM, ETR);
@@ -1477,9 +1481,10 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
         if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                    VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                    StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
+                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
+                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
+                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -1507,7 +1512,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalRUE_V2_2(NumPhase, ChangePhase, PARIntercepte, DryMatTotPop, DeadLeafdrywtPop, DryMatStructRootPop, Tr, Evap, Dr, Lr, SupplyTot, AssimNotUsed,
                                 Irrigation, IrrigAutoDay, Pluie, Assim, AssimPot, Conversion, NbJAS, Transplanting, NurseryStatus, Density, DensityNursery,
                                 DryMatAboveGroundTotPop, DryMatAboveGroundPop, RUE, CumPAR, CumTr, CumEt, CumWUse, CumWReceived, CumIrrig, CumDr, CumLr, TrEffInst,
-                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen, FirstDayIrrig);
+                                TrEff, WueEt, WueTot, ConversionEff, RUEGreen);
 
         samara::SorghumMortality(Cstr, SeuilCstrMortality, NumPhase, tabCstr, tabCstrIndiceCourant, NbJourCompte);
 
