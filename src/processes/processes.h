@@ -2369,134 +2369,126 @@ void RS_EvalRuiss_FloodDyna_V2(double const &NumPhase, double const &Rain, doubl
 }
 
 
-void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto,
-                                 double const &IrrigAutoTarget, double const &BundHeight,
-                                 double const &PlantHeight, double const &Irrigation, double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &/*VolRelMacropores*/,
-                                 double const &Rain, double const &FTSWIrrig, double const &IrrigAutoStop, double const &IrrigAutoResume, double const &ChangeNurseryStatus,
-                                 double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &ResUtil, double const &RootFront, double const &EpaisseurSurf,
-                                 double const &EpaisseurProf, double const &ProfRacIni, double const &Transplanting, double const &DurationNursery, double const &NurseryStatus,
-                                 double &FloodwaterDepth, double &IrrigAutoDay, double &IrrigTotDay, double &StockMacropores, double &EauDispo, double &RuRac, double &StockRac, double &FTSW, double &Lr) {
+void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto, double const &IrrigAutoTarget, double const &BundHeight, double const &PlantHeight,
+                                 double const &PlotDrainageDAF, double const &DAF, double const &VolMacropores, double const &VolRelMacropores, double const &Pluie, double const &IrrigAutoStop,
+                                 double const &IrrigAutoResume, double const &ChangeNurseryStatus, double const &PercolationMax, double const &NbJas, double const &RuSurf, double const &Ru,
+                                 double const &RootFront, double const &EpaisseurSurf, double const &EpaisseurProf, double const &FTSWIrrig, double const &Transplanting, double const &DurationNursery,
+                                 double const &NurseryStatus, double const& Rain,
+                                 double &Irrigation, double &Lr,
+                                 double &FloodwaterDepth, double &IrrigAutoDay, double &IrrigTotDay, double &StockMacropores, double &EauDispo, double &RuRac, double &StockRac, double &FTSW) {
     double IrrigAutoTargetCor;
     double CorrectedIrrigation;
     double CorrectedBundheight;
     double StressPeriod;
 
-    /*try*/ {
-        CorrectedBundheight = BundHeight;
-        /*StressPeriod := 0;     */
+    CorrectedBundheight = BundHeight;
+    StressPeriod = 0;
 
-        if ((Irrigation == NilValue)) {
-            CorrectedIrrigation = 0;
-        } else {
-            CorrectedIrrigation = Irrigation;
-        }
-        if ((NumPhase > 4) && (NumPhase < 7) && (DAF > PlotDrainageDAF)) {
-            CorrectedBundheight = 0;
-        }
-
-        /*NEW Y*/
-        if ((NbJas >= IrrigAutoStop) && (NbJas < IrrigAutoResume))
-            StressPeriod = 1;
-        else
-            StressPeriod = 0;
-        /*/NEW Y*/
-
-        /*NEW JUNE 18*/
-        // Enable interruption of irrigation for user defined period
-        if ((StressPeriod == 1) && (FloodwaterDepth > 0)) {
-            Lr = Lr + FloodwaterDepth;
-            FloodwaterDepth = 0;
-            // Drain off floodwater during user-defined stressperiod
-        }
-
-
-
-        if ((NumPhase < 7) && (DAF <= PlotDrainageDAF) && (IrrigAuto == 1) && (NumPhase > 0) && (CorrectedBundheight > 0) && (FTSW <= FTSWIrrig) && (StressPeriod == 0)) {
-
-            // FtswIrrig is a management parameter making irrigation conditional on Ftsw
-            IrrigAutoTargetCor = min((IrrigAutoTarget * BundHeight), (0.5 * PlantHeight));
-
-
-
-            //ADDED 30/06/2023
-            if ( (Transplanting == 0 && NbJas > 1) || (Transplanting == 1 && NbJas > (DurationNursery + 1) ) ) {
-                IrrigAutoDay = max(0., IrrigAutoTarget - FloodwaterDepth + (VolMacropores - StockMacropores));
-            } else {
-                IrrigAutoDay = 0;
-            }
-
-            if (NbJas == 1 && Transplanting == 0) {
-                IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
-                IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
-            }
-
-            if (Transplanting == 0 && NurseryStatus == 0)
-                IrrigAutoDay = 0;
-
-            if (ChangeNurseryStatus == 1) {
-                IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
-                IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
-            }
-            //
-
-
-            // Provide initial water flush for infiltration
-            if ((NumPhase == 1)) {
-                IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
-            }
-
-            // dimension irrigation on day i to replenish the floodwater, macropores and RuRac
-            IrrigAutoDay = max(0., (IrrigAutoTargetCor - FloodwaterDepth)) + (VolMacropores - StockMacropores) + RuRac * (1 - (min(FTSW, 1.)));
-
-//            // Pre-irrigation at transplanting, in mm
-//            if (ChangeNurseryStatus == 1)
-//                IrrigAutoDay = VolMacropores + RuSurf + PercolationMax;
-
-
-            if ((StockMacropores + FloodwaterDepth) == 0) {
-                EauDispo = Rain + CorrectedIrrigation + IrrigAutoDay;
-            } else {
-                FloodwaterDepth = FloodwaterDepth + IrrigAutoDay;
-                // make sure Macropores is fully filled before floodwater can build up!
-                if ((VolMacropores > 0) && (StockMacropores < VolMacropores) &&
-                    (FloodwaterDepth > 0)) {
-                    StockMacropores = StockMacropores + FloodwaterDepth;
-                    FloodwaterDepth = max(0., StockMacropores - VolMacropores);
-                    StockMacropores = StockMacropores - FloodwaterDepth;
-
-                    /*NEW P*/
-                    /*NEW JUNE 18*/
-                    /*Provision is introduced where RootFront is not evaluated yet, we take the value of ProfRacIni*/
-                    if (RootFront == 0)
-                        RuRac = /*NEW JUNE 18*//*Ru*/ResUtil * ProfRacIni / 1000;
-                    else
-                        RuRac = /*NEW JUNE 18*//*Ru*/ResUtil * RootFront / 1000;
-
-                    //showMessage(FloatToStr(ResUtil)+' * '+FloatToStr(ProfRacIni)+' NbJas:'+FloatToStr(NbJas)+' NumPhase:'+FloatToStr(NumPhase));
-                    if (RootFront == 0)
-                        StockRac = RuRac + StockMacropores * ProfRacIni / (EpaisseurSurf + EpaisseurProf);
-                    else
-                        StockRac = RuRac + StockMacropores * RootFront / (EpaisseurSurf + EpaisseurProf);
-
-                    FTSW = StockRac / RuRac;
-
-                    /*NEW P*/
-
-                }
-                EauDispo = StockMacropores + FloodwaterDepth;
-            }
-        } else {
-            if ((NumPhase < 7) && (DAF <= PlotDrainageDAF) && (IrrigAuto == 1) &&
-                (NumPhase > 0) && (CorrectedBundheight == 0)) {
-                FloodwaterDepth = 0;
-                /*DELETED JUNE 18*//*StockMacropores := 0;*/
-            }
-        }
-        IrrigTotDay = CorrectedIrrigation + IrrigAutoDay;
-
-    } /*catch (...)*/ {
-        error_message("RS_AutomaticIrrigation_V2_1", URisocas);
+    if ( Irrigation == NilValue ) {
+        CorrectedIrrigation = 0;
+    } else {
+        CorrectedIrrigation = Irrigation;
     }
+
+    if ((NumPhase > 4) && (NumPhase < 7) && (DAF > PlotDrainageDAF)) {
+        CorrectedBundheight = 0;
+    }
+
+    if ((NbJas >= IrrigAutoStop) && (NbJas < IrrigAutoResume))
+        StressPeriod = 1;
+    else
+        StressPeriod = 0;
+
+    // Regular automatic irrigation in mm if FTSW drops below FtswIrrig
+    if ( (NumPhase<7) && (DAF<=PlotDrainageDAF) && (IrrigAuto==1) && (NumPhase>0) && (CorrectedBundheight>0) && (FTSW<=FTSWIrrig) && (StressPeriod==0) ) {
+
+        IrrigAutoTargetCor = min( (IrrigAutoTarget * BundHeight), (0.5 * PlantHeight) );
+
+        //ADDED 30/06/2023
+        if ( (Transplanting == 0 && NbJas > 1) || ((Transplanting == 1) && (NbJas > (DurationNursery+1)) ) ) {
+            IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
+        } else {
+            IrrigAutoDay = 0;
+        }
+
+    }
+
+    // Provide initial water flush for infiltration under direct seeding, in mm
+    if ( (NbJas == 1) && (Transplanting == 0) && (BundHeight>1) && (Irrigation==1) ) {
+        IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
+        IrrigAutoDay = max(0., ( IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores) + RuSurf + PercolationMax) );
+    }
+
+
+    // Stop field irrigation while plants are in nursery
+    if ( (Transplanting == 0) && (NurseryStatus == 0) ) {
+        IrrigAutoDay = 0;
+    }
+
+    // Pre-irrigation at transplanting, in mm
+    if ( (Transplanting == 1) && (ChangeNurseryStatus == 1) ) {
+        IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
+        // dimension irrigation on day of transplanting, happens only on one day in the simulation
+        IrrigAutoDay = max(0., (IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores) + RuSurf + PercolationMax));
+    }
+
+    if ( (NumPhase < 7) && (StressPeriod == 1) ) {
+        IrrigAutoDay = 0;
+        Irrigation = 0;
+    }
+
+    // Implement user-defined terminal plot drainage
+    if ( (NumPhase > 4) && (NumPhase < 7) && (DAF > PlotDrainageDAF) ) {
+        CorrectedBundheight = 0;
+        IrrigAutoDay = 0;
+        Lr = Lr + FloodwaterDepth;
+        FloodwaterDepth = 0;
+    }
+
+    //  Implement user-defined stress period
+    StressPeriod = 0;
+    if ( (NbJas >= IrrigAutoStop) && (NbJas < IrrigAutoResume) ) {
+        StressPeriod = 1;
+        IrrigAutoDay = 0;
+        CorrectedIrrigation = 0;
+    } else {
+        CorrectedIrrigation = Irrigation;
+    }
+
+    // all the irrigations calculated in this module must be cumulated in Module 93 EvalRUE for variables CumIrrig and CumWReceived
+    // Update water reservoirs
+
+    if ((StockMacropores + FloodwaterDepth) == 0) {
+        EauDispo = Rain + CorrectedIrrigation + IrrigAutoDay;
+    } else {
+        FloodwaterDepth = FloodwaterDepth + IrrigAutoDay;
+        // make sure Macropores is fully filled before floodwater can build up!
+        if ( (VolMacropores > 0) && (StockMacropores < VolMacropores) && (FloodwaterDepth > 0) ) {
+            StockMacropores = StockMacropores + FloodwaterDepth;
+            FloodwaterDepth = max(0., StockMacropores - VolMacropores);
+            StockMacropores = StockMacropores - FloodwaterDepth;
+            RuRac = Ru * RootFront / 1000;
+//            if (RootFront == 0)
+//                RuRac = /*NEW JUNE 18*//*Ru*/ResUtil * ProfRacIni / 1000;
+//            else
+//                RuRac = /*NEW JUNE 18*//*Ru*/ResUtil * RootFront / 1000;
+            StockRac = RuRac + StockMacropores * RootFront / (EpaisseurSurf + EpaisseurProf);
+//            if (RootFront == 0)
+//                StockRac = RuRac + StockMacropores * ProfRacIni / (EpaisseurSurf + EpaisseurProf);
+//            else
+//                StockRac = RuRac + StockMacropores * RootFront / (EpaisseurSurf + EpaisseurProf);
+            FTSW = StockRac / RuRac;
+        }
+
+        EauDispo = StockMacropores + FloodwaterDepth; // must Rain + irrigations be added???
+    }
+
+    if ((NumPhase < 7) && (DAF <= PlotDrainageDAF) && (IrrigAuto == 1) && (NumPhase > 0) && (CorrectedBundheight == 0)) {
+        FloodwaterDepth = 0;
+        StockMacropores = 0;
+        /*DELETED JUNE 18*//*StockMacropores := 0;*/
+    }
+    IrrigTotDay = CorrectedIrrigation + IrrigAutoDay;
 }
 
 

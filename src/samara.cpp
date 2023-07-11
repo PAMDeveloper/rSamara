@@ -217,11 +217,11 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
-        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                    VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                    RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
-                                                    FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                    StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, PlotDrainageDAF,
+                                                DAF, VolMacropores, VolRelMacropores, Pluie, IrrigAutoStop, IrrigAutoResume,
+                                                ChangeNurseryStatus, PercolationMax, NbJAS, RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf,
+                                                FTSWIrrig, Transplanting, DurationNursery, NurseryStatus, Pluie, Irrigation, Lr, FloodwaterDepth,
+                                                IrrigAutoDay, IrrigTotDay, StockMacropores, EauDispo, RuRac, StockRac, FTSW);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -514,11 +514,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
-        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
-                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, PlotDrainageDAF, DAF, VolMacropores, VolRelMacropores, Pluie, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS, RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, FTSWIrrig, Transplanting, DurationNursery, NurseryStatus, Pluie, Irrigation, Lr, FloodwaterDepth, IrrigAutoDay, IrrigTotDay, StockMacropores, EauDispo, RuRac, StockRac, FTSW);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -821,11 +817,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
-        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
-                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, PlotDrainageDAF, DAF, VolMacropores, VolRelMacropores, Pluie, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS, RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, FTSWIrrig, Transplanting, DurationNursery, NurseryStatus, Pluie, Irrigation, Lr, FloodwaterDepth, IrrigAutoDay, IrrigTotDay, StockMacropores, EauDispo, RuRac, StockRac, FTSW);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
@@ -1142,11 +1134,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalRuiss_FloodDyna_V2(NumPhase, Pluie, SeuilRuiss, PourcRuiss, BundHeight, Irrigation, PlantHeight, LifeSavingDrainage, PlotDrainageDAF,
                                           VolMacropores, SeuilRuiss, PercolationMax, DAF, StockMacropores, FloodwaterDepth, EauDispo, Lr);
 
-        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, Irrigation, PlotDrainageDAF, DAF, VolMacropores,
-                                                VolRelMacropores, Pluie, FTSWIrrig, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS,
-                                                RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, ProfRacIni, Transplanting, DurationNursery, NurseryStatus,
-                                                FloodwaterDepth, IrrigAutoDay, IrrigTotDay,
-                                                StockMacropores, EauDispo, RuRac, StockRac, FTSW, Lr);
+        if(crop)samara::RS_AutomaticIrrigation_V2_1(NumPhase, IrrigAuto, IrrigAutoTarget, BundHeight, PlantHeight, PlotDrainageDAF, DAF, VolMacropores, VolRelMacropores, Pluie, IrrigAutoStop, IrrigAutoResume, ChangeNurseryStatus, PercolationMax, NbJAS, RuSurf, ResUtil, RootFront, EpaisseurSurf, EpaisseurProf, FTSWIrrig, Transplanting, DurationNursery, NurseryStatus, Pluie, Irrigation, Lr, FloodwaterDepth, IrrigAutoDay, IrrigTotDay, StockMacropores, EauDispo, RuRac, StockRac, FTSW);
 
         samara::RS_EvolRempliResRFE_RDE_V2(NumPhase, RuSurf, EauDispo, RuRac, CapaRFE, CapaREvap, CapaRDE, StRuMax, PercolationMax, BundHeight, EpaisseurSurf,
                                            EpaisseurProf, VolMacropores, FloodwaterDepth, StockTotal, StockRac, Hum, StockSurface, Dr, ValRDE, ValRFE, ValRSurf,
