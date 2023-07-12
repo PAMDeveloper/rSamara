@@ -226,7 +226,7 @@ qui fonctionne en degres jours et declanche IP lorsque SumPP est inferieur à PP
     }
 
 } /*catch (...)*/ {
-    error_message("EvolPhenoStress | NumPhase: " + FloatToStr(NumPhase) +
+    error_message("EvolPhenoStress | N umPhase: " + FloatToStr(NumPhase) +
                       " SommeDegresJour: " + FloatToStr(SommeDegresJour) +
                       " SeuilTempPhaseSuivante: " + FloatToStr(SeuilTempPhaseSuivante), URiz);
 }
@@ -2414,7 +2414,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
     }
 
     // Provide initial water flush for infiltration under direct seeding, in mm
-    if ( (NbJas == 1) && (Transplanting == 0) && (BundHeight>1) && (Irrigation==1) ) {
+    if ( (NbJas == 1) && (Transplanting == 0) && (BundHeight>1) && (IrrigAuto==1) ) {
         IrrigAutoTargetCor = max(IrrigAutoTargetCor, BundHeight / 2);
         IrrigAutoDay = max(0., ( IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores) + RuSurf + PercolationMax) );
     }
