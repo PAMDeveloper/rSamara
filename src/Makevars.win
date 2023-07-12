@@ -1,8 +1,3 @@
-ifeq "$(WIN)" "64"
-PKG_CXXFLAGS += -Ofast `Rscript -e 'Rcpp:::CxxFlags()'` -I"." $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
-else
-PKG_CXXFLAGS += -Ofast `Rscript -e 'Rcpp:::CxxFlags()'`-I"." $(FPICFLAGS) $(SHLIB_FFLAGS) `Rscript -e 'Rcpp:::LdFlags()'` -std=c++11
-endif
-
-
-
+CXX_STD = CXX11
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I.
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)

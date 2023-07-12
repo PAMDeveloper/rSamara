@@ -6,7 +6,6 @@
 #include <fstream>
 
 using namespace Rcpp;
-using namespace std;
 
 
 DataFrame mapOfVectorToDF(std::map<std::string, std::vector<double>> map) {
@@ -24,12 +23,12 @@ DataFrame mapOfVectorToDF(std::map<std::string, std::vector<double>> map) {
   return df;
 }
 
-map <string, vector <double > > mapFromDF(DataFrame list) {
-  map <string, vector <double > > map;
+std::map <std::string, std::vector <double > > mapFromDF(DataFrame list) {
+  std::map <std::string, std::vector <double > > map;
   CharacterVector names = list.attr("names");
   for (int i = 0; i < names.size(); ++i) {
     std::vector<double> vec = as<std::vector<double> >(list[i]);
-    string s = Rcpp::as<string>(names(i));
+    std::string s = Rcpp::as<string>(names(i));
     transform(s.begin(), s.end(), s.begin(), ::tolower);
     std::pair <std::string, std::vector<double> > token( s, vec );
     map.insert( token );
@@ -37,21 +36,21 @@ map <string, vector <double > > mapFromDF(DataFrame list) {
   return map;
 }
 
-void fillMapWithDoubleList(map <string, pair <double, string> > & map, List list, string category) {
+void fillMapWithDoubleList(std::map <std::string, std::pair <double, std::string> > & map, List list, std::string category) {
     CharacterVector names = list.attr("names");
     NumericVector values = list[0];
     for (int i = 0; i < names.size(); ++i) {
         double val = *REAL(list[i]);
-        string key = Rcpp::as<string>(names[i]);
-        pair <double, string> token( val, category );
-        map.insert( pair<string, pair <double, string> >(
+        std::string key = Rcpp::as<std::string>(names[i]);
+        std::pair <double, std::string> token( val, category );
+        map.insert( std::pair<std::string, std::pair <double, std::string> >(
                         key, token )
         );
 
     }
 }
 
-void fillClimaticVectorWithList(vector < Climate > & climatics, List list) {
+void fillClimaticVectorWithList(std::vector < Climate > & climatics, List list) {
     NumericVector TMax = list[3];
     NumericVector TMin = list[2];
     NumericVector TMoy = list[4];
@@ -69,7 +68,7 @@ void fillClimaticVectorWithList(vector < Climate > & climatics, List list) {
     }
 }
 
-DataFrame resultToList(const pair <vector <string>, vector < vector <double> > > & results) {
+DataFrame resultToList(const std::pair <std::vector <std::string>, std::vector < std::vector <double> > > & results) {
     CharacterVector names( results.first.begin(), results.first.end() );
     List values(results.first.size());
     for (int i = 0; i < results.first.size(); ++i) {
@@ -81,14 +80,14 @@ DataFrame resultToList(const pair <vector <string>, vector < vector <double> > >
     return out;
 }
 
-List DFFromDoubleMap(const map <string, pair <double, string> > & map, string category)
+List DFFromDoubleMap(const std::map <std::string, std::pair <double, std::string> > & map, std::string category)
 {
     Rcpp::CharacterVector names;
     Rcpp::NumericVector values;
     for(auto const& it: map){
-        string key = it.first;
+        std::string key = it.first;
         double value = it.second.first;
-        string cat = it.second.second;
+        std::string cat = it.second.second;
         if(cat == category || category == "") {
             names.push_back(key);
             values.push_back(value);
@@ -98,14 +97,14 @@ List DFFromDoubleMap(const map <string, pair <double, string> > & map, string ca
     return df;
 }
 
-List DFFromStringMap(const map <string, pair <string, string> > & map, string category)
+List DFFromStringMap(const std::map <std::string, std::pair <std::string, std::string> > & map, std::string category)
 {
     Rcpp::CharacterVector names;
     Rcpp::CharacterVector values;
     for(auto const& it: map){
-        string key = it.first;
-        string value = it.second.first;
-        string cat = it.second.second;
+      std::string key = it.first;
+      std::string value = it.second.first;
+      std::string cat = it.second.second;
         if(cat == category || category == "") {
             names.push_back(key);
             values.push_back(value);
@@ -115,7 +114,7 @@ List DFFromStringMap(const map <string, pair <string, string> > & map, string ca
     return df;
 }
 
-List DFFromClimaticVector(vector < Climate > meteoValues)
+List DFFromClimaticVector(std::vector < Climate > meteoValues)
 {
     NumericVector TMax, TMin, TMoy, HMax, HMin, HMoy, Vt, Ins, Rg, ETP, Rain;
     for(auto const& it: meteoValues){
@@ -160,22 +159,22 @@ SamaraParameters * params_sim(List params, List meteo, List str_params) {
   CharacterVector names = params.attr("names");
   for (int i = 0; i < params.size(); ++i) {
     CharacterVector column = params[i];
-    string key = Rcpp::as<string>(names[i]);
+    std::string key = Rcpp::as<string>(names[i]);
     if(column[0] != "") {
       double val = ::atof(column[0]);
-      pair <double, string> token( val, "unestimated" );
-      sparams->doubles.insert( pair<string, pair <double, string> >(key, token ));
+      std::pair <double, std::string> token( val, "unestimated" );
+      sparams->doubles.insert( std::pair<std::string, std::pair <double, std::string> >(key, token ));
     }
   }
 
   CharacterVector str_names = str_params.attr("names");
   for (int i = 0; i < str_params.size(); ++i) {
     CharacterVector column = str_params[i];
-    string key = Rcpp::as<string>(str_names[i]);
+    std::string key = Rcpp::as<string>(str_names[i]);
     if(column[0] != "") {
-      string val = Rcpp::as<string>(column[0]);
-      pair <string, string> token( val, "unestimated" );
-      sparams->strings.insert( pair<string, pair <string, string> >(key, token ));
+      std::string val = Rcpp::as<std::string>(column[0]);
+      std::pair <std::string, std::string> token( val, "unestimated" );
+      sparams->strings.insert( std::pair<std::string, std::pair <std::string, std::string> >(key, token ));
     }
   }
 
@@ -211,11 +210,11 @@ SamaraParameters * params_sim_simple(List params, List meteo) {
   CharacterVector names = params.attr("names");
   for (int i = 0; i < params.size(); ++i) {
     CharacterVector column = params[i];
-    string key = Rcpp::as<string>(names[i]);
+    std::string key = Rcpp::as<string>(names[i]);
     if(column[0] != "") {
       double val = ::atof(column[0]);
-      pair <double, string> token( val, "unestimated" );
-      sparams->doubles.insert( pair<string, pair <double, string> >(key, token ));
+      std::pair <double, std::string> token( val, "unestimated" );
+      sparams->doubles.insert( std::pair<std::string, std::pair <double, std::string> >(key, token ));
     }
   }
 
@@ -223,6 +222,7 @@ SamaraParameters * params_sim_simple(List params, List meteo) {
 
   return sparams;
 }
+
 
 // [[Rcpp::export]]
 void init_sim_idx_simple(int idx, List params, List meteo) {
@@ -251,12 +251,12 @@ void init_sim_idx(int idx, List params, List meteo, List str_params) {
 void update_params(SamaraParameters * params, NumericVector values, CharacterVector names) {
   for (int i = 0; i < names.size(); ++i) {
     double val = values[i];
-    string key = Rcpp::as<string>(names[i]);
-    pair <double, string> token( val, "estimation" );
+    std::string key = Rcpp::as<string>(names[i]);
+    std::pair <double, std::string> token( val, "estimation" );
     if(params->doubles.find(key) != params->doubles.end()) {
       params->doubles[key] = token;
     } else {
-      params->doubles.insert( pair<string, pair <double, string> >(key, token) );
+      params->doubles.insert( std::pair<std::string, std::pair <double, std::string> >(key, token) );
     }
   }
 }
@@ -278,6 +278,31 @@ List run_params(SamaraParameters * params) {
   return result;
 }
 
+List run_params_version(SamaraParameters * params, int version) {
+  Samara samara;
+  if (version == 1) {
+    auto results = samara.run_samara_2_1(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 2) {
+    auto results = samara.run_samara_2_1_micha(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 3) {
+    auto results = samara.run_samara_2_3(params);
+    List result = resultToList(results);
+    return result;
+  } else if (version == 4) {
+    auto results = samara.run_samara_2_3_lodging(params);
+    List result = resultToList(results);
+    return result;
+  } else {
+    auto results = samara.run_samara_2_3(params);
+    List result = resultToList(results);
+    return result;
+  }
+}
+
 // [[Rcpp::export]]
 List run_sim() {
   return run_params(current_params);
@@ -287,6 +312,12 @@ List run_sim() {
 List run_sim_idx(int idx) {
   return run_params(params_vector[idx-1]);
 }
+
+// [[Rcpp::export]]
+List run_sim_idx_version(int idx, int version) {
+  return run_params_version(params_vector[idx-1], version);
+}
+
 
 // [[Rcpp::export]]
 List reduce_sim(List results, List vobs) {
@@ -326,12 +357,12 @@ void save_params(SamaraParameters * params, string path) {
 }
 
 // [[Rcpp::export]]
-void save_sim(string path) {
+void save_sim(std::string path) {
   save_params(current_params, path);
 }
 
 // [[Rcpp::export]]
-void save_sim_idx(int idx, string path) {
+void save_sim_idx(int idx, std::string path) {
   save_params(params_vector[idx-1], path);
 }
 
@@ -433,7 +464,7 @@ double toJulianDayCalc(Rcpp::String date) {
 }
 
 // [[Rcpp::export]]
-string toAccessFormat(Rcpp::String date, Rcpp::String format, Rcpp::String sep) {
+std::string toAccessFormat(Rcpp::String date, Rcpp::String format, Rcpp::String sep) {
   double jDay = JulianCalculator::toJulianDay(date, format, sep);
   return JulianCalculator::toStringDate(jDay, JulianCalculator::YMD, '/');
 }
