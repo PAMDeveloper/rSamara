@@ -3042,7 +3042,7 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 
 
 void WetOrDryDirectSeeding(double const &DrySeedingSwitch, double const &Transplanting, double const &NumPhase, double const &StockSurface, double const &RuSurf,
-                         double &GerminationStatus, double &DaysDrySowingToGermination) {
+                         double &GerminationStatus, double &DaysDrySowingToGermination, int &TriggerInitCulture) {
     // if (DrySeedingSwitch =0) then pre-germinated seed is sown on wet field; if (DrySeedingSwitch =1) then dry seed is sown, and germination is halted until topsoil is moist; default value should be zero.
 //If (DrySeedingSwitch=1) and (Transplanting =0) and (NumPhase = 1) and (GerminationStatus :=0) then
 //Begin
@@ -3067,7 +3067,7 @@ void WetOrDryDirectSeeding(double const &DrySeedingSwitch, double const &Transpl
         if ( StockSurface < (0.9 * RuSurf) ) {
             GerminationStatus = 0;
             DaysDrySowingToGermination = DaysDrySowingToGermination + 1;
-            //Module initialisation culture
+            TriggerInitCulture = 1;
         }
     }
 

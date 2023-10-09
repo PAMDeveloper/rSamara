@@ -1028,6 +1028,10 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                             RootFront, ResUtil, Evap, ValRSurf, ValRFE, ValRDE, StockRac,
                                             StockTotal, StockSurface, Kr, KceReal, FloodwaterDepth, StockMacropores);
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
+
+        samara::WetOrDryDirectSeeding(DrySeedingSwitch, Transplanting, NumPhase, StockSurface, RuSurf, GerminationStatus,DaysDrySowingToGermination, TriggerInitCulture);
+        if (TriggerInitCulture == 1) init_culture_variables();
+
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
         if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);
@@ -1356,6 +1360,9 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
                                             RootFront, ResUtil, Evap, ValRSurf, ValRFE, ValRDE, StockRac,
                                             StockTotal, StockSurface, Kr, KceReal, FloodwaterDepth, StockMacropores);
         if(DateEnCours == DateDebutSimul) samara::RS_EvalEvapPot(ETo, Kce, EvapPot); //ADDED BY G.B. to debug
+
+        samara::WetOrDryDirectSeeding(DrySeedingSwitch, Transplanting, NumPhase, StockSurface, RuSurf, GerminationStatus,DaysDrySowingToGermination, TriggerInitCulture);
+        if (TriggerInitCulture == 1) init_culture_variables();
         /** CROP **/
         if (crop) samara::RS_EvalFTSW_V2(RuRac, StockTotal, StockMacropores, StRuMax, StockRac, FTSW);
         if (crop) samara::RS_EvalCstrPFactorFAO_V2(PFactor, FTSW, ETo, KcTot, StockMacropores, CoeffStressLogging, Transplanting, NurseryStatus, Cstr);

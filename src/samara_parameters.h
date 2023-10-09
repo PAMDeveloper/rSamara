@@ -131,7 +131,7 @@ public:
     double CoeffInternodeNum;
     double IcTillering;
     double KTempMaint;
-
+    double DrySeedingSwitch;
 
     void init_parameters_2_1_subset(SamaraParameters * params) {
         SamaraParameters parameters = *params;
@@ -251,8 +251,7 @@ public:
         VRacRPR = parameters.getDouble("vracrpr");
         WaterLoggingSens = parameters.getDouble("waterloggingsens");
         WtRatioLeafSheath = parameters.getDouble("wtratioleafsheath");
-
-
+        DrySeedingSwitch = parameters.getDouble("dryseedingswitch");
 
         CoeffInternodeNum = 2;
         IcTillering = 0.5;
