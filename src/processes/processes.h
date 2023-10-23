@@ -2405,7 +2405,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
         IrrigAutoTargetCor = min( (IrrigAutoTarget * BundHeight), (0.5 * PlantHeight) );
 
         //ADDED 30/06/2023
-        if ( (Transplanting == 0 && NbJas > 1) || ((Transplanting == 1) && (NbJas > (DurationNursery+1)) ) ) {
+        if ( (Transplanting == 0 && NbJas >= 1) || ((Transplanting == 1) && (NbJas > (DurationNursery+1)) ) ) {
             IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
         } else {
             IrrigAutoDay = 0;
