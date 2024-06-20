@@ -50,7 +50,7 @@ struct Climate {
 class SamaraParameters {
 public:
     vector < Climate > climatics;
-	  vector < double > irrigation;
+    vector < double > irrigation;
 
     map < string, pair < double, string > > doubles;
     map < string, pair < string, string > > strings;

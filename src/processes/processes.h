@@ -373,7 +373,7 @@ void RS_EvalDegresJourVitMoy_V2(double const &NumPhase, double const &TMax, doub
         } else {
             DegresDuJourCor = DegresDuJour;
         }
-        DegresDuJourCor = DegresDuJourCor * StressCold;
+//        DegresDuJourCor = DegresDuJourCor * StressCold;
 
     } /*catch (...)*/ {
         error_message("RS_EvalDegresJourVitMoy | TMax=" + FloatToStr(TMax) +
@@ -2405,7 +2405,7 @@ void RS_AutomaticIrrigation_V2_1(double const &NumPhase, double const &IrrigAuto
         IrrigAutoTargetCor = min( (IrrigAutoTarget * BundHeight), (0.5 * PlantHeight) );
 
         //ADDED 30/06/2023
-        if ( (Transplanting == 0 && NbJas > 1) || ((Transplanting == 1) && (NbJas > (DurationNursery+1)) ) ) {
+        if ( (Transplanting == 0 && NbJas >= 1) || ((Transplanting == 1) && (NbJas > (DurationNursery+1)) ) ) {
             IrrigAutoDay = max(0., IrrigAutoTargetCor - FloodwaterDepth + (VolMacropores - StockMacropores));
         } else {
             IrrigAutoDay = 0;
@@ -3041,7 +3041,37 @@ void EvalLodgingIncidence(double const &NumPhase, double const &LodgingResistanc
 }
 
 
+void WetOrDryDirectSeeding(double const &DrySeedingSwitch, double const &Transplanting, double const &NumPhase, double const &StockSurface, double const &RuSurf,
+                         double &GerminationStatus, double &DaysDrySowingToGermination, int &TriggerInitCulture) {
+    // if (DrySeedingSwitch =0) then pre-germinated seed is sown on wet field; if (DrySeedingSwitch =1) then dry seed is sown, and germination is halted until topsoil is moist; default value should be zero.
+//If (DrySeedingSwitch=1) and (Transplanting =0) and (NumPhase = 1) and (GerminationStatus :=0) then
+//Begin
+//	// There is enough water in surface soil layer for germination of dry seed:
+//	If (StockSurface >= (0.9 * RuSurf)) then (GerminationStatus = 1);
+//	// not enough water for germination of dry seed:
+//	If (StockSurface < (0.9 * RuSurf)) then
+//	Begin
+//		GerminationStatus = 0;
+//		DaysDrySowingToGermination := DaysDrySowingToGermination + 1;
+//		// Output variable describing nb of days after sowing when germination happened; add to output list!
+//  Go back to Module n°2 - RS_InitiationCulture (how do you program this?)
+//// Module “InitiationCulture” is executed because seed is still too dry for germination
+//End;
+//End;
 
+    if ( DrySeedingSwitch == 1 && Transplanting == 0 && NumPhase == 1 && GerminationStatus == 0) {
+        if ( StockSurface >= (0.9 * RuSurf) ) {
+            GerminationStatus = 1;
+        }
+
+        if ( StockSurface < (0.9 * RuSurf) ) {
+            GerminationStatus = 0;
+            DaysDrySowingToGermination = DaysDrySowingToGermination + 1;
+            TriggerInitCulture = 1;
+        }
+    }
+
+}
 
 
 //##############################################################################
