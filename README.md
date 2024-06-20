@@ -6,7 +6,11 @@ Samara C++ library with R bindings
 The documentation is here :
 https://umr-agap.cirad.fr/en/research/scientific-teams/samara-model
 
-## Install
+## Install from cran
+
+- install.packages("samara")
+
+## Build from project
 
 - install R 
 - open Rproj with RStudio 
@@ -41,4 +45,4 @@ In the src directory, the model Samara is implemented in C++:
 * samara_parameters.h : init the samara parameters
 
 ## Tutorial
-
+https://github.com/GBeurier/Samara_Tutorial

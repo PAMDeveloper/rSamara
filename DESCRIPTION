@@ -5,9 +5,8 @@ Version: 2.3
 Date: 2018-03-20
 Author: Gregory Beurier
 Maintainer: Gregory Beurier <gregory.beurier@cirad.fr>
-Description: The package contains the Samara simulation engine and the scripts
-			 for parameters estimation et sensitivity analysis. Package initiated
-			 by Eric Ramat.
+Description: The Samara simulation engine and the scripts for parameters estimation and sensitivity analysis.
 License: GPL (>= 2)
-Imports: Rcpp (>= 0.12.9)
+Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp
+RoxygenNote: 7.3.1
