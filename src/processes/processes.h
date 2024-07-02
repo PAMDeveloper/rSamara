@@ -1272,11 +1272,15 @@ void RS_EvolMobiliTillerDeath_V2_2_lodging( double const& NumPhase, double const
 
             double LowerOrderTillersPop = CulmsPop - 2 * (PlantsPerHill * Density);
 
+            double FixedTillerDeath = 0;
+            if (NumPhase >= 4)
+                FixedTillerDeath = CoeffFixedTillerDeath * CulmsPop;
+
             TillerDeathPop = max(0.,
                                  min(
                                      (1 - min(Ic,1.)) * CoeffTillerDeath * LowerOrderTillersPop,
                                      0.06 * CulmsPop)
-                                 ) + (CoeffFixedTillerDeath * CulmsPop);
+                                 ) + FixedTillerDeath;
             // Introduced rate limitation of tiller abortion (not more than 6%/day)in V2.2; additional provision added that TillerDeathPop cannot be negative
 
             CulmsPop = max(Density * PlantsPerHill, CulmsPop - TillerDeathPop);
