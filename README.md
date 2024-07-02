@@ -45,4 +45,6 @@ In the src directory, the model Samara is implemented in C++:
 * samara_parameters.h : init the samara parameters
 
 ## Tutorial
+For a detailed tutorial, visit: 
+
 https://github.com/GBeurier/Samara_Tutorial

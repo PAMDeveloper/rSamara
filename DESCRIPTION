@@ -1,12 +1,13 @@
 Package: samara
 Type: Package
-Title: Samara simulator package for R
+Title: Samara: Simulator Package for Cereal Crops in R
 Version: 2.3
-Date: 2018-03-20
+Date: 2023-07-02
 Author: Gregory Beurier
 Maintainer: Gregory Beurier <gregory.beurier@cirad.fr>
-Description: The Samara simulation engine and the scripts for parameters estimation and sensitivity analysis.
+Description: The Samara simulation engine and the scripts for parameters estimation and sensitivity analysis. SAMARA (Simulator of crop trait Assembly, MAnagement Response and Adaptation) is a deterministic cereal crop model developed by Cirad. The model simulates various cereal crops (excluding maize) on a daily time step, accommodating both dry and flooded conditions. SAMARA V2 improves upon V1 by incorporating numerous enhancements, such as the ability to simulate flooded crops and enhanced parameterization. The model requires daily agro-meteorological data and specific soil properties as inputs. SAMARA is part of the ECOTROP platform and is implemented in Delphi language for Windows. The model is freely available for non-commercial research and education applications.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp
+URL: https://umr-agap.cirad.fr/en/research/scientific-teams/samara-model
 RoxygenNote: 7.3.1
