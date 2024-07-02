@@ -10,4 +10,6 @@ License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp
 URL: https://umr-agap.cirad.fr/en/research/scientific-teams/samara-model
+Encoding: UTF-8
 RoxygenNote: 7.3.1
+Roxygen: list(markdown = TRUE)

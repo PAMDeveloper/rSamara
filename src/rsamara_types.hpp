@@ -1,5 +1,5 @@
 /**
- * @file rcpp_samara.hpp
+ * @file rsamara_types.hpp
  * @author See the AUTHORS file
  */
 
