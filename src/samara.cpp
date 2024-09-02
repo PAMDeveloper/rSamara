@@ -99,7 +99,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1(Samar
         samara::RS_EvalDegresJourVitMoy_V2(NumPhase, TMax, TMin, TBase, TOpt1, TOpt2, TLim, Cstr, DEVcstr, StressCold, DegresDuJour, DegresDuJourCor);
         samara::RS_EvalSDJPhase4(NumPhase, DegresDuJourCor, SDJCorPhase4);
         samara::RS_EvalDAF_V2(NumPhase, DAF);
-        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, PhaseStemElongation, HaunGain, HaunIndex);
+        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, HaunCritStemElongation, PhaseStemElongation, HaunGain, HaunIndex);
 
 
         /** DD **/
@@ -397,7 +397,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_1_micha
         samara::RS_EvalDegresJourVitMoy_V2(NumPhase, TMax, TMin, TBase, TOpt1, TOpt2, TLim, Cstr, DEVcstr, StressCold, DegresDuJour, DegresDuJourCor);
         samara::RS_EvalSDJPhase4(NumPhase, DegresDuJourCor, SDJCorPhase4);
         samara::RS_EvalDAF_V2(NumPhase, DAF);
-        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, PhaseStemElongation, HaunGain, HaunIndex);
+        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, HaunCritStemElongation, PhaseStemElongation, HaunGain, HaunIndex);
 
 
         /** DD **/
@@ -698,7 +698,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3(Samar
         samara::RS_EvalDegresJourVitMoy_V2(NumPhase, TMax, TMin, TBase, TOpt1, TOpt2, TLim, Cstr, DEVcstr, StressCold, DegresDuJour, DegresDuJourCor);
         samara::RS_EvalSDJPhase4(NumPhase, DegresDuJourCor, SDJCorPhase4);
         samara::RS_EvalDAF_V2(NumPhase, DAF);
-        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, PhaseStemElongation, HaunGain, HaunIndex);
+        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, HaunCritStemElongation, PhaseStemElongation, HaunGain, HaunIndex);
 
 
         /** DD **/
@@ -1015,7 +1015,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalSDJPhase4(NumPhase, DegresDuJourCor, SDJCorPhase4);
         samara::RS_EvalDAF_V2_lodging(NumPhase, DegresDuJour, SDJMatu1, SDJMatu2,
                                       DAF, MatuSDJ, MatuProgress);
-        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, PhaseStemElongation, HaunGain, HaunIndex);
+        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, HaunCritStemElongation, PhaseStemElongation, HaunGain, HaunIndex);
 
 
         /** DD **/
@@ -1347,7 +1347,7 @@ pair <vector <string>, vector < vector <double> > > Samara::run_samara_2_3_lodgi
         samara::RS_EvalSDJPhase4(NumPhase, DegresDuJourCor, SDJCorPhase4);
         samara::RS_EvalDAF_V2_lodging(NumPhase, DegresDuJour, SDJMatu1, SDJMatu2,
                                       DAF, MatuSDJ, MatuProgress);
-        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, PhaseStemElongation, HaunGain, HaunIndex);
+        samara::RS_Phyllochron(NumPhase, DegresDuJourCor, Phyllo, RelPhylloPhaseStemElong, HaunCritStemElongation, PhaseStemElongation, HaunGain, HaunIndex);
 
 
         /** DD **/

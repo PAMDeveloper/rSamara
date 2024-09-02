@@ -37,6 +37,7 @@ public:
     double ExcessAssimToRoot;
     double FTSWIrrig;
     double HaunCritTillering;
+    double HaunCritStemElongation;
     double HumFC;
     double HumPF;
     double HumSat;
@@ -165,6 +166,7 @@ public:
         ExcessAssimToRoot = parameters.getDouble("excessassimtoroot");
         FTSWIrrig = parameters.getDouble("ftswirrig");
         HaunCritTillering = parameters.getDouble("hauncrittillering");
+        HaunCritStemElongation = parameters.getDouble("hauncritstemelongation");
         HumFC = parameters.getDouble("humfc");
         HumPF = parameters.getDouble("humpf");
         HumSat = parameters.getDouble("humsat");

@@ -370,6 +370,7 @@ void RS_EvalDegresJourVitMoy_V2(double const &NumPhase, double const &TMax, doub
         DegresDuJour = v * (TOpt1 - TBase);
         if ((NumPhase > 1) && (NumPhase < 5)) {
             DegresDuJourCor = DegresDuJour * std::pow(max(cstr, 0.00000001), DEVcstr);
+
         } else {
             DegresDuJourCor = DegresDuJour;
         }
@@ -434,11 +435,11 @@ void RS_EvalDAF_V2_lodging(double const &NumPhase, double const &DegresDuJour,
 // between 20 and 60) sets the rhythm of leaf development.
 // -----------------------------------------------------------------------------
 
-void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, double const &Phyllo, double const &RelPhylloPhaseStemElong,
+void RS_Phyllochron(double const &NumPhase, double const &DegresDuJourCor, double const &Phyllo, double const &RelPhylloPhaseStemElong, double const &HaunCritStemElongation,
                     double &PhaseStemElongation, double &HaunGain, double &HaunIndex) {
     /*try*/ {
         if (((NumPhase > 1) && (NumPhase < 5))) {
-            if ((((NumPhase > 3) || (HaunIndex > 20)) && (NumPhase < 5))) {
+            if ((((NumPhase > 3) || (HaunIndex > HaunCritStemElongation)) && (NumPhase < 5))) {
                 PhaseStemElongation = 1;
             } else {
                 PhaseStemElongation = 0;
