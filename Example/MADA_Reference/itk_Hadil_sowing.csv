@@ -1,0 +1,5 @@
+ID_ITK,dryseedingswitch,bundheight,coefftransplantingshock,densityfield,densitynursery,durationnursery,endingdate,ftswirrig,irrigauto,irrigautoresume,irrigautostop,irrigautotarget,kpar,lifesavingdrainage,mulch,plantsperhill,plotdrainagedaf,profracini,sowing,startingdate,transplanting,transplantingdepth
+Transplanting,0,160,1,333333,25000000,34,2460474,1,1,0,0,0.3,0.5,1,100,2,25,40,2460273,2460189,1,100
+DSirrg,1,160,1,333333,25000000,34,2460657,1,1,0,0,0.3,0.5,1,100,2,25,40,2460250,2460189,0,100
+Rainfed,1,160,1,333333,25000000,34,2460657,1,0,0,0,0.3,0.5,1,100,2,25,40,2460250,2460189,0,100
+Rainfed_true,1,0,1,333333,25000000,34,2460657,1,0,0,0,0.3,0.5,1,100,2,25,40,2460250,2460189,0,100

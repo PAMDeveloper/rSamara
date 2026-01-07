@@ -1,0 +1,4 @@
+ID_soil,ca,depthsoil,epaisseurprof,epaisseursurf,humcr,humfc,humpf,humsat,percolationmax,pevap,pourcruiss,ru,seuilruiss,stockiniprof,stockinisurf,volrelmacropores,wsalt,wslat,wslong
+DSrain3mm,400,0,150,100,0.15,0.2,0.05,0.22,3,0.2,30,150,20,10,10,10,1615,-19.82,47.1
+DSrain6mm,400,0,150,100,0.15,0.2,0.05,0.22,6,0.2,30,150,20,10,10,10,1615,-19.82,47.1
+DSrain12mm,400,0,150,100,0.15,0.2,0.05,0.22,12,0.2,30,150,20,10,10,10,1615,-19.82,47.1
